@@ -48,6 +48,8 @@ public class CreateScreenController extends Controller{
             infoText.setText("Searching...");
             lineSelection.setDisable(true);
             createButton.setDisable(true);
+            //TextOutput is not editable while searching
+            textOutput.setEditable(false);
 
             Thread searchThread = new Thread(new Task<Void>(){
                 @Override
@@ -79,9 +81,11 @@ public class CreateScreenController extends Controller{
         }
         else{
             //term found on wikipedia, update GUI to allow line selection
-            command = new Command("cat -n .temp_text.txt");
+            command = new Command("cat .temp_text.txt");
             command.execute();
             textOutput.setText(command.getStream());
+            //textOutput becomes editable when search was successful,
+            textOutput.setEditable(true);
 
             int numberOfLines = command.getStream().split(System.getProperty("line.separator")).length;
             populateComboBox(numberOfLines);
