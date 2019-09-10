@@ -14,6 +14,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         new File("creations").mkdir();
+        new File("audio").mkdir();
         try{
             //Load in and display the Home screen (Main Menu)
             FXMLLoader loader = new FXMLLoader();
