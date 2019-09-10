@@ -1,3 +1,10 @@
+#extra gradle files
+.idea/
+build.gradle
+gradle/
+gradlew
+gradlew.bat
+settings.gradle
 
 # Created by https://www.gitignore.io/api/java,gradle,intellij
 # Edit at https://www.gitignore.io/?templates=java,gradle,intellij
