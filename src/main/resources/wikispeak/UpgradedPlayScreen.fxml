@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.media.MediaView?>
+
+<BorderPane fx:id="rootBorderPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wikispeak.UpgradedPlayScreenController">
+   <center>
+      <AnchorPane prefHeight="400.0" prefWidth="600.0">
+         <children>
+            <ListView fx:id="creationList" layoutX="430.0" layoutY="7.0" prefHeight="310.0" prefWidth="156.0" />
+            <Slider fx:id="volumeSlider" layoutX="257.0" layoutY="339.0" showTickLabels="true" showTickMarks="true" />
+            <Button layoutX="24.0" layoutY="334.0" mnemonicParsing="false" onAction="#handlePlayPauseButton" text="Play/Pause" />
+            <Label layoutX="207.0" layoutY="339.0" text="Volume" />
+            <Button layoutX="430.0" layoutY="328.0" mnemonicParsing="false" onAction="#handleExitButton" prefHeight="55.0" prefWidth="156.0" text="Exit" />
+            <MediaView fx:id="creationViewer" fitHeight="310.0" fitWidth="405.0" layoutX="7.0" layoutY="7.0" />
+            <Button layoutX="156.0" layoutY="334.0" mnemonicParsing="false" onAction="#handleForwardButton" prefHeight="26.0" prefWidth="41.0" text="&gt;&gt;" />
+            <Button layoutX="113.0" layoutY="334.0" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="26.0" prefWidth="43.0" text="&lt;&lt;" />
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
