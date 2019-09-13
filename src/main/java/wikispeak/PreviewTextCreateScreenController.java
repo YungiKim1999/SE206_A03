@@ -100,6 +100,17 @@ public class PreviewTextCreateScreenController extends Controller{
     private void handleVoiceSelection(){ createAudioButton.setDisable(audioFileNameField.getText().isEmpty()); }
 
     @FXML
+    private void handlePreview(){
+        String textSelection = textOutput.getSelectedText();
+        if(correctTextSelection(textSelection)){
+            //play the audio
+        }
+        else{
+            //play read out some sample audio
+        }
+    }
+
+    @FXML
     private void handleCreateAudio(){
 
         String audioFileName = audioFileNameField.getText();
@@ -150,12 +161,10 @@ public class PreviewTextCreateScreenController extends Controller{
     }
 
     /**
-     * Adds Festival voices to the VoiceSelectionVoice
-     * (Allow this selection to be done dynamically? Or run a script at the beginning that definitely works to install voices?)
-     * Currently, this assumes that voice_install.sh script has been run on the VirtualBox
+     * Adds Festival voices to the VoiceSelectionComboBox
      */
     private void populateVoiceSelectionBox(){
-        String[] voiceNameArray = {"rab_diphone", "don_diphone", "kal_diphone", "ked_diphone"};
+        String[] voiceNameArray = {"kal_diphone", "akl_nz_jdt_diphone", "akl_nz_cw_cg_cg"};
         for(int i = 0; i < voiceNameArray.length; i++){
             voiceSelection.getItems().add(voiceNameArray[i]);
         }
