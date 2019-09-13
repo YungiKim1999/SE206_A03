@@ -10,7 +10,10 @@ import javafx.scene.text.Text;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,8 +22,6 @@ import java.util.regex.Pattern;
  */
 public class PreviewTextCreateScreenController extends Controller{
 
-    private String _currentSearch;
-
     @FXML private BorderPane rootBorderPane;
     @FXML private TextField searchField;
     @FXML private TextArea textOutput;
@@ -28,6 +29,7 @@ public class PreviewTextCreateScreenController extends Controller{
     @FXML private Button createAudioButton;
     @FXML private Text infoText;
     @FXML private TextField audioFileNameField;
+    @FXML private Button previewButton;
 
     public void initialize(){
         //listens to changes in the audio file name field
@@ -50,9 +52,9 @@ public class PreviewTextCreateScreenController extends Controller{
     @FXML
     private void handleSearch(){
 
-        _currentSearch = searchField.getText();
+        String currentSearch = searchField.getText();
 
-        if(!_currentSearch.isEmpty()) {
+        if(!currentSearch.isEmpty()) {
             infoText.setText("Searching...");
             //while searching, WHAT SHOULD BE DISABLED?
             createAudioButton.setDisable(true);
@@ -60,7 +62,7 @@ public class PreviewTextCreateScreenController extends Controller{
             Thread searchThread = new Thread(new Task<Void>(){
                 @Override
                 protected Void call() throws Exception {
-                    Command wikitCommand = new Command("wikit " + _currentSearch + " | sed 's/\\([.!?]\\) \\([[:upper:]]\\)/\\1\\n\\2/g' > .temp_text.txt");
+                    Command wikitCommand = new Command("wikit " + currentSearch + " | sed 's/\\([.!?]\\) \\([[:upper:]]\\)/\\1\\n\\2/g' > .temp_text.txt");
                     wikitCommand.execute();
                     return null;
                 }
@@ -93,21 +95,40 @@ public class PreviewTextCreateScreenController extends Controller{
             //textOutput becomes enabled because search was successful,
             textOutput.setDisable(false);
         }
-        infoText.setText("");
+        infoText.setText("Edit the text below. Highlight text to add it to an audio file.");
     }
 
     @FXML
-    private void handleVoiceSelection(){ createAudioButton.setDisable(audioFileNameField.getText().isEmpty()); }
+    private void handleVoiceSelection(){
+        createAudioButton.setDisable(audioFileNameField.getText().isEmpty());
+        previewButton.setDisable(false);
+    }
 
     @FXML
-    private void handlePreview(){
+    private void handlePreview() throws InterruptedException, IOException {
+
+        String selectedVoice = (String)voiceSelection.getValue();
         String textSelection = textOutput.getSelectedText();
-        if(correctTextSelection(textSelection)){
-            //play the audio
+
+        if(!correctTextSelection(textSelection)){
+            textSelection = "This is my voice";
         }
-        else{
-            //play read out some sample audio
-        }
+        //read out the selected text in the selected voice
+        String finalTextSelection = textSelection;
+
+        Thread previewVoiceThread = new Thread(new Task<Void>(){
+            @Override
+            protected Void call() throws Exception {
+                Process p = Runtime.getRuntime().exec("festival");
+                Writer w = new OutputStreamWriter(p.getOutputStream());
+                w.append("(voice_" + selectedVoice + ")");
+                w.append("(SayText \"" + finalTextSelection + "\")");
+                w.close();
+                return null;
+            }
+        });
+
+        previewVoiceThread.start();
     }
 
     @FXML

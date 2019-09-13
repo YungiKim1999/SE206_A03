@@ -25,7 +25,7 @@
                         <Insets bottom="10.0" left="5.0" />
                      </HBox.margin>
                   </TextField>
-                  <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleSearch" prefHeight="33.0" prefWidth="90.0" text="Search">
+                  <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleSearch" prefHeight="33.0" prefWidth="90.0" text="Search">
                      <HBox.margin>
                         <Insets bottom="10.0" right="5.0" />
                      </HBox.margin></Button>
@@ -60,7 +60,7 @@
                               <Insets bottom="5.0" />
                            </HBox.margin>
                         </ComboBox>
-                        <Button mnemonicParsing="false" onAction="#handlePreview" prefHeight="30.0" prefWidth="72.0" text="Preview">
+                        <Button fx:id="previewButton" disable="true" mnemonicParsing="false" onAction="#handlePreview" prefHeight="30.0" prefWidth="72.0" text="Preview">
                            <HBox.margin>
                               <Insets bottom="5.0" />
                            </HBox.margin>
