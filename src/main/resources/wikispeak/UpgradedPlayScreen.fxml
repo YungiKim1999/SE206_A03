@@ -16,13 +16,15 @@
             <Slider fx:id="volumeSlider" layoutX="260.0" layoutY="354.0" showTickLabels="true" showTickMarks="true" />
             <Button fx:id="playPauseButton" layoutX="24.0" layoutY="347.0" mnemonicParsing="false" onAction="#handlePlayPauseButton" text="Play/Pause" />
             <Label layoutX="210.0" layoutY="352.0" text="Volume" />
-            <Button layoutX="430.0" layoutY="328.0" mnemonicParsing="false" onAction="#handleExitButton" prefHeight="55.0" prefWidth="156.0" text="Exit" />
+            <Button layoutX="430.0" layoutY="360.0" mnemonicParsing="false" onAction="#handleExitButton" prefHeight="18.0" prefWidth="156.0" text="Exit" />
             <MediaView fx:id="creationViewer" fitHeight="310.0" fitWidth="405.0" layoutX="7.0" layoutY="7.0" />
             <Button layoutX="156.0" layoutY="347.0" mnemonicParsing="false" onAction="#handleForwardButton" prefHeight="26.0" prefWidth="41.0" text="&gt;&gt;" />
             <Button layoutX="113.0" layoutY="347.0" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="26.0" prefWidth="43.0" text="&lt;&lt;" />
             <Label fx:id="timeLabel" layoutX="7.0" layoutY="320.0" prefHeight="16.0" prefWidth="42.0" text="Label" />
             <Label fx:id="finishTime" layoutX="372.0" layoutY="320.0" prefHeight="16.0" prefWidth="56.0" text="Label" />
-            <Slider fx:id="videoBuffer" layoutX="49.0" layoutY="320.0" prefHeight="16.0" prefWidth="326.0" showTickMarks="true" />
+            <Slider fx:id="videoBuffer" layoutX="49.0" layoutY="320.0" prefHeight="16.0" prefWidth="326.0" />
+            <Button layoutX="430.0" layoutY="323.0" mnemonicParsing="false" onAction="#handleDeleteButton" prefHeight="26.0" prefWidth="157.0" text="Delete" />
+            <Label fx:id="listIsEmpty" contentDisplay="CENTER" layoutX="441.0" layoutY="17.0" prefHeight="293.0" prefWidth="136.0" textAlignment="CENTER" />
          </children>
       </AnchorPane>
    </center>

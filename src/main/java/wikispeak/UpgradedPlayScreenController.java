@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -15,6 +16,9 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class UpgradedPlayScreenController extends ListController {
@@ -35,46 +39,65 @@ public class UpgradedPlayScreenController extends ListController {
     @FXML private Label finishTime;
     @FXML private Button playPauseButton;
     @FXML private Slider videoBuffer;
+    @FXML private Label listIsEmpty;
+    private ExecutorService workerTeam = Executors.newSingleThreadExecutor();
 
     @FXML
     public void initialize(){
         firsTime = true;
+        listIsEmpty.setText("There seems to be\nno creation to\nplay/delete");
         creationList.setItems(creationsStrings);
         creationList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         timeLabel.setText("00:00");
         finishTime.setText("00:00");
+        setEmptyLabelText();
         creationList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                    getUserChoice(newValue);
-                    setMediaForPlay();
-                    playMedia();
-                    addVideoListener();
-                    addVolumeListener();
-                    firsTime = false;
-                    play = true;
+                   if(!creationList.getItems().isEmpty()) {
+                       setEmptyLabelText();
+                       getUserChoice(newValue);
+                       setMediaForPlay();
+                       playMedia();
+                       addVideoListener();
+                       addVolumeListener();
+                       firsTime = false;
+                       play = true;
+                   }else{
+                       setEmptyLabelText();
+                       creationPlayingThing.dispose();
+                       timeLabel.setText("00:00");
+                       finishTime.setText("00:00");
+                       videoBuffer.setValue(0);
+                   }
             }
         });
         volumeSlider.setValue(100);
 
     }
 
+    private void setEmptyLabelText(){
+        if(!creationList.getItems().isEmpty()) {
+            listIsEmpty.setVisible(false);
+        }else{
+            listIsEmpty.setVisible(true);
+        }
+    }
     private void addVolumeListener(){
         volumeSlider.valueProperty().addListener(observable -> {
                 creationPlayingThing.setVolume(volumeSlider.getValue() / 100);
         });
     }
-
     private void setTimeLabels(Duration newVakue){
         String currentTime = "";
         currentTime += String.format("%02d", (int)newVakue.toMinutes());
         currentTime += ":";
-        currentTime += String.format("%02d", (int)newVakue.toSeconds());
+        currentTime += String.format("%02d", (int)newVakue.toSeconds()%60);
         timeLabel.setText(currentTime);
         String stopTime = "";
         stopTime += String.format("%02d", (int)creationPlayingThing.getStopTime().toMinutes());
         stopTime += ":";
-        stopTime += String.format("%02d", (int)creationPlayingThing.getStopTime().toSeconds());
+        stopTime += String.format("%02d", (int)creationPlayingThing.getStopTime().toSeconds()%60);
         finishTime.setText(stopTime);
     }
 
@@ -83,8 +106,8 @@ public class UpgradedPlayScreenController extends ListController {
             @Override
             public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
                 videoBuffer.setMin(0);
-                int endTime = Integer.parseInt(String.format("%02d", (int)creationPlayingThing.getStopTime().toMinutes())) * 60 +Integer.parseInt( String.format("%02d", (int)creationPlayingThing.getStopTime().toSeconds()));
-                int currentTime = Integer.parseInt(String.format("%02d", (int)newValue.toMinutes())) * 60 +Integer.parseInt( String.format("%02d", (int)newValue.toSeconds()));
+                int endTime  =  Integer.parseInt(String.format("%02d", (int)creationPlayingThing.getStopTime().toMillis()));
+                int currentTime =  Integer.parseInt(String.format("%02d",(int)newValue.toMillis()));
                 videoBuffer.setMax(endTime);
                 videoBuffer.setValue(currentTime);
                 setTimeLabels(newValue);
@@ -130,7 +153,7 @@ public class UpgradedPlayScreenController extends ListController {
 
     @FXML
     private void handlePlayPauseButton(){
-        if(!firsTime) {
+        if(!firsTime && !creationList.getItems().isEmpty()) {
             if(playPauseButton.getText().equals("Repeat")){
                 creationPlayingThing.stop();
                 selectedCreation = creationList.getSelectionModel().getSelectedItem();
@@ -146,6 +169,21 @@ public class UpgradedPlayScreenController extends ListController {
                 playMedia();
                 play = true;
 
+            }
+        }
+    }
+
+    @FXML
+    private void handleDeleteButton(){
+        if(selectedCreation != null && !creationList.getItems().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete \"" + selectedCreation + "\"?");
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                deletionJobs deleteSelected = new deletionJobs(selectedCreation);
+                workerTeam.submit(deleteSelected);
+                creationList.getItems().remove(selectedCreation);
+                setEmptyLabelText();
             }
         }
     }
