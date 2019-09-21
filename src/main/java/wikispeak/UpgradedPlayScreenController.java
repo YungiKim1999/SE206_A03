@@ -1,5 +1,7 @@
 package wikispeak;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -58,12 +60,12 @@ public class UpgradedPlayScreenController extends ListController {
                        setEmptyLabelText();
                        getUserChoice(newValue);
                        setMediaForPlay();
-                       playMedia();
                        addVideoListener();
                        addVolumeListener();
+                       playMedia();
                        firsTime = false;
                        play = true;
-                   }else{
+                   }else {
                        setEmptyLabelText();
                        creationPlayingThing.dispose();
                        timeLabel.setText("00:00");
@@ -109,8 +111,17 @@ public class UpgradedPlayScreenController extends ListController {
                 int endTime  =  Integer.parseInt(String.format("%02d", (int)creationPlayingThing.getStopTime().toMillis()));
                 int currentTime =  Integer.parseInt(String.format("%02d",(int)newValue.toMillis()));
                 videoBuffer.setMax(endTime);
-                videoBuffer.setValue(currentTime);
                 setTimeLabels(newValue);
+                videoBuffer.setValue(currentTime);
+                videoBuffer.valueProperty().addListener(new InvalidationListener() {
+                    @Override
+                    public void invalidated(Observable observable) {
+                        if(videoBuffer.isPressed()){
+                            Duration newTime = new Duration(videoBuffer.getValue());
+                            creationPlayingThing.seek(newTime);
+                        }
+                    }
+                });
                 if(timeLabel.getText().equals(finishTime.getText())){
                     creationPlayingThing.stop();
                     playPauseButton.setText("Repeat");
