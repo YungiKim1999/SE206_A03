@@ -29,7 +29,7 @@ public class DeleteScreenController extends ListController {
 
     @FXML
     public void initialize() {
-        List<String> currentCreations = populateList();
+        List<String> currentCreations = populateList("creations", ".mp4");
 
         for(String creation : currentCreations){
             Button button = new Button(creation);

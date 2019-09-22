@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 /**
  * Controller for CreateScreen
  */
-public class CreateScreenController extends Controller{
+public class OLDCreateScreenController extends Controller{
 
     private String _currentSearch;
 
