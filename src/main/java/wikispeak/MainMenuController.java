@@ -20,7 +20,7 @@ public class MainMenuController extends Controller {
 
     @FXML
     private void handleCreate() throws IOException {
-        switchScenes(rootBorderPane, "CreateScreen.fxml");
+        switchScenes(rootBorderPane, "CreateAudioScreen.fxml");
     }
 
     @FXML

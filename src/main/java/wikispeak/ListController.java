@@ -8,32 +8,32 @@ import java.util.List;
 
 /**
  * Abstract ListController class
- * Provides creation listing functionality
+ * Provides listing functionality for items inside a given directory
  */
 public abstract class ListController extends Controller {
 
     /**
-     * Lists the creations in the creations directory (.mp4 extension removed)
-     * @return alphabetically sorted list of creations
+     * Lists the creations in the specified directory (with the specified extension removed)
+     * @return alphabetically sorted list of filenames
      */
-    public List<String> populateList(){
+    public List<String> populateList(String directory, String extension){
 
         List<String> results = new ArrayList<String>();
 
-        //in case creations directory has been deleted
-        new File("creations").mkdir();
-        //find all files in 'creations' directory with .mp4 extension
-        File[] files = new File("creations").listFiles(new FilenameFilter() {
+        //in case directory has been removed
+        new File(directory).mkdir();
+        //find all files in given directory with specified extension
+        File[] files = new File(directory).listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
-                return name.endsWith(".mp4");
+                return name.endsWith(extension);
             }
         });
 
         for (File file : files) {
             if (file.isFile()) {
                 String name = file.getName();
-                //remove the .mp4 extension from the filename
+                //remove the extension from the filename
                 int extensionIndex = name.lastIndexOf(".");
                 if (extensionIndex == -1){
                     results.add(name);
