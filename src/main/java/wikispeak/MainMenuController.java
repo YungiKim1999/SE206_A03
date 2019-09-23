@@ -20,17 +20,12 @@ public class MainMenuController extends Controller {
 
     @FXML
     private void handleCreate() throws IOException {
-        switchScenes(rootBorderPane, "CreateAudioScreen.fxml");
+        switchScenes(rootBorderPane, "SearchScreen.fxml");
     }
 
     @FXML
     private void handlePlay() throws IOException {
         switchScenes(rootBorderPane,"UpgradedPlayScreen.fxml");
-    }
-
-    @FXML
-    private void handleDelete() throws IOException {
-        switchScenes(rootBorderPane, "DeleteScreen.fxml");
     }
 
 }
