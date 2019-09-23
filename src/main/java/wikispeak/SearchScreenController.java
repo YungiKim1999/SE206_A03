@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 
+import java.io.File;
 import java.io.IOException;
 
 public class SearchScreenController extends Controller {
@@ -16,11 +17,13 @@ public class SearchScreenController extends Controller {
     @FXML private Text infoText;
 
     /**
-     * Switches to the MainMenu screen
+     * Initial clean-up.
+     * The user deals with a fresh set of audio files for each creation
      */
-    @FXML
-    private void handleMainMenu() throws IOException {
-        switchScenes(rootBorderPane, "MainMenu.fxml");
+    public void initialize(){
+        for (File file : new File("audio").listFiles()){
+            file.delete();
+        }
     }
 
     @FXML
@@ -73,5 +76,13 @@ public class SearchScreenController extends Controller {
             //term found on wikipedia, go to next screen
             switchScenes(rootBorderPane, "CreateAudioScreen.fxml");
         }
+    }
+
+    /**
+     * Switches to the MainMenu screen
+     */
+    @FXML
+    private void handleMainMenu() throws IOException {
+        switchScenes(rootBorderPane, "MainMenu.fxml");
     }
 }
