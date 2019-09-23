@@ -98,12 +98,17 @@ public class CreateAudioScreenController extends Controller{
 
                 @Override
                 protected void done(){
-                    Platform.runLater(() -> infoText.setText("Audio Created!"));
+                    Platform.runLater(() -> setInfoText());
                 }
 
             });
             creationThread.start();
         }
+    }
+
+    private void setInfoText(){
+        int numberOfFiles = new File("audio").listFiles().length;
+        infoText.setText(numberOfFiles + " Audio Files Created");
     }
 
     @FXML
@@ -118,14 +123,13 @@ public class CreateAudioScreenController extends Controller{
     }
 
     @FXML
-    private void handleNext(){
+    private void handleNext() throws IOException {
         //save the current text area status to the text file
         String text = textOutput.getText();
         System.out.println(text);
         Command command = new Command("echo \"" + text + "\" > .temp_text.txt");
         command.execute();
-        System.out.println(command.getStream());
-        System.out.println("Next Pressed");
+        switchScenes(rootBorderPane, "CombineAudioScreen.fxml");
     }
 
     /**
