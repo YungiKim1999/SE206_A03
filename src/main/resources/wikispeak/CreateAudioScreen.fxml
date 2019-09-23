@@ -64,7 +64,7 @@
                   <Insets bottom="5.0" right="5.0" />
                </HBox.margin>
                <children>
-                  <Text fx:id="infoText" fill="#0000006f" strokeType="OUTSIDE" strokeWidth="0.0" text="0 Audio Files Created" textAlignment="CENTER" wrappingWidth="100.0">
+                  <Text fx:id="infoText" fill="#0000006f" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="100.0">
                      <font>
                         <Font size="11.0" />
                      </font>
@@ -83,7 +83,7 @@
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Step 2: Create Audio Files" textAlignment="CENTER" wrappingWidth="600.0">
                <VBox.margin>
-                  <Insets left="20.0" right="20.0" top="15.0" />
+                  <Insets left="20.0" right="20.0" top="10.0" />
                </VBox.margin>
                <font>
                   <Font size="20.0" />

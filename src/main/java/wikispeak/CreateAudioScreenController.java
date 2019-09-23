@@ -126,7 +126,6 @@ public class CreateAudioScreenController extends Controller{
     private void handleNext() throws IOException {
         //save the current text area status to the text file
         String text = textOutput.getText();
-        System.out.println(text);
         Command command = new Command("echo \"" + text + "\" > .temp_text.txt");
         command.execute();
         switchScenes(rootBorderPane, "CombineAudioScreen.fxml");
@@ -250,23 +249,5 @@ public class CreateAudioScreenController extends Controller{
             creationThread.start();
         }
     }
-    /**
-     * Deletes specified creation after asking for confirmation
-     * @param creation
-     * @throws IOException
-    private void deleteCreation(String creation) throws IOException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete \"" + creation + "\"?");
-        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            File file = new File("creations" + System.getProperty("file.separator") + creation + ".mp4");
-            file.delete();
-
-            //refresh the scene
-            switchScenes(rootBorderPane, "DeleteScreen.fxml");
-        }
-    }
-
     */
-
 }
