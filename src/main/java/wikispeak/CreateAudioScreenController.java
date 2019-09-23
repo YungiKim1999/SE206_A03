@@ -46,22 +46,6 @@ public class CreateAudioScreenController extends Controller{
     }
 
     @FXML
-    private void handleBackToSearch() throws IOException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Any audio files you have created will be deleted.\nAre you sure you want to go back?");
-        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            //only switch scene after confirmation
-            switchScenes(rootBorderPane, "SearchScreen.fxml");
-        }
-    }
-
-    @FXML
-    private void handleNext(){
-        System.out.println("Next Pressed");
-    }
-
-    @FXML
     private void handleVoiceSelection(){
         createAudioButton.setDisable(audioFileNameField.getText().isEmpty());
         previewButton.setDisable(false);
@@ -122,7 +106,27 @@ public class CreateAudioScreenController extends Controller{
         }
     }
 
+    @FXML
+    private void handleBackToSearch() throws IOException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Any audio files you have created will be deleted.\nAre you sure you want to go back?");
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            //only switch scene after confirmation
+            switchScenes(rootBorderPane, "SearchScreen.fxml");
+        }
+    }
 
+    @FXML
+    private void handleNext(){
+        //save the current text area status to the text file
+        String text = textOutput.getText();
+        System.out.println(text);
+        Command command = new Command("echo \"" + text + "\" > .temp_text.txt");
+        command.execute();
+        System.out.println(command.getStream());
+        System.out.println("Next Pressed");
+    }
 
     /**
      * Adds Festival voices to the VoiceSelectionComboBox
