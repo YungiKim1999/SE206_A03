@@ -83,6 +83,9 @@ public class CombineAudioScreenController extends ListController {
     @FXML
     private void handleCreateCreation(){
         System.out.println("make the creation");
+        //This command works on the virtualbox
+        //It assumes that there is a bunch of .jpg images in the current working directory
+        //ffmpeg -framerate 0.5 -pattern_type glob -i '*.jpg' -vf "drawtext=fontfile=fonts/myfont.ttf:fontsize=30: fontcolor=black:x=(w-text_w)/2:y=(h-text_h)/2:text=test" output.mp4
     }
 
     private static class SelectableFile {
