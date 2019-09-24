@@ -1,7 +1,10 @@
 package wikispeak;
+
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
@@ -14,20 +17,22 @@ public class CheckBoxListTest extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        ListView<String> listView = new ListView<>();
-        for (int i = 1; i <= 20 ; i++) {
-            String item = "Item "+i ;
+        ListView<Item> listView = new ListView<>();
+        for (int i=1; i<=20; i++) {
+            Item item = new Item("Item "+i, false);
+
+            // observe item's on property and display message if it changes:
+            item.onProperty().addListener((obs, wasOn, isNowOn) -> {
+                System.out.println(item.getName() + " changed on state from "+wasOn+" to "+isNowOn);
+            });
+
             listView.getItems().add(item);
         }
 
-        listView.setCellFactory(CheckBoxListCell.forListView(new Callback<String, ObservableValue<Boolean>>() {
+        listView.setCellFactory(CheckBoxListCell.forListView(new Callback<Item, ObservableValue<Boolean>>() {
             @Override
-            public ObservableValue<Boolean> call(String item) {
-                BooleanProperty observable = new SimpleBooleanProperty();
-                observable.addListener((obs, wasSelected, isNowSelected) ->
-                        System.out.println("Check box for "+item+" changed from "+wasSelected+" to "+isNowSelected)
-                );
-                return observable ;
+            public ObservableValue<Boolean> call(Item item) {
+                return item.onProperty();
             }
         }));
 
@@ -35,6 +40,46 @@ public class CheckBoxListTest extends Application {
         Scene scene = new Scene(root, 250, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    public static class Item {
+        private final StringProperty name = new SimpleStringProperty();
+        private final BooleanProperty on = new SimpleBooleanProperty();
+
+        public Item(String name, boolean on) {
+            setName(name);
+            setOn(on);
+        }
+
+        public final StringProperty nameProperty() {
+            return this.name;
+        }
+
+        public final String getName() {
+            return this.nameProperty().get();
+        }
+
+        public final void setName(final String name) {
+            this.nameProperty().set(name);
+        }
+
+        public final BooleanProperty onProperty() {
+            return this.on;
+        }
+
+        public final boolean isOn() {
+            return this.onProperty().get();
+        }
+
+        public final void setOn(final boolean on) {
+            this.onProperty().set(on);
+        }
+
+        @Override
+        public String toString() {
+            return getName();
+        }
+
     }
 
     public static void main(String[] args) {

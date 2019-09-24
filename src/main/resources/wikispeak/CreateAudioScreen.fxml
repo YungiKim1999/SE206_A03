@@ -15,28 +15,12 @@
    <center>
       <VBox prefHeight="288.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="CENTER" prefHeight="12.0" prefWidth="600.0">
-               <children>
-                  <TextField fx:id="searchField" prefHeight="58.0" prefWidth="510.0" promptText="Search Wikipedia...">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets bottom="10.0" left="5.0" />
-                     </HBox.margin>
-                  </TextField>
-                  <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleSearch" prefHeight="33.0" prefWidth="90.0" text="Search">
-                     <HBox.margin>
-                        <Insets bottom="10.0" right="5.0" />
-                     </HBox.margin></Button>
-               </children>
-            </HBox>
-            <TextArea fx:id="textOutput" disable="true" prefHeight="254.0" prefWidth="580.0">
+            <TextArea fx:id="textOutput" prefHeight="254.0" prefWidth="580.0">
                <font>
                   <Font size="12.0" />
                </font>
                <VBox.margin>
-                  <Insets bottom="5.0" />
+                  <Insets bottom="5.0" top="10.0" />
                </VBox.margin>
             </TextArea>
          </children>
@@ -45,7 +29,7 @@
    <bottom>
       <HBox alignment="BOTTOM_LEFT" BorderPane.alignment="CENTER_LEFT">
          <children>
-            <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleMainMenu" prefHeight="30.0" prefWidth="100.0" text="Main Menu">
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleBackToSearch" prefHeight="30.0" prefWidth="100.0" text="&lt; Back">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" />
                </HBox.margin></Button>
@@ -80,7 +64,7 @@
                   <Insets bottom="5.0" right="5.0" />
                </HBox.margin>
                <children>
-                  <Text fill="#0000006f" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="100.0">
+                  <Text fx:id="infoText" fill="#0000006f" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="100.0">
                      <font>
                         <Font size="11.0" />
                      </font>
@@ -88,21 +72,38 @@
                         <Insets bottom="5.0" />
                      </VBox.margin>
                   </Text>
-                  <Button fx:id="handleNext" mnemonicParsing="false" prefHeight="26.0" prefWidth="100.0" text="Next &gt;" />
+                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleNext" prefHeight="26.0" prefWidth="100.0" text="Next &gt;" textAlignment="CENTER" />
                </children>
             </VBox>
          </children>
       </HBox>
    </bottom>
    <top>
-      <VBox prefHeight="36.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="71.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <Text fx:id="infoText" strokeType="OUTSIDE" strokeWidth="0.0" text="Search for something in Wikipedia." wrappingWidth="586.0">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Step 2: Create Audio Files" textAlignment="CENTER" wrappingWidth="600.0">
                <VBox.margin>
-                  <Insets bottom="5.0" left="15.0" top="10.0" />
+                  <Insets left="20.0" right="20.0" top="10.0" />
                </VBox.margin>
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Edit the search result below. Highlight some text, select a voice and enter a file name to create an audio file." textAlignment="CENTER" wrappingWidth="400.0">
+               <VBox.margin>
+                  <Insets left="30.0" right="30.0" top="5.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="12.0" />
+               </font>
             </Text>
          </children>
+         <opaqueInsets>
+            <Insets bottom="10.0" />
+         </opaqueInsets>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
       </VBox>
    </top>
 </BorderPane>
