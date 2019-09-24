@@ -86,11 +86,12 @@ public class CreateAudioScreenController extends Controller{
             infoText.setText("Creating Audio...");
             String selectedVoice = (String)voiceSelection.getValue();
 
-            Thread creationThread = new Thread(new Task<Void>(){
+            Thread audioThread = new Thread(new Task<Void>(){
                 @Override
                 protected Void call() throws Exception {
-                    Command command = new Command("echo " + textSelection + " | text2wave -eval \"(voice_" + selectedVoice + ")\" -o audio" + System.getProperty("file.separator") + audioFileName + ".wav");
+                    Command command = new Command("echo \"" + textSelection + "\" | text2wave -eval \"(voice_" + selectedVoice + ")\" -o audio" + System.getProperty("file.separator") + audioFileName + ".wav");
                     command.execute();
+                    System.out.println(command.getStream());
                     return null;
                 }
 
@@ -100,7 +101,7 @@ public class CreateAudioScreenController extends Controller{
                 }
 
             });
-            creationThread.start();
+            audioThread.start();
         }
     }
 
@@ -200,7 +201,7 @@ public class CreateAudioScreenController extends Controller{
         Pattern p = Pattern.compile("[\\s<>:\"/\\\\|?*]");
         Matcher m = p.matcher(fileName);
         if (m.find()){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid creation name");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid audio file name");
             alert.showAndWait();
             return false;
         }

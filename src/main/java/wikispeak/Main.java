@@ -38,9 +38,11 @@ public class Main extends Application {
     public void stop(){
         File file = new File(".temp_text.txt");
         file.delete();
+        file = new File(".temp_video.mp4");
+        file.delete();
         file = new File(".temp_audio.wav");
         file.delete();
-        file = new File(".temp_video.mp4");
+        file = new File(".temp_searchterm.txt");
         file.delete();
     }
 

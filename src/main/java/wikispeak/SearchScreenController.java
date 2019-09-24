@@ -49,7 +49,7 @@ public class SearchScreenController extends Controller {
                 protected void done() {
                     Platform.runLater(() -> {
                         try {
-                            postSearchUpdateGUI();
+                            postSearchUpdateGUI(currentSearch);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -63,8 +63,9 @@ public class SearchScreenController extends Controller {
 
     /**
      * Updates the GUI appropriately based on the outcome of a Wikit Search
+     * TODO: Find a better way to save the search term than just to a temp file
      */
-    private void postSearchUpdateGUI() throws IOException {
+    private void postSearchUpdateGUI(String currentSearch) throws IOException {
         Command command = new Command("cat .temp_text.txt | grep -Fwq \":^(\"");
         if(command.execute() == 0){
             //nothing found on Wikipedia, update GUI to inform user
@@ -73,6 +74,8 @@ public class SearchScreenController extends Controller {
             infoText.setText(command.getStream());
         }
         else {
+            command = new Command("echo \"" + currentSearch + "\" > .temp_searchterm.txt");
+            command.execute();
             //term found on wikipedia, go to next screen
             switchScenes(rootBorderPane, "CreateAudioScreen.fxml");
         }
