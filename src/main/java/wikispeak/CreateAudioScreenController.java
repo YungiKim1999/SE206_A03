@@ -33,13 +33,11 @@ public class CreateAudioScreenController extends Controller{
     public void initialize(){
         //listens to changes in the audio file name field
         audioFileNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-            //createAudioButton is disabled if: file name field is empty, or no voice is selected, or no text is selected in the text area
-            createAudioButton.setDisable(newValue.isEmpty() || voiceSelection.getValue() == null || textOutput.getSelectedText().isEmpty());
+            updateCreateButtonAccess();
         });
         //listens to changes in the selected text
         textOutput.selectedTextProperty().addListener(((observable, oldValue, newValue) -> {
-            //createAudioButton is disabled if: file name field is empty, or no voice is selected, or no text is selected in the text area
-            createAudioButton.setDisable(newValue.isEmpty() || voiceSelection.getValue() == null || audioFileNameField.getText().isEmpty());
+            updateCreateButtonAccess();
         }));
         populateVoiceSelectionBox();
         populateTextArea();
@@ -47,7 +45,7 @@ public class CreateAudioScreenController extends Controller{
 
     @FXML
     private void handleVoiceSelection(){
-        createAudioButton.setDisable(audioFileNameField.getText().isEmpty());
+        updateCreateButtonAccess();
         previewButton.setDisable(false);
     }
 
@@ -106,12 +104,20 @@ public class CreateAudioScreenController extends Controller{
         }
     }
 
+    /**
+     * Sets the little info text to tell the user how many audio files they created
+     * TODO: make it say "1 Audio File" instead of "1 Audio Files"
+     */
     private void setInfoText(){
         int numberOfFiles = new File("audio").listFiles().length;
         infoText.setText(numberOfFiles + " Audio Files Created");
     }
 
     @FXML
+    /**
+     * Takes the user back to the search screen. Confirms they are happy to delete any audio files they have made
+     * TODO: make this only prompt if the number of audio files made is > 0
+     */
     private void handleBackToSearch() throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Any audio files you have created will be deleted.\nAre you sure you want to go back?");
         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
@@ -123,6 +129,10 @@ public class CreateAudioScreenController extends Controller{
     }
 
     @FXML
+    /**
+     * Takes the user to the next screen where they combine audio files
+     * Saves the text area so any edits persist if the user wants to go back
+     */
     private void handleNext() throws IOException {
         //save the current text area status to the text file
         String text = textOutput.getText();
@@ -133,6 +143,7 @@ public class CreateAudioScreenController extends Controller{
 
     /**
      * Adds Festival voices to the VoiceSelectionComboBox
+     * TODO: make this dynamically search for the voices available
      */
     private void populateVoiceSelectionBox(){
         String[] voiceNameArray = {"kal_diphone", "akl_nz_jdt_diphone", "akl_nz_cw_cg_cg"};
@@ -148,6 +159,15 @@ public class CreateAudioScreenController extends Controller{
         Command command = new Command("cat .temp_text.txt");
         command.execute();
         textOutput.setText(command.getStream());
+    }
+
+    /**
+     * Checks if all requirements are met to enable the create button
+     * A voice must be selected, some text must be highlighted and a name must be provided for the audio file
+     * @return
+     */
+    private void updateCreateButtonAccess(){
+        createAudioButton.setDisable(voiceSelection.getValue() == null || textOutput.getSelectedText().isEmpty() || audioFileNameField.getText().isEmpty());
     }
 
     /**

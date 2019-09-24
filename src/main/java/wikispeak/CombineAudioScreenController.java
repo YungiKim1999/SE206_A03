@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -26,6 +27,7 @@ public class CombineAudioScreenController extends ListController {
     @FXML private ComboBox numberSelection;
     @FXML private Text infoText;
     @FXML private Button creationButton;
+    @FXML private TextField creationNameField;
 
     //Hashset to ensure no duplicates
     private HashSet<SelectableFile> _selectedFiles = new HashSet<>();
@@ -49,7 +51,7 @@ public class CombineAudioScreenController extends ListController {
                 else if(_selectedFiles.contains(selectableFile)){
                     _selectedFiles.remove(selectableFile);
                 }
-                updateButtonAccess();
+                updateCreateButtonAccess();
             });
         }
 
@@ -67,6 +69,11 @@ public class CombineAudioScreenController extends ListController {
             audioListBox.getChildren().add(listView);
         }
         populateImageNumberSelectionBox();
+
+        //listens to changes in the creation file name field
+        creationNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            updateCreateButtonAccess();
+        });
     }
 
     @FXML
@@ -75,9 +82,8 @@ public class CombineAudioScreenController extends ListController {
     }
 
     @FXML
-    private void updateButtonAccess(){
-        //Button is disabled if there are no selected audio files OR no number has been selected
-        creationButton.setDisable(_selectedFiles.isEmpty() || numberSelection.getValue() == null);
+    private void handleNumberSelection(){
+        updateCreateButtonAccess();
     }
 
     @FXML
@@ -110,6 +116,13 @@ public class CombineAudioScreenController extends ListController {
             return _name.get();
         }
 
+    }
+
+    /**
+     * Button is disabled if there are no selected audio files OR no number has been selected OR no creation name has been entered
+     */
+    private void updateCreateButtonAccess(){
+        creationButton.setDisable(_selectedFiles.isEmpty() || numberSelection.getValue() == null || creationNameField.getText().isEmpty());
     }
 
     /**
