@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 /**
  * Controller for CreateScreen
  */
-public class PreviewTextCreateScreenController extends Controller{
+public class CreateAudioScreenController extends Controller{
 
     @FXML private BorderPane rootBorderPane;
     @FXML private TextField searchField;
@@ -95,7 +95,7 @@ public class PreviewTextCreateScreenController extends Controller{
             //textOutput becomes enabled because search was successful,
             textOutput.setDisable(false);
         }
-        infoText.setText("Edit the text below. Highlight text to add it to an audio file.");
+        infoText.setText("Edit and highlight the text below. Enter a name and voice to create an audio file.");
     }
 
     @FXML
