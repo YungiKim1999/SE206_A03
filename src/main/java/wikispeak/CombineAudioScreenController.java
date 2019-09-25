@@ -1,49 +1,62 @@
 package wikispeak;
 
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
+import wikispeak.helpers.Command;
+import wikispeak.helpers.FlickreImageCreator;
+import wikispeak.tasks.creationJob;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CombineAudioScreenController extends ListController {
 
     @FXML private BorderPane rootBorderPane;
     @FXML private VBox audioListBox;
     @FXML private ComboBox numberSelection;
-    @FXML private Text infoText;
+    @FXML private Text audioFileInfoText;
     @FXML private Button creationButton;
     @FXML private TextField creationNameField;
+    @FXML private ProgressBar progressBar;
+
+    private ExecutorService team = Executors.newCachedThreadPool();
 
     //Hashset to ensure no duplicates
-    private HashSet<SelectableFile> _selectedFiles = new HashSet<>();
+    private LinkedHashSet<SelectableFile> _selectedFiles = new LinkedHashSet<>();
 
     public void initialize() {
 
         //Turning a list of String audio files into SelectableFile objects that have a "selected" property
         List<String> audioFileList = populateList("audio", ".wav");
-
         ListView<SelectableFile> listView = new ListView<>();
 
         for (String fileName : audioFileList) {
             SelectableFile selectableFile = new SelectableFile(fileName, false);
             listView.getItems().add(selectableFile);
 
-            //Observer Selected property and add/remove the file from _selectedFiles appropriately
+            //Observe Selected property and add/remove the file from _selectedFiles appropriately
             selectableFile.selectedProperty().addListener((obs, previouslySelected, currentlySelected) -> {
                 if(currentlySelected){
                     _selectedFiles.add(selectableFile);
@@ -63,7 +76,7 @@ public class CombineAudioScreenController extends ListController {
         }));
 
         if(audioFileList.size() == 0){
-            infoText.setText("No audio files found");
+            audioFileInfoText.setText("No audio files found");
         }
         else{
             audioListBox.getChildren().add(listView);
@@ -82,16 +95,48 @@ public class CombineAudioScreenController extends ListController {
     }
 
     @FXML
+    private void handleMainMenu() throws IOException {
+        switchScenes(rootBorderPane, "MainMenu.fxml");
+    }
+
+    @FXML
     private void handleNumberSelection(){
         updateCreateButtonAccess();
     }
 
     @FXML
     private void handleCreateCreation(){
-        System.out.println("make the creation");
-        //This command works on the virtualbox
-        //It assumes that there is a bunch of .jpg images in the current working directory
-        //ffmpeg -framerate 0.5 -pattern_type glob -i '*.jpg' -vf "drawtext=fontfile=fonts/myfont.ttf:fontsize=30: fontcolor=black:x=(w-text_w)/2:y=(h-text_h)/2:text=test" output.mp4
+
+        String creationName = creationNameField.getText();
+
+        if(nameIsValid(creationName)){
+
+            //get current search term and number of images
+            Command command = new Command("cat .temp_searchterm.txt");
+            command.execute();
+            String searchTerm = command.getStream();
+
+            int number = (Integer)numberSelection.getValue();
+
+            //make a String of audiofile names
+            String audioFileList = "";
+            for(CombineAudioScreenController.SelectableFile file : _selectedFiles){
+                audioFileList = audioFileList + " audio" + System.getProperty("file.separator") + file.toString() + ".wav";
+            }
+
+            //start the task
+            creationJob createCreation = new creationJob(searchTerm, number, audioFileList, creationName);
+            progressBar.progressProperty().bind(createCreation.progressProperty());
+            createCreation.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+                @Override
+                public void handle(WorkerStateEvent workerStateEvent) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Creation " + creationName + " finished!");
+                    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                    Optional<ButtonType> result = alert.showAndWait();
+                }
+            });
+            team.submit(createCreation);
+        }
     }
 
     private static class SelectableFile {
@@ -132,5 +177,21 @@ public class CombineAudioScreenController extends ListController {
         for(int i = 1; i <= 10; i++){
             numberSelection.getItems().add(i);
         }
+    }
+
+    /**
+     * Checks if the given filename doesn't contain forbidden characters
+     * @param fileName
+     * @return true or false
+     */
+    private boolean nameIsValid(String fileName){
+        Pattern p = Pattern.compile("[\\s<>:\"/\\\\|?*]");
+        Matcher m = p.matcher(fileName);
+        if (m.find()){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid creation name");
+            alert.showAndWait();
+            return false;
+        }
+        return true;
     }
 }

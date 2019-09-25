@@ -1,4 +1,4 @@
-package wikispeak;
+package wikispeak.tasks;
 
 import com.flickr4java.flickr.Flickr;
 import com.flickr4java.flickr.FlickrException;
@@ -48,6 +48,7 @@ public class downloadImageJob extends Task<Boolean> {
                     BufferedImage image = photos.getImage(photo, Size.LARGE);
                     String filename = query.trim().replace(' ', '-')+"-"+System.currentTimeMillis()+"-"+photo.getId()+".jpg";
                     //you can change the name of the file that the photos are to be outputted by changing "downloads" to whatever~
+                    new File("downloads").mkdir();
                     File outputfile = new File("downloads",filename);
 
                     ImageIO.write(image, "jpg", outputfile);
