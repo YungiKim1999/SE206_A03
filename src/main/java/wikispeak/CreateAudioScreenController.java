@@ -7,13 +7,13 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
+import wikispeak.helpers.Command;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -107,25 +107,30 @@ public class CreateAudioScreenController extends Controller{
 
     /**
      * Sets the little info text to tell the user how many audio files they created
-     * TODO: make it say "1 Audio File" instead of "1 Audio Files"
      */
     private void setInfoText(){
         int numberOfFiles = new File("audio").listFiles().length;
-        infoText.setText(numberOfFiles + " Audio Files Created");
+        if(numberOfFiles == 1){
+            infoText.setText(numberOfFiles + " Audio File Created");
+        }
+        else{
+            infoText.setText(numberOfFiles + " Audio Files Created");
+        }
     }
 
     @FXML
     /**
      * Takes the user back to the search screen. Confirms they are happy to delete any audio files they have made
-     * TODO: make this only prompt if the number of audio files made is > 0
      */
     private void handleBackToSearch() throws IOException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Any audio files you have created will be deleted.\nAre you sure you want to go back?");
-        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            //only switch scene after confirmation
-            switchScenes(rootBorderPane, "SearchScreen.fxml");
+        if(new File("audio").listFiles().length > 0) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Any audio files you have created will be deleted.\nAre you sure you want to go back?");
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                //only switch scene after confirmation
+                switchScenes(rootBorderPane, "SearchScreen.fxml");
+            }
         }
     }
 
@@ -235,40 +240,4 @@ public class CreateAudioScreenController extends Controller{
             return true;
         }
     }
-
-    /*
-    Old method for creating creations on this screen
-    @FXML
-    private void handleCreate(){
-        String creationName = creationNameField.getText();
-        if(nameIsValid(creationName) && canOverwrite(creationName)){
-            infoText.setText("Creating Creation...");
-            int selectedValue = (Integer)lineSelection.getValue();
-
-            Thread creationThread = new Thread(new Task<Void>(){
-                @Override
-                protected Void call() throws Exception {
-                    Command command = new Command("head -n" + selectedValue + " .temp_text.txt | text2wave -o .temp_audio.wav");
-                    command.execute();
-                    command = new Command("soxi -D .temp_audio.wav");
-                    command.execute();
-                    Double audioLength = Double.parseDouble(command.getStream());
-                    command = new Command("ffmpeg -y -f lavfi -i color=c=pink:s=320x240:d=" + audioLength + " -vf \"drawtext=fontfile=fonts/myfont.ttf:fontsize=30: fontcolor=black:x=(w-text_w)/2:y=(h-text_h)/2:text=" + _currentSearch + "\" .temp_video.mp4");
-                    command.execute();
-                    command = new Command("ffmpeg -y -i .temp_audio.wav -i .temp_video.mp4 -c:v copy -c:a aac -strict experimental creations" + System.getProperty("file.separator") + creationName + ".mp4");
-                    command.execute();
-                    return null;
-                }
-
-                @Override
-                protected void done(){
-                    Platform.runLater(() -> infoText.setText("Creation Created!"));
-                }
-
-            });
-
-            creationThread.start();
-        }
-    }
-    */
 }

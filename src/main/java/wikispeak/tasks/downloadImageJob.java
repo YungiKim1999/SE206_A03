@@ -1,4 +1,4 @@
-package wikispeak;
+package wikispeak.tasks;
 
 import com.flickr4java.flickr.Flickr;
 import com.flickr4java.flickr.FlickrException;

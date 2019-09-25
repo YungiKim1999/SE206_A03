@@ -43,7 +43,7 @@ public abstract class ListController extends Controller {
                 }
             }
         }
-        //Collections.sort(results, String.CASE_INSENSITIVE_ORDER);
+        Collections.sort(results, String.CASE_INSENSITIVE_ORDER);
         return results;
     }
 

@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
+import wikispeak.helpers.Command;
 
 import java.io.File;
 import java.io.IOException;

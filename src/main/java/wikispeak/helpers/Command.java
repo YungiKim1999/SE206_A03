@@ -1,4 +1,4 @@
-package wikispeak;
+package wikispeak.helpers;
 
 import java.io.BufferedReader;
 import java.io.IOException;

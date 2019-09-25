@@ -1,4 +1,4 @@
-package wikispeak;
+package wikispeak.tasks;
 
 import javafx.concurrent.Task;
 

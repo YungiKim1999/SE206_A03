@@ -1,4 +1,4 @@
-package wikispeak;
+package wikispeak.helpers;
 
 import com.flickr4java.flickr.Flickr;
 import com.flickr4java.flickr.FlickrException;
@@ -23,6 +23,7 @@ import java.util.concurrent.Executors;
  *
  * note that the download of images is done concurrently with whatever(i assume) is being done. If this is not wanted,
  * then i can make changes to it.
+ * I have commented out the lines of code that causes concurrency just in case.
  *
  */
 public class FlickreImageCreator {
@@ -30,7 +31,7 @@ public class FlickreImageCreator {
     String searchedTerm;
     int numOfImages;
     Flickr flickrObject;
-    private ExecutorService workerTeam = Executors.newSingleThreadExecutor();
+    //private ExecutorService workerTeam = Executors.newSingleThreadExecutor();
 
     public FlickreImageCreator(String searchedTerm, int numOfImages){
         this.numOfImages=numOfImages;
@@ -77,8 +78,39 @@ public class FlickreImageCreator {
 
     //slow part
     public void start(){
-        downloadImageJob getImages = new downloadImageJob(searchedTerm, numOfImages, flickrObject);
-        workerTeam.submit(getImages);
+        try {
+
+            String query = searchedTerm;
+            int resultsPerPage = numOfImages;
+            int page = 0;
+
+            PhotosInterface photos = flickrObject.getPhotosInterface();
+            SearchParameters params = new SearchParameters();
+            params.setSort(SearchParameters.RELEVANCE);
+            params.setMedia("photos");
+            params.setText(query);
+
+            PhotoList<Photo> results = photos.search(params, resultsPerPage, page);
+
+            for (Photo photo: results) {
+                try {
+                    BufferedImage image = photos.getImage(photo, Size.LARGE);
+                    String filename = query.trim().replace(' ', '-')+"-"+System.currentTimeMillis()+"-"+photo.getId()+".jpg";
+                    //you can change the name of the file that the photos are to be outputted by changing "downloads" to whatever~
+                    new File("downloads").mkdir();
+                    File outputfile = new File("downloads",filename);
+
+                    ImageIO.write(image, "jpg", outputfile);
+                    System.out.println("Downloaded "+filename);
+                } catch (FlickrException fe) {
+                    System.err.println("Ignoring image " +photo.getId() +": "+ fe.getMessage());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //downloadImageJob getImages = new downloadImageJob(searchedTerm, numOfImages, flickrObject);
+        //workerTeam.submit(getImages);
     }
     //
 }
