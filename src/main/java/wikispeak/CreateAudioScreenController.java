@@ -9,10 +9,8 @@ import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import wikispeak.helpers.Command;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,7 +28,7 @@ public class CreateAudioScreenController extends Controller{
     @FXML private TextField audioFileNameField;
     @FXML private Button previewButton;
 
-    public void initialize(){
+    public void initialize() throws IOException {
         //listens to changes in the audio file name field
         audioFileNameField.textProperty().addListener((observable, oldValue, newValue) -> {
             updateCreateButtonAccess();
@@ -132,6 +130,9 @@ public class CreateAudioScreenController extends Controller{
                 switchScenes(rootBorderPane, "SearchScreen.fxml");
             }
         }
+        else{
+            switchScenes(rootBorderPane, "SearchScreen.fxml");
+        }
     }
 
     @FXML
@@ -151,8 +152,13 @@ public class CreateAudioScreenController extends Controller{
      * Adds Festival voices to the VoiceSelectionComboBox
      * TODO: make this dynamically search for the voices available
      */
-    private void populateVoiceSelectionBox(){
-        String[] voiceNameArray = {"kal_diphone", "akl_nz_jdt_diphone", "akl_nz_cw_cg_cg"};
+    private void populateVoiceSelectionBox() throws IOException {
+
+        Command command = new Command("ls " +  System.getProperty("file.separator") + "usr" + System.getProperty("file.separator") + "share" + System.getProperty("file.separator") + "festival" + System.getProperty("file.separator") + "voices" + System.getProperty("file.separator") + "english");
+        command.execute();
+
+        String[] voiceNameArray = command.getStream().split("\\s+");
+        System.out.print(voiceNameArray);
         for(int i = 0; i < voiceNameArray.length; i++){
             voiceSelection.getItems().add(voiceNameArray[i]);
         }

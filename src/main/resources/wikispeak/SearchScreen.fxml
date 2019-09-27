@@ -25,7 +25,7 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" />
                      </HBox.margin>
                   </TextField>
-                  <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleSearch" prefHeight="50.0" prefWidth="90.0" text="Enter">
+                  <Button alignment="CENTER" defaultButton="true" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleSearch" prefHeight="50.0" prefWidth="90.0" text="Search">
                      <HBox.margin>
                         <Insets bottom="10.0" right="10.0" />
                      </HBox.margin></Button>
