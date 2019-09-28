@@ -101,7 +101,6 @@ public class FlickreImageCreator {
                     File outputfile = new File("downloads",filename);
 
                     ImageIO.write(image, "jpg", outputfile);
-                    System.out.println("Downloaded "+filename);
                 } catch (FlickrException fe) {
                     System.err.println("Ignoring image " +photo.getId() +": "+ fe.getMessage());
                 }
