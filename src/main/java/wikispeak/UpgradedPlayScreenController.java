@@ -23,46 +23,30 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * The UpgradedPlayScreenController is a better version of the normal "PlayScreenController" where it has the embedded
- * video player as well as other functions in the player which was not in the base model.
- */
+
 public class UpgradedPlayScreenController extends ListController {
 
     ObservableList<String> creationsStrings = FXCollections.observableArrayList(populateList("creations", ".mp4"));
-    String selectedCreation = null;
+    String  selectedCreation = null;
     File fileURL;
 
     private boolean play = false;
     private boolean firsTime;
-    private MediaPlayer creationMediaPlayer = null;
+    private  MediaPlayer creationPlayingThing = null;
 
-    @FXML
-    private Button deleteButton;
-    @FXML
-    private MediaView creationViewer;
-    @FXML
-    private BorderPane rootBorderPane;
-    @FXML
-    private ListView<String> creationList;
-    @FXML
-    private Slider volumeSlider;
-    @FXML
-    private Label timeLabel;
-    @FXML
-    private Label finishTime;
-    @FXML
-    private Button playPauseButton;
-    @FXML
-    private Slider videoBuffer;
-    @FXML
-    private Label listIsEmpty;
+    @FXML private MediaView creationViewer;
+    @FXML private BorderPane rootBorderPane;
+    @FXML private ListView<String> creationList;
+    @FXML private Slider volumeSlider;
+    @FXML private Label timeLabel;
+    @FXML private Label finishTime;
+    @FXML private Button playPauseButton;
+    @FXML private Slider videoBuffer;
+    @FXML private Label listIsEmpty;
     private ExecutorService workerTeam = Executors.newSingleThreadExecutor();
 
     @FXML
-    public void initialize() {
-        playPauseButton.setStyle("-fx-base: rgb(30,170,255);");
-        deleteButton.setStyle("-fx-base: red;");
+    public void initialize(){
         firsTime = true;
         listIsEmpty.setText("There seems to be\nno creation to\nplay/delete");
         creationList.setItems(creationsStrings);
@@ -73,144 +57,127 @@ public class UpgradedPlayScreenController extends ListController {
         creationList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (!creationList.getItems().isEmpty()) {
-                    setEmptyLabelText();
-                    getUserChoice(newValue);
-                    setMediaForPlay();
-                    playMedia();
-                    firsTime = false;
-                    play = true;
-                } else {
-                    setEmptyLabelText();
-                    creationMediaPlayer.dispose();
-                    timeLabel.setText("00:00");
-                    finishTime.setText("00:00");
-                    videoBuffer.setValue(0);
-                }
+                   if(!creationList.getItems().isEmpty()) {
+                       setEmptyLabelText();
+                       getUserChoice(newValue);
+                       setMediaForPlay();
+                       addVideoListener();
+                       addVolumeListener();
+                       playMedia();
+                       firsTime = false;
+                       play = true;
+                   }else {
+                       setEmptyLabelText();
+                       creationPlayingThing.dispose();
+                       timeLabel.setText("00:00");
+                       finishTime.setText("00:00");
+                       videoBuffer.setValue(0);
+                   }
             }
         });
         volumeSlider.setValue(100);
 
     }
 
-    /**
-     * displays a message to the user telling them that there is no creation that has been created
-     */
-    private void setEmptyLabelText() {
-        if (!creationList.getItems().isEmpty()) {
+    private void setEmptyLabelText(){
+        if(!creationList.getItems().isEmpty()) {
             listIsEmpty.setVisible(false);
-        } else {
+        }else{
             listIsEmpty.setVisible(true);
         }
     }
-
-    private void addVolumeListener() {
+    private void addVolumeListener(){
         volumeSlider.valueProperty().addListener(observable -> {
-            creationMediaPlayer.setVolume(volumeSlider.getValue() / 100);
+                creationPlayingThing.setVolume(volumeSlider.getValue() / 100);
         });
     }
-
-    /**
-     * sets the time labels for the video player(current time and how long the video is going to be).
-     * @param newValue
-     */
-    private void setTimeLabels(Duration newValue) {
+    private void setTimeLabels(Duration newVakue){
         String currentTime = "";
-        currentTime += String.format("%02d", (int) newValue.toMinutes());
+        currentTime += String.format("%02d", (int)newVakue.toMinutes());
         currentTime += ":";
-        currentTime += String.format("%02d", (int) newValue.toSeconds() % 60);
+        currentTime += String.format("%02d", (int)newVakue.toSeconds()%60);
         timeLabel.setText(currentTime);
         String stopTime = "";
-        stopTime += String.format("%02d", (int) creationMediaPlayer.getStopTime().toMinutes());
+        stopTime += String.format("%02d", (int)creationPlayingThing.getStopTime().toMinutes());
         stopTime += ":";
-        stopTime += String.format("%02d", (int) creationMediaPlayer.getStopTime().toSeconds() % 60);
+        stopTime += String.format("%02d", (int)creationPlayingThing.getStopTime().toSeconds()%60);
         finishTime.setText(stopTime);
     }
 
     private void addVideoListener() {
-        creationMediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
+        creationPlayingThing.currentTimeProperty().addListener(new ChangeListener<Duration>() {
             @Override
             public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
                 videoBuffer.setMin(0);
-                double endTime = creationMediaPlayer.getStopTime().toMillis();
-                double currentTime = newValue.toMillis();
+                int endTime  =  Integer.parseInt(String.format("%02d", (int)creationPlayingThing.getStopTime().toMillis()));
+                int currentTime =  Integer.parseInt(String.format("%02d",(int)newValue.toMillis()));
                 videoBuffer.setMax(endTime);
                 setTimeLabels(newValue);
                 videoBuffer.setValue(currentTime);
                 videoBuffer.valueProperty().addListener(new InvalidationListener() {
                     @Override
                     public void invalidated(Observable observable) {
-                        if (videoBuffer.isPressed()) {
+                        if(videoBuffer.isPressed()){
                             Duration newTime = new Duration(videoBuffer.getValue());
-                            creationMediaPlayer.seek(newTime);
+                            creationPlayingThing.seek(newTime);
                         }
                     }
                 });
-                creationMediaPlayer.setOnEndOfMedia(new Runnable() {
-                    @Override
-                    public void run() {
-                        creationMediaPlayer.stop();
-                        playPauseButton.setText("Repeat");
-                    }
-                });
+                if(timeLabel.getText().equals(finishTime.getText())){
+                    creationPlayingThing.stop();
+                    playPauseButton.setText("Repeat");
+                }
 
             }
         });
     }
-
     @FXML
-    private void handleExitButton() throws IOException {
-        if (play == true) {
+    private void handleExitButton()throws IOException {
+        if(play == true){
             pauseMedia();
         }
         switchScenes(rootBorderPane, "MainMenu.fxml");
     }
 
-    private void playMedia() {
-        creationMediaPlayer.play();
-        playPauseButton.setText("Pause");
+    private void playMedia(){
+        creationPlayingThing.play();
+        playPauseButton.setText("Play/Pause");
     }
 
-    private void pauseMedia() {
-        creationMediaPlayer.pause();
-        playPauseButton.setText("Play");
+    private void pauseMedia(){
+        creationPlayingThing.pause();
     }
 
-    /**
-     * prepares the media file to be playable in the media viewer
-     */
-    private void setMediaForPlay() {
-        if (!firsTime && creationMediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-            creationMediaPlayer.dispose();
+    private void setMediaForPlay(){
+        if (!firsTime && creationPlayingThing.getStatus() == MediaPlayer.Status.PLAYING){
+            creationPlayingThing.dispose();
         }
-        fileURL = new File("." + System.getProperty("file.separator") + "creations" + System.getProperty("file.separator") + selectedCreation + ".mp4");
+        fileURL =new File("." + System.getProperty("file.separator") +"creations" + System.getProperty("file.separator") + selectedCreation + ".mp4");
         Media playCreation = new Media(fileURL.toURI().toString());
-        creationMediaPlayer = new MediaPlayer(playCreation);
-        creationViewer.setMediaPlayer(creationMediaPlayer);
-        addVideoListener();
-        addVolumeListener();
+        creationPlayingThing = new MediaPlayer(playCreation);
+        creationViewer.setMediaPlayer(creationPlayingThing);
     }
 
-    private void getUserChoice(String selection) {
+    private void getUserChoice(String selection){
         selectedCreation = selection;
     }
 
-    /**
-     * handles the situation where the user would like to start/stop or repeat the creation again.
-     */
+
     @FXML
-    private void handlePlayPauseButton() {
-        if (!firsTime && !creationList.getItems().isEmpty()) {
-            if (playPauseButton.getText().equals("Repeat")) {
-                creationMediaPlayer.stop();
+    private void handlePlayPauseButton(){
+        if(!firsTime && !creationList.getItems().isEmpty()) {
+            if(playPauseButton.getText().equals("Repeat")){
+                creationPlayingThing.stop();
                 selectedCreation = creationList.getSelectionModel().getSelectedItem();
                 setMediaForPlay();
                 playMedia();
+                addVideoListener();
+                addVolumeListener();
                 play = true;
-            } else if (creationMediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            } else if (creationPlayingThing.getStatus() == MediaPlayer.Status.PLAYING) {
                 pauseMedia();
                 play = false;
-            } else if (creationMediaPlayer.getStatus() == MediaPlayer.Status.PAUSED) {
+            } else if (creationPlayingThing.getStatus() == MediaPlayer.Status.PAUSED) {
                 playMedia();
                 play = true;
 
@@ -219,8 +186,8 @@ public class UpgradedPlayScreenController extends ListController {
     }
 
     @FXML
-    private void handleDeleteButton() {
-        if (selectedCreation != null && !creationList.getItems().isEmpty()) {
+    private void handleDeleteButton(){
+        if(selectedCreation != null && !creationList.getItems().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete \"" + selectedCreation + "\"?");
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             Optional<ButtonType> result = alert.showAndWait();
@@ -229,22 +196,21 @@ public class UpgradedPlayScreenController extends ListController {
                 workerTeam.submit(deleteSelected);
                 creationList.getItems().remove(selectedCreation);
                 setEmptyLabelText();
-
             }
         }
     }
 
     @FXML
-    private void handleForwardButton() {
-        if (play) {
-            creationMediaPlayer.seek(creationMediaPlayer.getCurrentTime().add(Duration.seconds(2)));
+    private void handleForwardButton(){
+        if(play){
+            creationPlayingThing.seek(creationPlayingThing.getCurrentTime().add(Duration.seconds(2)));
         }
     }
 
     @FXML
-    private void handleBackButton() {
-        if (play) {
-            creationMediaPlayer.seek(creationMediaPlayer.getCurrentTime().subtract(Duration.seconds(2)));
+    private void handleBackButton(){
+        if(play){
+            creationPlayingThing.seek(creationPlayingThing.getCurrentTime().subtract(Duration.seconds(2)));
         }
     }
 }

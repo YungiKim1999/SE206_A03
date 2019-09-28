@@ -16,7 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 import wikispeak.helpers.Command;
-import wikispeak.tasks.creationJob;
+import wikispeak.tasks.mergeAudioFileJob;
 
 import java.io.IOException;
 import java.util.LinkedHashSet;
@@ -27,15 +27,13 @@ import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CombineAudioScreenController extends ListController {
+public class SelectAudioController extends ListController {
 
     @FXML private BorderPane rootBorderPane;
     @FXML private VBox audioListBox;
-    @FXML private ComboBox numberSelection;
     @FXML private Text audioFileInfoText;
     @FXML private Button creationButton;
     @FXML private TextField creationNameField;
-    @FXML private ProgressBar progressBar;
 
     private ExecutorService team = Executors.newCachedThreadPool();
 
@@ -77,7 +75,6 @@ public class CombineAudioScreenController extends ListController {
         else{
             audioListBox.getChildren().add(listView);
         }
-        populateImageNumberSelectionBox();
 
         //listens to changes in the creation file name field
         creationNameField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -102,42 +99,38 @@ public class CombineAudioScreenController extends ListController {
     }
 
     @FXML
-    private void handleNumberSelection(){
-        updateCreateButtonAccess();
-    }
-
-    @FXML
-    private void handleCreateCreation(){
+    private void handleNext(){
 
         String creationName = creationNameField.getText();
 
         if(nameIsValid(creationName)){
 
-            //get current search term and number of images
-            Command command = new Command("cat .temp_searchterm.txt");
+            Command command = new Command("echo \"" + creationName + "\" > .temp_creationName.txt");
             command.execute();
-            String searchTerm = command.getStream();
-
-            int number = (Integer)numberSelection.getValue();
 
             //make a String of audiofile names
             String audioFileList = "";
-            for(CombineAudioScreenController.SelectableFile file : _selectedFiles){
+            for(SelectAudioController.SelectableFile file : _selectedFiles){
                 audioFileList = audioFileList + " audio" + System.getProperty("file.separator") + file.toString() + ".wav";
             }
 
             //start the task
-            creationJob createCreation = new creationJob(searchTerm, number, audioFileList, creationName);
-            progressBar.progressProperty().bind(createCreation.progressProperty());
-            createCreation.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            mergeAudioFileJob getFullAudio = new mergeAudioFileJob(audioFileList);
+            //creationJob createCreation = new creationJob(searchTerm, number, audioFileList, creationName);
+            //progressBar.progressProperty().bind(createCreation.progressProperty());
+            getFullAudio.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                 @Override
                 public void handle(WorkerStateEvent workerStateEvent) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Creation " + creationName + " finished!");
-                    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-                    Optional<ButtonType> result = alert.showAndWait();
+                    try {
+                        switchScenes(rootBorderPane, "ImageSelectionScreen.fxml");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
-            team.submit(createCreation);
+
+            team.submit(getFullAudio);
+
         }
     }
 
@@ -169,17 +162,12 @@ public class CombineAudioScreenController extends ListController {
      * Button is disabled if there are no selected audio files OR no number has been selected OR no creation name has been entered
      */
     private void updateCreateButtonAccess(){
-        creationButton.setDisable(_selectedFiles.isEmpty() || numberSelection.getValue() == null || creationNameField.getText().isEmpty());
+        creationButton.setDisable(_selectedFiles.isEmpty()|| creationNameField.getText().isEmpty());
     }
 
     /**
      * Adds numbers 1 to 10 to the combobox
      */
-    private void populateImageNumberSelectionBox(){
-        for(int i = 1; i <= 10; i++){
-            numberSelection.getItems().add(i);
-        }
-    }
 
     /**
      * Checks if the given filename doesn't contain forbidden characters

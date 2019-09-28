@@ -2,21 +2,18 @@ package wikispeak;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import wikispeak.helpers.Command;
-import wikispeak.tasks.previewJob;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,8 +22,6 @@ import java.util.regex.Pattern;
  */
 public class CreateAudioScreenController extends Controller{
 
-    private ExecutorService workingUnit = Executors.newSingleThreadExecutor();
-    Thread previewVoiceThread;
     @FXML private BorderPane rootBorderPane;
     @FXML private TextArea textOutput;
     @FXML private ComboBox voiceSelection;
@@ -56,6 +51,7 @@ public class CreateAudioScreenController extends Controller{
 
     @FXML
     private void handlePreview() throws InterruptedException, IOException {
+
         String selectedVoice = (String)voiceSelection.getValue();
         String textSelection = textOutput.getSelectedText();
         if(!correctTextSelection(textSelection)){
@@ -75,8 +71,8 @@ public class CreateAudioScreenController extends Controller{
                 return null;
             }
         });
-        previewVoiceThread.start();
 
+        previewVoiceThread.start();
     }
 
     @FXML
@@ -95,6 +91,7 @@ public class CreateAudioScreenController extends Controller{
                 protected Void call() throws Exception {
                     Command command = new Command("echo \"" + textSelection + "\" | text2wave -eval \"(voice_" + selectedVoice + ")\" -o audio" + System.getProperty("file.separator") + audioFileName + ".wav");
                     command.execute();
+                    System.out.println(command.getStream());
                     return null;
                 }
 
@@ -150,7 +147,8 @@ public class CreateAudioScreenController extends Controller{
         String text = textOutput.getText();
         Command command = new Command("echo \"" + text + "\" > .temp_text.txt");
         command.execute();
-        switchScenes(rootBorderPane, "CombineAudioScreen.fxml");
+       // switchScenes(rootBorderPane, "CombineAudioScreen.fxml");
+        switchScenes(rootBorderPane, "SelectAudioScreen.fxml");
     }
 
     /**

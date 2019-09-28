@@ -30,7 +30,6 @@ public class creationJob extends Task<Void> {
         updateProgress(0, 7);
 
         //delete any existing images
-        new File("downloads").mkdir();
         for (File file : new File("downloads").listFiles()){
             file.delete();
         }
@@ -61,12 +60,12 @@ public class creationJob extends Task<Void> {
 
         //make the video
         //TODO: check the output resolution is the same as the resolution of the video player
-        command = new Command("ffmpeg -framerate " + framerate + " -pattern_type glob -i 'downloads/*.jpg' -vf \"scale=414:312, drawtext=fontfile=fonts/myfont.ttf:fontsize=100: fontcolor=black:x=(w-text_w)/2:y=(h-text_h)/2:text=" + _searchTerm + "\" -r 25 .temp_video.mp4");
+        command = new Command("ffmpeg -framerate " + framerate + " -pattern_type glob -i 'downloads/*.jpg' -vf \"scale=414:312, drawtext=fontfile=fonts/myfont.ttf:fontsize=100: fontcolor=black:x=(w-text_w)/2:y=(h-text_h)/2:text=" + _searchTerm + "\" .temp_video.mp4");
         command.execute();
 
         updateProgress(6, 7);
 
-        //make the creation: combine audio and video
+                //make the creation: combine audio and video
         command = new Command("ffmpeg -y -i .temp_audio.wav -i .temp_video.mp4 -c:v copy -c:a aac -strict experimental creations" + System.getProperty("file.separator") + _creationName + ".mp4");
         command.execute();
 

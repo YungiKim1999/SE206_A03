@@ -1,12 +1,7 @@
 package wikispeak;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 
@@ -26,6 +21,10 @@ public class MainMenuController extends Controller {
     @FXML
     private void handlePlay() throws IOException {
         switchScenes(rootBorderPane,"UpgradedPlayScreen.fxml");
+    }
+    @FXML
+    private void handleTryButton() throws IOException{
+            switchScenes(rootBorderPane, "ImageSelectionScreen.fxml");
     }
 
 }
