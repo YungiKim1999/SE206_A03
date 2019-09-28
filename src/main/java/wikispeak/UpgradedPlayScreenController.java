@@ -27,26 +27,35 @@ import java.util.concurrent.Executors;
 public class UpgradedPlayScreenController extends ListController {
 
     ObservableList<String> creationsStrings = FXCollections.observableArrayList(populateList("creations", ".mp4"));
-    String  selectedCreation = null;
+    String selectedCreation = null;
     File fileURL;
 
     private boolean play = false;
     private boolean firsTime;
-    private  MediaPlayer creationPlayingThing = null;
+    private MediaPlayer creationPlayingThing = null;
 
-    @FXML private MediaView creationViewer;
-    @FXML private BorderPane rootBorderPane;
-    @FXML private ListView<String> creationList;
-    @FXML private Slider volumeSlider;
-    @FXML private Label timeLabel;
-    @FXML private Label finishTime;
-    @FXML private Button playPauseButton;
-    @FXML private Slider videoBuffer;
-    @FXML private Label listIsEmpty;
+    @FXML
+    private MediaView creationViewer;
+    @FXML
+    private BorderPane rootBorderPane;
+    @FXML
+    private ListView<String> creationList;
+    @FXML
+    private Slider volumeSlider;
+    @FXML
+    private Label timeLabel;
+    @FXML
+    private Label finishTime;
+    @FXML
+    private Button playPauseButton;
+    @FXML
+    private Slider videoBuffer;
+    @FXML
+    private Label listIsEmpty;
     private ExecutorService workerTeam = Executors.newSingleThreadExecutor();
 
     @FXML
-    public void initialize(){
+    public void initialize() {
         firsTime = true;
         listIsEmpty.setText("There seems to be\nno creation to\nplay/delete");
         creationList.setItems(creationsStrings);
@@ -57,50 +66,50 @@ public class UpgradedPlayScreenController extends ListController {
         creationList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                   if(!creationList.getItems().isEmpty()) {
-                       setEmptyLabelText();
-                       getUserChoice(newValue);
-                       setMediaForPlay();
-                       addVideoListener();
-                       addVolumeListener();
-                       playMedia();
-                       firsTime = false;
-                       play = true;
-                   }else {
-                       setEmptyLabelText();
-                       creationPlayingThing.dispose();
-                       timeLabel.setText("00:00");
-                       finishTime.setText("00:00");
-                       videoBuffer.setValue(0);
-                   }
+                if (!creationList.getItems().isEmpty()) {
+                    setEmptyLabelText();
+                    getUserChoice(newValue);
+                    setMediaForPlay();
+                    playMedia();
+                    firsTime = false;
+                    play = true;
+                } else {
+                    setEmptyLabelText();
+                    creationPlayingThing.dispose();
+                    timeLabel.setText("00:00");
+                    finishTime.setText("00:00");
+                    videoBuffer.setValue(0);
+                }
             }
         });
         volumeSlider.setValue(100);
 
     }
 
-    private void setEmptyLabelText(){
-        if(!creationList.getItems().isEmpty()) {
+    private void setEmptyLabelText() {
+        if (!creationList.getItems().isEmpty()) {
             listIsEmpty.setVisible(false);
-        }else{
+        } else {
             listIsEmpty.setVisible(true);
         }
     }
-    private void addVolumeListener(){
+
+    private void addVolumeListener() {
         volumeSlider.valueProperty().addListener(observable -> {
-                creationPlayingThing.setVolume(volumeSlider.getValue() / 100);
+            creationPlayingThing.setVolume(volumeSlider.getValue() / 100);
         });
     }
-    private void setTimeLabels(Duration newVakue){
+
+    private void setTimeLabels(Duration newVakue) {
         String currentTime = "";
-        currentTime += String.format("%02d", (int)newVakue.toMinutes());
+        currentTime += String.format("%02d", (int) newVakue.toMinutes());
         currentTime += ":";
-        currentTime += String.format("%02d", (int)newVakue.toSeconds()%60);
+        currentTime += String.format("%02d", (int) newVakue.toSeconds() % 60);
         timeLabel.setText(currentTime);
         String stopTime = "";
-        stopTime += String.format("%02d", (int)creationPlayingThing.getStopTime().toMinutes());
+        stopTime += String.format("%02d", (int) creationPlayingThing.getStopTime().toMinutes());
         stopTime += ":";
-        stopTime += String.format("%02d", (int)creationPlayingThing.getStopTime().toSeconds()%60);
+        stopTime += String.format("%02d", (int) creationPlayingThing.getStopTime().toSeconds() % 60);
         finishTime.setText(stopTime);
     }
 
@@ -109,70 +118,74 @@ public class UpgradedPlayScreenController extends ListController {
             @Override
             public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
                 videoBuffer.setMin(0);
-                int endTime  =  Integer.parseInt(String.format("%02d", (int)creationPlayingThing.getStopTime().toMillis()));
-                int currentTime =  Integer.parseInt(String.format("%02d",(int)newValue.toMillis()));
+                double endTime = creationPlayingThing.getStopTime().toMillis();
+                double currentTime = newValue.toMillis();
                 videoBuffer.setMax(endTime);
                 setTimeLabels(newValue);
                 videoBuffer.setValue(currentTime);
                 videoBuffer.valueProperty().addListener(new InvalidationListener() {
                     @Override
                     public void invalidated(Observable observable) {
-                        if(videoBuffer.isPressed()){
+                        if (videoBuffer.isPressed()) {
                             Duration newTime = new Duration(videoBuffer.getValue());
                             creationPlayingThing.seek(newTime);
                         }
                     }
                 });
-                if(timeLabel.getText().equals(finishTime.getText())){
-                    creationPlayingThing.stop();
-                    playPauseButton.setText("Repeat");
-                }
+                creationPlayingThing.setOnEndOfMedia(new Runnable() {
+                    @Override
+                    public void run() {
+                        creationPlayingThing.stop();
+                        playPauseButton.setText("Repeat");
+                    }
+                });
 
             }
         });
     }
+
     @FXML
-    private void handleExitButton()throws IOException {
-        if(play == true){
+    private void handleExitButton() throws IOException {
+        if (play == true) {
             pauseMedia();
         }
         switchScenes(rootBorderPane, "MainMenu.fxml");
     }
 
-    private void playMedia(){
+    private void playMedia() {
         creationPlayingThing.play();
         playPauseButton.setText("Play/Pause");
     }
 
-    private void pauseMedia(){
+    private void pauseMedia() {
         creationPlayingThing.pause();
     }
 
-    private void setMediaForPlay(){
-        if (!firsTime && creationPlayingThing.getStatus() == MediaPlayer.Status.PLAYING){
+    private void setMediaForPlay() {
+        if (!firsTime && creationPlayingThing.getStatus() == MediaPlayer.Status.PLAYING) {
             creationPlayingThing.dispose();
         }
-        fileURL =new File("." + System.getProperty("file.separator") +"creations" + System.getProperty("file.separator") + selectedCreation + ".mp4");
+        fileURL = new File("." + System.getProperty("file.separator") + "creations" + System.getProperty("file.separator") + selectedCreation + ".mp4");
         Media playCreation = new Media(fileURL.toURI().toString());
         creationPlayingThing = new MediaPlayer(playCreation);
         creationViewer.setMediaPlayer(creationPlayingThing);
+        addVideoListener();
+        addVolumeListener();
     }
 
-    private void getUserChoice(String selection){
+    private void getUserChoice(String selection) {
         selectedCreation = selection;
     }
 
 
     @FXML
-    private void handlePlayPauseButton(){
-        if(!firsTime && !creationList.getItems().isEmpty()) {
-            if(playPauseButton.getText().equals("Repeat")){
+    private void handlePlayPauseButton() {
+        if (!firsTime && !creationList.getItems().isEmpty()) {
+            if (playPauseButton.getText().equals("Repeat")) {
                 creationPlayingThing.stop();
                 selectedCreation = creationList.getSelectionModel().getSelectedItem();
                 setMediaForPlay();
                 playMedia();
-                addVideoListener();
-                addVolumeListener();
                 play = true;
             } else if (creationPlayingThing.getStatus() == MediaPlayer.Status.PLAYING) {
                 pauseMedia();
@@ -186,8 +199,8 @@ public class UpgradedPlayScreenController extends ListController {
     }
 
     @FXML
-    private void handleDeleteButton(){
-        if(selectedCreation != null && !creationList.getItems().isEmpty()) {
+    private void handleDeleteButton() {
+        if (selectedCreation != null && !creationList.getItems().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete \"" + selectedCreation + "\"?");
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             Optional<ButtonType> result = alert.showAndWait();
@@ -201,15 +214,15 @@ public class UpgradedPlayScreenController extends ListController {
     }
 
     @FXML
-    private void handleForwardButton(){
-        if(play){
+    private void handleForwardButton() {
+        if (play) {
             creationPlayingThing.seek(creationPlayingThing.getCurrentTime().add(Duration.seconds(2)));
         }
     }
 
     @FXML
-    private void handleBackButton(){
-        if(play){
+    private void handleBackButton() {
+        if (play) {
             creationPlayingThing.seek(creationPlayingThing.getCurrentTime().subtract(Duration.seconds(2)));
         }
     }
