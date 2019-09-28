@@ -2,16 +2,21 @@ package wikispeak;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import wikispeak.helpers.Command;
+import wikispeak.tasks.previewJob;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,6 +25,8 @@ import java.util.regex.Pattern;
  */
 public class CreateAudioScreenController extends Controller{
 
+    private ExecutorService workingUnit = Executors.newSingleThreadExecutor();
+    Thread previewVoiceThread;
     @FXML private BorderPane rootBorderPane;
     @FXML private TextArea textOutput;
     @FXML private ComboBox voiceSelection;
@@ -49,7 +56,6 @@ public class CreateAudioScreenController extends Controller{
 
     @FXML
     private void handlePreview() throws InterruptedException, IOException {
-
         String selectedVoice = (String)voiceSelection.getValue();
         String textSelection = textOutput.getSelectedText();
         if(!correctTextSelection(textSelection)){
@@ -69,8 +75,8 @@ public class CreateAudioScreenController extends Controller{
                 return null;
             }
         });
-
         previewVoiceThread.start();
+
     }
 
     @FXML

@@ -23,7 +23,10 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
+/**
+ * The UpgradedPlayScreenController is a better version of the normal "PlayScreenController" where it has the embedded
+ * video player as well as other functions in the player which was not in the base model.
+ */
 public class UpgradedPlayScreenController extends ListController {
 
     ObservableList<String> creationsStrings = FXCollections.observableArrayList(populateList("creations", ".mp4"));
@@ -32,8 +35,10 @@ public class UpgradedPlayScreenController extends ListController {
 
     private boolean play = false;
     private boolean firsTime;
-    private MediaPlayer creationPlayingThing = null;
+    private MediaPlayer creationMediaPlayer = null;
 
+    @FXML
+    private Button deleteButton;
     @FXML
     private MediaView creationViewer;
     @FXML
@@ -56,6 +61,8 @@ public class UpgradedPlayScreenController extends ListController {
 
     @FXML
     public void initialize() {
+        playPauseButton.setStyle("-fx-base: rgb(30,170,255);");
+        deleteButton.setStyle("-fx-base: red;");
         firsTime = true;
         listIsEmpty.setText("There seems to be\nno creation to\nplay/delete");
         creationList.setItems(creationsStrings);
@@ -75,7 +82,7 @@ public class UpgradedPlayScreenController extends ListController {
                     play = true;
                 } else {
                     setEmptyLabelText();
-                    creationPlayingThing.dispose();
+                    creationMediaPlayer.dispose();
                     timeLabel.setText("00:00");
                     finishTime.setText("00:00");
                     videoBuffer.setValue(0);
@@ -86,6 +93,9 @@ public class UpgradedPlayScreenController extends ListController {
 
     }
 
+    /**
+     * displays a message to the user telling them that there is no creation that has been created
+     */
     private void setEmptyLabelText() {
         if (!creationList.getItems().isEmpty()) {
             listIsEmpty.setVisible(false);
@@ -96,29 +106,33 @@ public class UpgradedPlayScreenController extends ListController {
 
     private void addVolumeListener() {
         volumeSlider.valueProperty().addListener(observable -> {
-            creationPlayingThing.setVolume(volumeSlider.getValue() / 100);
+            creationMediaPlayer.setVolume(volumeSlider.getValue() / 100);
         });
     }
 
-    private void setTimeLabels(Duration newVakue) {
+    /**
+     * sets the time labels for the video player(current time and how long the video is going to be).
+     * @param newValue
+     */
+    private void setTimeLabels(Duration newValue) {
         String currentTime = "";
-        currentTime += String.format("%02d", (int) newVakue.toMinutes());
+        currentTime += String.format("%02d", (int) newValue.toMinutes());
         currentTime += ":";
-        currentTime += String.format("%02d", (int) newVakue.toSeconds() % 60);
+        currentTime += String.format("%02d", (int) newValue.toSeconds() % 60);
         timeLabel.setText(currentTime);
         String stopTime = "";
-        stopTime += String.format("%02d", (int) creationPlayingThing.getStopTime().toMinutes());
+        stopTime += String.format("%02d", (int) creationMediaPlayer.getStopTime().toMinutes());
         stopTime += ":";
-        stopTime += String.format("%02d", (int) creationPlayingThing.getStopTime().toSeconds() % 60);
+        stopTime += String.format("%02d", (int) creationMediaPlayer.getStopTime().toSeconds() % 60);
         finishTime.setText(stopTime);
     }
 
     private void addVideoListener() {
-        creationPlayingThing.currentTimeProperty().addListener(new ChangeListener<Duration>() {
+        creationMediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
             @Override
             public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
                 videoBuffer.setMin(0);
-                double endTime = creationPlayingThing.getStopTime().toMillis();
+                double endTime = creationMediaPlayer.getStopTime().toMillis();
                 double currentTime = newValue.toMillis();
                 videoBuffer.setMax(endTime);
                 setTimeLabels(newValue);
@@ -128,14 +142,14 @@ public class UpgradedPlayScreenController extends ListController {
                     public void invalidated(Observable observable) {
                         if (videoBuffer.isPressed()) {
                             Duration newTime = new Duration(videoBuffer.getValue());
-                            creationPlayingThing.seek(newTime);
+                            creationMediaPlayer.seek(newTime);
                         }
                     }
                 });
-                creationPlayingThing.setOnEndOfMedia(new Runnable() {
+                creationMediaPlayer.setOnEndOfMedia(new Runnable() {
                     @Override
                     public void run() {
-                        creationPlayingThing.stop();
+                        creationMediaPlayer.stop();
                         playPauseButton.setText("Repeat");
                     }
                 });
@@ -153,22 +167,26 @@ public class UpgradedPlayScreenController extends ListController {
     }
 
     private void playMedia() {
-        creationPlayingThing.play();
-        playPauseButton.setText("Play/Pause");
+        creationMediaPlayer.play();
+        playPauseButton.setText("Pause");
     }
 
     private void pauseMedia() {
-        creationPlayingThing.pause();
+        creationMediaPlayer.pause();
+        playPauseButton.setText("Play");
     }
 
+    /**
+     * prepares the media file to be playable in the media viewer
+     */
     private void setMediaForPlay() {
-        if (!firsTime && creationPlayingThing.getStatus() == MediaPlayer.Status.PLAYING) {
-            creationPlayingThing.dispose();
+        if (!firsTime && creationMediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            creationMediaPlayer.dispose();
         }
         fileURL = new File("." + System.getProperty("file.separator") + "creations" + System.getProperty("file.separator") + selectedCreation + ".mp4");
         Media playCreation = new Media(fileURL.toURI().toString());
-        creationPlayingThing = new MediaPlayer(playCreation);
-        creationViewer.setMediaPlayer(creationPlayingThing);
+        creationMediaPlayer = new MediaPlayer(playCreation);
+        creationViewer.setMediaPlayer(creationMediaPlayer);
         addVideoListener();
         addVolumeListener();
     }
@@ -177,20 +195,22 @@ public class UpgradedPlayScreenController extends ListController {
         selectedCreation = selection;
     }
 
-
+    /**
+     * handles the situation where the user would like to start/stop or repeat the creation again.
+     */
     @FXML
     private void handlePlayPauseButton() {
         if (!firsTime && !creationList.getItems().isEmpty()) {
             if (playPauseButton.getText().equals("Repeat")) {
-                creationPlayingThing.stop();
+                creationMediaPlayer.stop();
                 selectedCreation = creationList.getSelectionModel().getSelectedItem();
                 setMediaForPlay();
                 playMedia();
                 play = true;
-            } else if (creationPlayingThing.getStatus() == MediaPlayer.Status.PLAYING) {
+            } else if (creationMediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
                 pauseMedia();
                 play = false;
-            } else if (creationPlayingThing.getStatus() == MediaPlayer.Status.PAUSED) {
+            } else if (creationMediaPlayer.getStatus() == MediaPlayer.Status.PAUSED) {
                 playMedia();
                 play = true;
 
@@ -209,6 +229,7 @@ public class UpgradedPlayScreenController extends ListController {
                 workerTeam.submit(deleteSelected);
                 creationList.getItems().remove(selectedCreation);
                 setEmptyLabelText();
+
             }
         }
     }
@@ -216,14 +237,14 @@ public class UpgradedPlayScreenController extends ListController {
     @FXML
     private void handleForwardButton() {
         if (play) {
-            creationPlayingThing.seek(creationPlayingThing.getCurrentTime().add(Duration.seconds(2)));
+            creationMediaPlayer.seek(creationMediaPlayer.getCurrentTime().add(Duration.seconds(2)));
         }
     }
 
     @FXML
     private void handleBackButton() {
         if (play) {
-            creationPlayingThing.seek(creationPlayingThing.getCurrentTime().subtract(Duration.seconds(2)));
+            creationMediaPlayer.seek(creationMediaPlayer.getCurrentTime().subtract(Duration.seconds(2)));
         }
     }
 }
