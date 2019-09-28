@@ -89,7 +89,6 @@ public class CreateAudioScreenController extends Controller{
                 protected Void call() throws Exception {
                     Command command = new Command("echo \"" + textSelection + "\" | text2wave -eval \"(voice_" + selectedVoice + ")\" -o audio" + System.getProperty("file.separator") + audioFileName + ".wav");
                     command.execute();
-                    System.out.println(command.getStream());
                     return null;
                 }
 
@@ -158,7 +157,6 @@ public class CreateAudioScreenController extends Controller{
         command.execute();
 
         String[] voiceNameArray = command.getStream().split("\\s+");
-        System.out.print(voiceNameArray);
         for(int i = 0; i < voiceNameArray.length; i++){
             voiceSelection.getItems().add(voiceNameArray[i]);
         }
