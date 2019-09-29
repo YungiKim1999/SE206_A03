@@ -60,7 +60,7 @@ public class creationJob extends Task<Void> {
         updateProgress(5, 7);
 
         //make the video
-        command = new Command("cat downloads" + System.getProperty("file.separator") + "*.jpg | ffmpeg -f image2pipe -framerate " + framerate + " -i - -vf \"scale=414:312, drawtext=fontfile=fonts/myfont.ttf:fontsize=50: fontcolor=black:x=(w-text_w)/2:y=(h-text_h)/2:text=" + _searchTerm + "\" -r 25 -y .temp_video.mp4");
+        command = new Command("cat downloads" + System.getProperty("file.separator") + "*.jpg | ffmpeg -f image2pipe -framerate " + framerate + " -i - -vf \"scale=414:312, drawtext=fontsize=50:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:shadowcolor=black:shadowx=2:shadowy=2:text=" + _searchTerm + "\" -r 25 -y .temp_video.mp4");
         command.execute();
 
         updateProgress(6, 7);
