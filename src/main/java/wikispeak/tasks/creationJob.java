@@ -51,16 +51,16 @@ public class creationJob extends Task<Void> {
 
         updateProgress(4, 7);
 
-        //calculate duration for each image in slideshow, given audio duration
+        //calculate duration for each image in slideshow, given audio duration and number of imeages
         command = new Command("soxi -D .temp_audio.wav");
         command.execute();
-        double duration = Double.parseDouble(command.getStream());
-        Double framerate = (_numberOfImages/duration);
+        double audioDuration = Double.parseDouble(command.getStream());
+        Double framerate = (_numberOfImages/audioDuration);
 
         updateProgress(5, 7);
 
         //make the video
-        command = new Command("ffmpeg -framerate " + framerate + " -pattern_type glob -i 'downloads/*.jpg' -vf \"scale=414:312, drawtext=fontfile=fonts/myfont.ttf:fontsize=50: fontcolor=black:x=(w-text_w)/2:y=(h-text_h)/2:text=" + _searchTerm + "\" -r 25 .temp_video.mp4");
+        command = new Command("cat downloads" + System.getProperty("file.separator") + "*.jpg | ffmpeg -f image2pipe -framerate " + framerate + " -i - -vf \"scale=414:312, drawtext=fontfile=fonts/myfont.ttf:fontsize=50: fontcolor=black:x=(w-text_w)/2:y=(h-text_h)/2:text=" + _searchTerm + "\" -r 25 -y .temp_video.mp4");
         command.execute();
 
         updateProgress(6, 7);
