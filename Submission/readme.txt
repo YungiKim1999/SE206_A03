@@ -1,5 +1,4 @@
-# SE206_A03
-The shared repo for SOFTENG 206 Assignment 3 - GROUP 33 Daniel Kim and Denise Jarry
+SOFTENG 206 Assignment 3 - GROUP 33 Daniel Kim and Denise Jarry
 
 ~~~RUN ON UPDATED VIRTUALBOX LINUX IMAGE~~~
 
@@ -19,3 +18,7 @@ chmod +x VARPedia_Group33_runscript.sh
 Execute the java application by running:
 
 ./VARPedia_Group33_runscript.sh
+
+
+
+

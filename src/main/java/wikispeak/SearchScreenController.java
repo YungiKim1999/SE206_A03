@@ -3,6 +3,7 @@ package wikispeak;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
@@ -16,12 +17,17 @@ public class SearchScreenController extends Controller {
     @FXML private BorderPane rootBorderPane;
     @FXML private TextField searchField;
     @FXML private Text infoText;
+    @FXML private Button searchButton;
 
     /**
      * Initial clean-up.
      * The user deals with a fresh set of audio files for each creation
      */
     public void initialize(){
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            //Search button is not available if the textField is empty
+            searchButton.setDisable(newValue.isEmpty());
+        });
         for (File file : new File("audio").listFiles()){
             file.delete();
         }

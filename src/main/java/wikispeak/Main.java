@@ -12,9 +12,12 @@ import java.io.IOException;
 public class Main extends Application {
 
     @Override
+    //TODO: these mkdir() should be added JUST before the folder is used in case the user deletes them halfway through
+    //TODO: research "you can't delete this because it is in use" protection to stop the user deleting stuff
     public void start(Stage primaryStage) {
         new File("creations").mkdir();
         new File("audio").mkdir();
+        new File("downloads").mkdir();
         try{
             //Load in and display the Home screen (Main Menu)
             FXMLLoader loader = new FXMLLoader();
@@ -43,6 +46,16 @@ public class Main extends Application {
         file = new File(".temp_audio.wav");
         file.delete();
         file = new File(".temp_searchterm.txt");
+        file.delete();
+        file = new File("audio");
+        for (File insideFile : file.listFiles()){
+            insideFile.delete();
+        }
+        file.delete();
+        file = new File("downloads");
+        for (File insideFile : file.listFiles()){
+            insideFile.delete();
+        }
         file.delete();
     }
 

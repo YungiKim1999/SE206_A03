@@ -9,7 +9,7 @@
 
 <BorderPane fx:id="rootBorderPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wikispeak.MainMenuController">
    <center>
-      <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" prefHeight="366.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
             <Button mnemonicParsing="false" onAction="#handleCreate" prefHeight="50.0" prefWidth="400.0" text="Create a New Creation">
                <VBox.margin>
@@ -29,12 +29,12 @@
       </VBox>
    </center>
    <top>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to the Wiki-Speak Authoring Tool" textAlignment="CENTER" wrappingWidth="600.0" BorderPane.alignment="CENTER">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to VARPedia" textAlignment="CENTER" wrappingWidth="600.0" BorderPane.alignment="CENTER">
          <font>
             <Font size="40.0" />
          </font>
          <BorderPane.margin>
-            <Insets top="20.0" />
+            <Insets top="30.0" />
          </BorderPane.margin>
       </Text>
    </top>
