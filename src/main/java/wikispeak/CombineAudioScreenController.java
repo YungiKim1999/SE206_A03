@@ -96,7 +96,13 @@ public class CombineAudioScreenController extends ListController {
 
     @FXML
     private void handleMainMenu() throws IOException {
-        switchScenes(rootBorderPane, "MainMenu.fxml");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to go to Main Menu?\nAny progress will be lost.");
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            //only switch scene after confirmation
+            switchScenes(rootBorderPane, "MainMenu.fxml");
+        }
     }
 
     @FXML

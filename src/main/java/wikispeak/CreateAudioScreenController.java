@@ -10,7 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import wikispeak.helpers.Command;
-import wikispeak.tasks.previewJob;
+//import wikispeak.tasks.previewJob;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -127,7 +127,7 @@ public class CreateAudioScreenController extends Controller{
      */
     private void handleBackToSearch() throws IOException {
         if(new File("audio").listFiles().length > 0) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Any audio files you have created will be deleted.\nAre you sure you want to go back?");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to go back?\nAny audio files created will be lost.");
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -155,7 +155,6 @@ public class CreateAudioScreenController extends Controller{
 
     /**
      * Adds Festival voices to the VoiceSelectionComboBox
-     * TODO: make this dynamically search for the voices available
      */
     private void populateVoiceSelectionBox() throws IOException {
 
