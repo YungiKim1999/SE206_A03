@@ -14,17 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * How to use this thing:
- *
- * you create an object of "FlickreImageCreator" with the searched term you want images of(as a string) and the number of
- * images that you want.
- *
- * then, you should "start();" the object.
- *
- * note that the download of images is done concurrently with whatever(i assume) is being done. If this is not wanted,
- * then i can make changes to it.
- * I have commented out the lines of code that causes concurrency just in case.
- *
+ *This class packages the Flickr api so that it is easy to use.
  */
 public class FlickreImageCreator {
 
@@ -45,13 +35,9 @@ public class FlickreImageCreator {
         }
     }
 
-
     /**
-     * in order for this function to work, the there needs to be a text file called "flickr-api-keys.txt"
-     * its included here so there should be no worries
-     * if not included, message me and ill give it to you with the codes
-     *
-     *
+     * In order to use this method properly, the keys api key as well as the shared secret key should be in the
+     * "flickr-api-keys.txt"
      * @param key
      * @return
      * @throws Exception
@@ -108,8 +94,6 @@ public class FlickreImageCreator {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //downloadImageJob getImages = new downloadImageJob(searchedTerm, numOfImages, flickrObject);
-        //workerTeam.submit(getImages);
     }
-    //
+
 }
