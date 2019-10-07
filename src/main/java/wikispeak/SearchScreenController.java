@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
@@ -18,15 +19,16 @@ public class SearchScreenController extends Controller {
     @FXML private TextField searchField;
     @FXML private Text infoText;
     @FXML private Button searchButton;
+    @FXML private ProgressIndicator searchProgress;
 
     /**
      * Initial clean-up.
-     * The user deals with a fresh set of audio files for each creation
+     * Configures the search button to only be pressable if some text is entered
+     * Deletes any generated audio files.
      */
     public void initialize(){
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            //Search button is not available if the textField is empty
-            searchButton.setDisable(newValue.isEmpty());
+            searchButton.setDisable(newValue.trim().isEmpty());
         });
         for (File file : new File("audio").listFiles()){
             file.delete();
@@ -39,15 +41,16 @@ public class SearchScreenController extends Controller {
      */
     private void handleSearch() {
 
-        String currentSearch = searchField.getText();
+        final String currentSearch = searchField.getText();
 
         if (!currentSearch.isEmpty()) {
-            infoText.setText("Searching...");
+            infoText.setText("");
+            searchProgress.setVisible(true);
 
             Thread searchThread = new Thread(new Task<Void>() {
                 @Override
                 protected Void call() throws Exception {
-                    Command wikitCommand = new Command("wikit " + currentSearch + " | sed 's/\\([.!?]\\) \\([[:upper:]]\\)/\\1\\n\\2/g' > .temp_text.txt");
+                    Command wikitCommand = new Command("wikit " + currentSearch + " | sed 's/\\([.!?]\\) \\([[:upper:]]\\)/\\1\\n\\n\\2/g' > .temp_text.txt");
                     wikitCommand.execute();
                     return null;
                 }
@@ -70,7 +73,6 @@ public class SearchScreenController extends Controller {
 
     /**
      * Updates the GUI appropriately based on the outcome of a Wikit Search
-     * TODO: Find a better way to save the search term than just to a temp file
      */
     private void postSearchUpdateGUI(String currentSearch) throws IOException {
         Command command = new Command("cat .temp_text.txt | grep -Fwq \":^(\"");
@@ -79,12 +81,13 @@ public class SearchScreenController extends Controller {
             command = new Command("cat .temp_text.txt");
             command.execute();
             infoText.setText(command.getStream());
+            searchProgress.setVisible(false);
         }
         else {
             command = new Command("echo \"" + currentSearch + "\" > .temp_searchterm.txt");
             command.execute();
             //term found on wikipedia, go to next screen
-            switchScenes(rootBorderPane, "CreateAudioScreen.fxml");
+            switchScenes(rootBorderPane, "EditText.fxml");
         }
     }
 
