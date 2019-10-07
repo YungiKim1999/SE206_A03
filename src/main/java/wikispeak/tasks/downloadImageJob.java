@@ -1,9 +1,9 @@
 package wikispeak.tasks;
 
-import com.flickr4java.flickr.Flickr;
 import com.flickr4java.flickr.FlickrException;
 import com.flickr4java.flickr.photos.*;
 import javafx.concurrent.Task;
+import wikispeak.helpers.FlickreImageCreator;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -19,9 +19,9 @@ public class downloadImageJob extends Task<Boolean> {
 
     String searchedTerm;
     int numOfImages;
-    Flickr flickrObject;
+    FlickreImageCreator flickrObject;
 
-    public downloadImageJob(String searchedTerm, int numOfImages, Flickr flickrObject){
+    public downloadImageJob(String searchedTerm, int numOfImages, FlickreImageCreator flickrObject){
         this.searchedTerm = searchedTerm;
         this.flickrObject = flickrObject;
         this.numOfImages = numOfImages;
@@ -35,7 +35,7 @@ public class downloadImageJob extends Task<Boolean> {
             int resultsPerPage = numOfImages;
             int page = 0;
 
-            PhotosInterface photos = flickrObject.getPhotosInterface();
+            PhotosInterface photos = flickrObject.getFlickrObject().getPhotosInterface();
             SearchParameters params = new SearchParameters();
             params.setSort(SearchParameters.RELEVANCE);
             params.setMedia("photos");

@@ -2,9 +2,6 @@ package wikispeak.helpers;
 
 import com.flickr4java.flickr.Flickr;
 import com.flickr4java.flickr.REST;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
-import wikispeak.tasks.downloadImageJob;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -73,21 +70,9 @@ public class FlickreImageCreator {
         br.close();
         throw new RuntimeException("Couldn't find " + key +" in config file "+file.getName());
     }
-    //
 
-    //slow part
-    public boolean start() {
-        downloadImageJob getImages = new downloadImageJob(searchedTerm, numOfImages, flickrObject);
-        workerTeam.execute(getImages);
-        getImages.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-            @Override
-            public void handle(WorkerStateEvent event) {
-
-            }
-        });
-
-        return true;
-
+    public Flickr getFlickrObject() {
+        return flickrObject;
     }
 }
 

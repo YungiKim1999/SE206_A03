@@ -38,7 +38,6 @@ public class creationJob extends Task<Void> {
 
         //download the images
         FlickreImageCreator imageCreator = new FlickreImageCreator(_searchTerm, _numberOfImages);
-        imageCreator.start();
 
         updateProgress(3, 7);
 
