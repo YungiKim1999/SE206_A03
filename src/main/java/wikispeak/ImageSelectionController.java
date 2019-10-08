@@ -4,6 +4,8 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -27,14 +29,19 @@ public class ImageSelectionController extends Controller{
  @FXML private TilePane selectedImages;
  @FXML private Button getImageButton;
  @FXML private BorderPane rootBorderPane;
+ @FXML private Label imageCountLabel;
+ @FXML private Button nextButton;
+ @FXML private ScrollPane paneOne;
+ @FXML private ScrollPane paneTwo;
 
  private String searchTerm;
  private ExecutorService team = Executors.newSingleThreadExecutor();
  private String creationName;
  private boolean firstTime=true;
 
- private static final double ELEMENT_SIZE = 100;
- private static final double GAP = ELEMENT_SIZE/10;
+ private static final double ELEMENT_SIZE = 145;
+ private static final double ELEMENT_SIZE_TWO = 235;
+ private static final double NO_GAP = ELEMENT_SIZE_TWO/10;
 
  ArrayList<File> filesJpg = new ArrayList<>();
  File allImages[];
@@ -42,9 +49,14 @@ public class ImageSelectionController extends Controller{
 
     @FXML
     public void initialize() {
+        nextButton.setDisable(true);
         if(!firstTime){
             getImageButton.setText("get more images...");
         }
+        paneOne.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        paneOne.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        paneTwo.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        paneTwo.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         filesJpg = new ArrayList<>();
         addedImages = new ArrayList<>();
         Command command = new Command("cat .temp_searchterm.txt");
@@ -55,11 +67,11 @@ public class ImageSelectionController extends Controller{
         command.execute();
         creationName = command.getStream();
 
-        tilePane.setHgap(GAP);
-        tilePane.setVgap(GAP);
+        tilePane.setHgap(NO_GAP);
+        tilePane.setVgap(NO_GAP);
 
-        selectedImages.setHgap(GAP);
-        selectedImages.setVgap(GAP);
+        selectedImages.setHgap(NO_GAP);
+        selectedImages.setVgap(NO_GAP);
 
         File selectedDirectory = new File("downloads");
 
@@ -76,71 +88,19 @@ public class ImageSelectionController extends Controller{
             }
         }
         //now set image in tiles
-        createAllImageSelectionPageFirst();
+        createAllImageSelectionPage();
     }
 
-    private void createAllImageSelectionPageFirst() {
+    private void createAllImageSelectionPage() {
         tilePane.getChildren().clear();
         for(int i=0; i<filesJpg.size(); i++){
-            tilePane.getChildren().add(createElementsFirst(i));
+            tilePane.getChildren().add(createElements(i));
         }
     }
 
-    private void createAllImageSelectionPageSecond(){
-        tilePane.getChildren().clear();
-        for(int i=0; i<filesJpg.size(); i++){
-            tilePane.getChildren().add(createElementsSecond(i));
-        }
-    }
 
-    private VBox createElementsSecond(int index){
-        ImageView imageView = new ImageView();
 
-        File file = filesJpg.get(index);
-        Image image = new Image(file.toURI().toString());
-        imageView.setImage(image);
-
-        imageView.setFitWidth(ELEMENT_SIZE);
-        imageView.setFitHeight(ELEMENT_SIZE);
-
-        imageView.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                boolean found = false;
-                for(int i = 0; i<addedImages.size(); i++){
-                    if(addedImages.get(i).equals(file)){
-                        filesJpg.add(addedImages.get(i));
-                        addedImages.remove(addedImages.get(i));
-                        tilePane.getChildren().add(imageView);
-                        System.out.println("added");
-                        createAllImageSelectionPageSecond();
-                        found = true;
-
-                    }
-                }
-                if(!found) {
-                    for (int i = 0; i < filesJpg.size(); i++) {
-                        if (filesJpg.get(i).equals(file)) {
-                            addedImages.add(file);
-                            filesJpg.remove(file);
-                            selectedImages.getChildren().add(imageView);
-                        }
-                    }
-                }
-                found = false;
-            }
-        });
-
-        imageView.setSmooth(true);
-        imageView.setCache(true);
-
-        VBox pageBox = new VBox();
-        pageBox.getChildren().add(imageView);
-
-        return pageBox;
-    }
-
-    private VBox createElementsFirst(int index) {
+    private VBox createElements(int index) {
 
         ImageView imageView = new ImageView();
 
@@ -157,25 +117,33 @@ public class ImageSelectionController extends Controller{
                 boolean found = false;
                 for(int i = 0; i<addedImages.size(); i++){
                     if(addedImages.get(i).equals(file)){
-                        filesJpg.add(addedImages.get(i));
+                        filesJpg.add(0,addedImages.get(i));
                         addedImages.remove(addedImages.get(i));
                         tilePane.getChildren().add(imageView);
-                        System.out.println("added");
-                        createAllImageSelectionPageSecond();
+                        createAllImageSelectionPage();
                         found = true;
-
+                        imageCountLabel.setText(addedImages.size()+" Images selected for the creation");
                     }
                 }
                 if(!found) {
                     for (int i = 0; i < filesJpg.size(); i++) {
                         if (filesJpg.get(i).equals(file)) {
+                            imageView.setFitWidth(ELEMENT_SIZE_TWO);
+                            imageView.setFitHeight(ELEMENT_SIZE_TWO);
                             addedImages.add(file);
                             filesJpg.remove(file);
                             selectedImages.getChildren().add(imageView);
+                            createAllImageSelectionPage();
+                            imageCountLabel.setText(addedImages.size()+" Images selected for the creation");
                         }
                     }
                 }
                 found = false;
+                if(addedImages.size()>0){
+                    nextButton.setDisable(false);
+                }else{
+                    nextButton.setDisable(true);
+                }
             }
         });
 
@@ -189,9 +157,11 @@ public class ImageSelectionController extends Controller{
     }
 
     @FXML
-    public void handleCreate(){
+    public void handleCreate() throws IOException {
         newCreationJob work = new newCreationJob(searchTerm, addedImages);
         team.submit(work);
+
+        switchScenes(rootBorderPane, "FinalPreviewScreen.fxml");
     }
 
     @FXML

@@ -9,87 +9,52 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Region;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.util.Duration;
-import wikispeak.tasks.deletionJobs;
-
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 
-public class UpgradedPlayScreenController extends ListController {
-
-    ObservableList<String> creationsStrings = FXCollections.observableArrayList(populateList("creations", ".mp4"));
-    String  selectedCreation = null;
+public class FinalPreviewScreenController extends ListController {
     File fileURL;
 
+    ObservableList<String> creationsStrings = FXCollections.observableArrayList(populateList("creations", ".mp4"));
     private boolean play = false;
     private boolean firsTime;
     private  MediaPlayer creationPlayingThing = null;
 
     @FXML private MediaView creationViewer;
     @FXML private BorderPane rootBorderPane;
-    @FXML private ListView<String> creationList;
     @FXML private Slider volumeSlider;
     @FXML private Label timeLabel;
     @FXML private Label finishTime;
     @FXML private Button playPauseButton;
     @FXML private Slider videoBuffer;
-    @FXML private Label listIsEmpty;
-    private ExecutorService workerTeam = Executors.newSingleThreadExecutor();
+    @FXML private TextField creationNameInput;
+    @FXML private ListView previousCreations;
 
     @FXML
     public void initialize(){
+
+        previousCreations.setItems(creationsStrings);
         firsTime = true;
-        listIsEmpty.setText("There seems to be\nno creation to\nplay/delete");
-        creationList.setItems(creationsStrings);
-        creationList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         timeLabel.setText("00:00");
         finishTime.setText("00:00");
-        setEmptyLabelText();
-        creationList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                   if(!creationList.getItems().isEmpty()) {
-                       setEmptyLabelText();
-                       getUserChoice(newValue);
-                       setMediaForPlay();
-                       addVideoListener();
-                       addVolumeListener();
-                       //playMedia();
-                       creationPlayingThing.setAutoPlay(false);
-                       firsTime = false;
-                       play = false;
-                   }else {
-                       setEmptyLabelText();
-                       creationPlayingThing.dispose();
-                       timeLabel.setText("00:00");
-                       finishTime.setText("00:00");
-                       videoBuffer.setValue(0);
-                   }
-            }
-        });
+        setMediaForPlay();
+        addVideoListener();
+        addVolumeListener();
+        playMedia();
+
         volumeSlider.setValue(100);
 
     }
 
-    private void setEmptyLabelText(){
-        if(!creationList.getItems().isEmpty()) {
-            listIsEmpty.setVisible(false);
-        }else{
-            listIsEmpty.setVisible(true);
-        }
-    }
     private void addVolumeListener(){
         volumeSlider.valueProperty().addListener(observable -> {
-                creationPlayingThing.setVolume(volumeSlider.getValue() / 100);
+            creationPlayingThing.setVolume(volumeSlider.getValue() / 100);
         });
     }
     private void setTimeLabels(Duration newVakue){
@@ -153,23 +118,17 @@ public class UpgradedPlayScreenController extends ListController {
         if (!firsTime && creationPlayingThing.getStatus() == MediaPlayer.Status.PLAYING){
             creationPlayingThing.dispose();
         }
-        fileURL =new File("." + System.getProperty("file.separator") +"creations" + System.getProperty("file.separator") + selectedCreation + ".mp4");
+        fileURL =new File( "final_creation.mp4");
         Media playCreation = new Media(fileURL.toURI().toString());
         creationPlayingThing = new MediaPlayer(playCreation);
         creationViewer.setMediaPlayer(creationPlayingThing);
     }
 
-    private void getUserChoice(String selection){
-        selectedCreation = selection;
-    }
-
 
     @FXML
     private void handlePlayPauseButton(){
-        if(!firsTime && !creationList.getItems().isEmpty()) {
             if(playPauseButton.getText().equals("Repeat")){
                 creationPlayingThing.stop();
-                selectedCreation = creationList.getSelectionModel().getSelectedItem();
                 setMediaForPlay();
                 playMedia();
                 addVideoListener();
@@ -178,27 +137,11 @@ public class UpgradedPlayScreenController extends ListController {
             } else if (creationPlayingThing.getStatus() == MediaPlayer.Status.PLAYING) {
                 pauseMedia();
                 play = false;
-            } else {
+            } else if (creationPlayingThing.getStatus() == MediaPlayer.Status.PAUSED) {
                 playMedia();
                 play = true;
 
             }
-        }
-    }
-
-    @FXML
-    private void handleDeleteButton(){
-        if(selectedCreation != null && !creationList.getItems().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete \"" + selectedCreation + "\"?");
-            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                deletionJobs deleteSelected = new deletionJobs(selectedCreation);
-                workerTeam.submit(deleteSelected);
-                creationList.getItems().remove(selectedCreation);
-                setEmptyLabelText();
-            }
-        }
     }
 
     @FXML
