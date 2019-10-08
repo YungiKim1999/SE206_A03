@@ -126,18 +126,7 @@ public class CreateAudioScreenController extends Controller{
      * Takes the user back to the search screen. Confirms they are happy to delete any audio files they have made
      */
     private void handleBackToSearch() throws IOException {
-        if(new File("audio").listFiles().length > 0) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to go back?\nAny audio files created will be lost.");
-            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                //only switch scene after confirmation
-                switchScenes(rootBorderPane, "SearchScreen.fxml");
-            }
-        }
-        else{
-            switchScenes(rootBorderPane, "SearchScreen.fxml");
-        }
+        switchScenes(rootBorderPane, "EditText.fxml");
     }
 
     @FXML

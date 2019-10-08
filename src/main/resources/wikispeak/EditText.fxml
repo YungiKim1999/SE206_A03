@@ -10,7 +10,7 @@
 
 <BorderPane fx:id="rootBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wikispeak.EditTextController">
    <center>
-      <TextArea fx:id="textOutput" prefHeight="461.0" prefWidth="890.0" wrapText="true">
+      <TextArea fx:id="textOutput" prefHeight="450.0" prefWidth="890.0" wrapText="true">
          <font>
             <Font size="14.0" />
          </font>
