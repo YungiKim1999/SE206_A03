@@ -4,8 +4,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -15,15 +13,21 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import wikispeak.components.DeleteAndMoveCell;
 import wikispeak.helpers.Command;
-//import wikispeak.tasks.previewJob;
+import wikispeak.tasks.createFullAudioJob;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+//import wikispeak.tasks.previewJob;
 
 /**
  * Controller for CreateScreen
@@ -39,16 +43,18 @@ public class CreateAudioScreenController extends ListController{
     @FXML private VBox audioListBox;
     @FXML private ProgressIndicator progressIndicator;
 
+    private ExecutorService worker = Executors.newSingleThreadExecutor();
+
     private final ObservableList<String> audioFiles = FXCollections.observableArrayList();
 
     public void initialize() throws IOException {
         //listens to changes in the audio file name field
         audioFileNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-            updateCreateButtonAccess();
+            updateCreateAudioSnippetButtonAccess();
         });
         //listens to changes in the selected text
         textOutput.selectedTextProperty().addListener(((observable, oldValue, newValue) -> {
-            updateCreateButtonAccess();
+            updateCreateAudioSnippetButtonAccess();
         }));
         populateVoiceSelectionBox();
         populateTextArea();
@@ -57,7 +63,7 @@ public class CreateAudioScreenController extends ListController{
 
     @FXML
     private void handleVoiceSelection(){
-        updateCreateButtonAccess();
+        updateCreateAudioSnippetButtonAccess();
         previewButton.setDisable(false);
     }
 
@@ -138,11 +144,11 @@ public class CreateAudioScreenController extends ListController{
      * Takes the user to the next screen where they combine audio files
      * Saves the text area so any edits persist if the user wants to go back
      */
-    private void handleNext() throws IOException {
-        //save the current text area status to the text file
-        String text = textOutput.getText();
-        Command command = new Command("echo \"" + text + "\" > .temp_text.txt");
-        command.execute();
+    private void handleCreateFullAudio() throws IOException {
+        //start the createFullAudioJob
+        final List<String> chosenAudioFiles = new ArrayList<String>(audioFiles);
+        createFullAudioJob job = new createFullAudioJob(chosenAudioFiles);
+        worker.submit(job);
         switchScenes(rootBorderPane, "CombineAudioScreen.fxml");
     }
 
@@ -179,7 +185,7 @@ public class CreateAudioScreenController extends ListController{
         ListView<String> audioListView = new ListView<>(audioFiles);
         Text text = new Text("No Audio Snippets\nhave been Created");
         text.setTextAlignment(TextAlignment.CENTER);
-        audioListView.setPlaceholder(new Text("No Audio Snippets\nhave been Created"));
+        audioListView.setPlaceholder(text);
         audioListView.setCellFactory(param -> new DeleteAndMoveCell());
 
         audioListBox.getChildren().add(audioListView);
@@ -190,7 +196,7 @@ public class CreateAudioScreenController extends ListController{
      * A voice must be selected, some text must be highlighted and a name must be provided for the audio file
      * @return
      */
-    private void updateCreateButtonAccess(){
+    private void updateCreateAudioSnippetButtonAccess(){
         createAudioSnippetButton.setDisable(voiceSelection.getValue() == null || textOutput.getSelectedText().trim().isEmpty() || audioFileNameField.getText().trim().isEmpty());
     }
 

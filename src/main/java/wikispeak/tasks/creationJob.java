@@ -35,24 +35,16 @@ public class creationJob extends Task<Void> {
             file.delete();
         }
 
-        updateProgress(1, 7);
+        updateProgress(2, 7);
 
         //download the images
         FlickreImageCreator imageCreator = new FlickreImageCreator(_searchTerm, _numberOfImages);
         imageCreator.start();
 
-        updateProgress(3, 7);
-
-        //merge the selected audiofiles
-        File file = new File(".combined.wav"); //delete the file if it already exists
-        file.delete();
-        Command command = new Command("sox " + _audioFileList + " .temp_audio.wav");
-        command.execute();
-
         updateProgress(4, 7);
 
         //calculate duration for each image in slideshow, given audio duration and number of imeages
-        command = new Command("soxi -D .temp_audio.wav");
+        Command command = new Command("soxi -D .temp_audio.wav");
         command.execute();
         double audioDuration = Double.parseDouble(command.getStream());
         Double framerate = (_numberOfImages/audioDuration);
