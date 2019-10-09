@@ -7,6 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -22,12 +23,13 @@
             <TextField fx:id="audioFileNameField" layoutX="489.0" layoutY="101.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="160.0" promptText="Audio File Name..." />
             <ComboBox fx:id="voiceSelection" layoutX="489.0" layoutY="164.0" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleVoiceSelection" prefHeight="30.0" prefWidth="160.0" promptText="Select Voice" visibleRowCount="5" />
             <Button fx:id="previewButton" disable="true" layoutX="489.0" layoutY="225.0" mnemonicParsing="false" onAction="#handlePreview" prefHeight="30.0" prefWidth="160.0" text="Preview Selection" />
-            <Button fx:id="createAudioButton" disable="true" layoutX="489.0" layoutY="286.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCreateAudio" prefHeight="60.0" prefWidth="160.0" text="Create Audio Snippet" textAlignment="CENTER" wrapText="true" />
+            <Button fx:id="createAudioSnippetButton" disable="true" layoutX="489.0" layoutY="286.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCreateAudioSnippet" prefHeight="60.0" prefWidth="160.0" text="Create Audio Snippet" textAlignment="CENTER" wrapText="true" />
             <Text fx:id="infoText" fill="#0000006f" layoutX="756.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="100.0">
                <font>
                   <Font size="11.0" />
                </font>
             </Text>
+            <VBox fx:id="audioListBox" layoutX="658.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="237.0" />
          </children>
       </AnchorPane>
    </center>

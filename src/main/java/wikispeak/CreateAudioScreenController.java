@@ -1,6 +1,8 @@
 package wikispeak;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -8,7 +10,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import wikispeak.components.DeleteAndMoveCell;
 import wikispeak.helpers.Command;
 //import wikispeak.tasks.previewJob;
 
@@ -23,17 +27,20 @@ import java.util.regex.Pattern;
 /**
  * Controller for CreateScreen
  */
-public class CreateAudioScreenController extends Controller{
+public class CreateAudioScreenController extends ListController{
 
     private ExecutorService workingUnit = Executors.newSingleThreadExecutor();
     Thread previewVoiceThread;
     @FXML private BorderPane rootBorderPane;
     @FXML private TextArea textOutput;
     @FXML private ComboBox voiceSelection;
-    @FXML private Button createAudioButton;
+    @FXML private Button createAudioSnippetButton;
     @FXML private Text infoText;
     @FXML private TextField audioFileNameField;
     @FXML private Button previewButton;
+    @FXML private VBox audioListBox;
+
+    private final ObservableList<String> audioFiles = FXCollections.observableArrayList();
 
     public void initialize() throws IOException {
         //listens to changes in the audio file name field
@@ -46,6 +53,7 @@ public class CreateAudioScreenController extends Controller{
         }));
         populateVoiceSelectionBox();
         populateTextArea();
+        populateAudioList();
     }
 
     @FXML
@@ -80,15 +88,15 @@ public class CreateAudioScreenController extends Controller{
     }
 
     @FXML
-    private void handleCreateAudio(){
+    private void handleCreateAudioSnippet(){
 
-        String audioFileName = audioFileNameField.getText();
-        String textSelection = textOutput.getSelectedText();
+        final String audioFileName = audioFileNameField.getText();
+        final String textSelection = textOutput.getSelectedText();
 
         if(correctTextSelection(textSelection) && nameIsValid(audioFileName) && canOverwrite(audioFileName)){
 
             infoText.setText("Creating Audio...");
-            String selectedVoice = (String)voiceSelection.getValue();
+            final String selectedVoice = (String)voiceSelection.getValue();
 
             Thread audioThread = new Thread(new Task<Void>(){
                 @Override
@@ -100,7 +108,7 @@ public class CreateAudioScreenController extends Controller{
 
                 @Override
                 protected void done(){
-                    Platform.runLater(() -> setInfoText());
+                    Platform.runLater(() -> postCreateUpdateGUI(audioFileName));
                 }
 
             });
@@ -111,7 +119,8 @@ public class CreateAudioScreenController extends Controller{
     /**
      * Sets the little info text to tell the user how many audio files they created
      */
-    private void setInfoText(){
+    private void postCreateUpdateGUI(String audioFileName){
+        audioFiles.add(audioFileName);
         int numberOfFiles = new File("audio").listFiles().length;
         if(numberOfFiles == 1){
             infoText.setText(numberOfFiles + " Audio File Created");
@@ -166,12 +175,25 @@ public class CreateAudioScreenController extends Controller{
     }
 
     /**
+     * Adds any created audio files to the audiofile list
+     * Mainly useful when user comes back to this screen after already creating audio
+     */
+    private void populateAudioList(){
+        audioFiles.addAll(populateList("audio", ".wav"));
+
+        ListView<String> thingList = new ListView<>(audioFiles);
+        thingList.setCellFactory(param -> new DeleteAndMoveCell());
+
+        audioListBox.getChildren().add(thingList);
+    }
+
+    /**
      * Checks if all requirements are met to enable the create button
      * A voice must be selected, some text must be highlighted and a name must be provided for the audio file
      * @return
      */
     private void updateCreateButtonAccess(){
-        createAudioButton.setDisable(voiceSelection.getValue() == null || textOutput.getSelectedText().isEmpty() || audioFileNameField.getText().isEmpty());
+        createAudioSnippetButton.setDisable(voiceSelection.getValue() == null || textOutput.getSelectedText().isEmpty() || audioFileNameField.getText().isEmpty());
     }
 
     /**

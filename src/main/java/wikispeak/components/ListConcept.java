@@ -32,13 +32,13 @@ public class ListConcept extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        ListView<String> birdList = new ListView<>(things);
+        ListView<String> thingList = new ListView<>(things);
 
-        birdList.setCellFactory(param -> new DeleteMoveCell());
+        thingList.setCellFactory(param -> new DeleteMoveCell());
 
-        birdList.setPrefWidth(180);
+        thingList.setPrefWidth(180);
 
-        VBox layout = new VBox(birdList);
+        VBox layout = new VBox(thingList);
         layout.setPadding(new Insets(10));
 
         stage.setScene(new Scene(layout));
