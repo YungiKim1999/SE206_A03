@@ -149,7 +149,7 @@ public class CreateAudioScreenController extends ListController{
         final List<String> chosenAudioFiles = new ArrayList<String>(audioFiles);
         createFullAudioJob job = new createFullAudioJob(chosenAudioFiles);
         worker.submit(job);
-        switchScenes(rootBorderPane, "CombineAudioScreen.fxml");
+        switchScenes(rootBorderPane, "ImageSelectionScreen.fxml");
     }
 
     /**

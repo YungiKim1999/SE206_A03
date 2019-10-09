@@ -96,4 +96,8 @@ public class FlickreImageCreator {
         }
     }
 
+    public Flickr getFlickrObject() {
+        return flickrObject;
+    }
+
 }

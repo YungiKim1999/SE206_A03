@@ -29,7 +29,7 @@ import java.util.concurrent.Executors;
  */
 public class UpgradedPlayScreenController extends ListController {
 
-    ObservableList<String> creationsStrings = FXCollections.observableArrayList(populateList("creations", ".mp4"));
+    ObservableList<String> creationsStrings = FXCollections.observableArrayList(populateList("creations", ""));
     String selectedCreation = null;
     File fileURL;
 

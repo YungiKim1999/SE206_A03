@@ -1,9 +1,7 @@
 package wikispeak.tasks;
 
 import javafx.concurrent.Task;
-import wikispeak.CombineAudioScreenController;
 import wikispeak.helpers.Command;
-import wikispeak.helpers.FlickreImageCreator;
 
 import java.io.File;
 import java.util.List;
