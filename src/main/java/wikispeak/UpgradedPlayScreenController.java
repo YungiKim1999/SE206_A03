@@ -225,7 +225,7 @@ public class UpgradedPlayScreenController extends ListController {
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                deletionJobs deleteSelected = new deletionJobs(selectedCreation);
+                deletionJobs deleteSelected = new deletionJobs("creations", selectedCreation, ".mp4");
                 workerTeam.submit(deleteSelected);
                 creationList.getItems().remove(selectedCreation);
                 setEmptyLabelText();

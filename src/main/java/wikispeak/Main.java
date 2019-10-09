@@ -47,6 +47,8 @@ public class Main extends Application {
         file.delete();
         file = new File(".temp_searchterm.txt");
         file.delete();
+        file = new File(".temp_creationName.txt");
+        file.delete();
         file = new File("audio");
         for (File insideFile : file.listFiles()){
             insideFile.delete();

@@ -1,56 +1,69 @@
 package wikispeak;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import wikispeak.components.DeleteAndMoveCell;
 import wikispeak.helpers.Command;
-//import wikispeak.tasks.previewJob;
+import wikispeak.tasks.createFullAudioJob;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+//import wikispeak.tasks.previewJob;
+
 /**
  * Controller for CreateScreen
  */
-public class CreateAudioScreenController extends Controller{
+public class CreateAudioScreenController extends ListController{
 
-    private ExecutorService workingUnit = Executors.newSingleThreadExecutor();
-    Thread previewVoiceThread;
     @FXML private BorderPane rootBorderPane;
     @FXML private TextArea textOutput;
     @FXML private ComboBox voiceSelection;
-    @FXML private Button createAudioButton;
-    @FXML private Text infoText;
+    @FXML private Button createAudioSnippetButton;
     @FXML private TextField audioFileNameField;
     @FXML private Button previewButton;
+    @FXML private VBox audioListBox;
+    @FXML private ProgressIndicator progressIndicator;
+
+    private ExecutorService worker = Executors.newSingleThreadExecutor();
+
+    private final ObservableList<String> audioFiles = FXCollections.observableArrayList();
 
     public void initialize() throws IOException {
         //listens to changes in the audio file name field
         audioFileNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-            updateCreateButtonAccess();
+            updateCreateAudioSnippetButtonAccess();
         });
         //listens to changes in the selected text
         textOutput.selectedTextProperty().addListener(((observable, oldValue, newValue) -> {
-            updateCreateButtonAccess();
+            updateCreateAudioSnippetButtonAccess();
         }));
         populateVoiceSelectionBox();
         populateTextArea();
+        populateAudioList();
     }
 
     @FXML
     private void handleVoiceSelection(){
-        updateCreateButtonAccess();
+        updateCreateAudioSnippetButtonAccess();
         previewButton.setDisable(false);
     }
 
@@ -80,15 +93,15 @@ public class CreateAudioScreenController extends Controller{
     }
 
     @FXML
-    private void handleCreateAudio(){
+    private void handleCreateAudioSnippet(){
 
-        String audioFileName = audioFileNameField.getText();
-        String textSelection = textOutput.getSelectedText();
+        final String audioFileName = audioFileNameField.getText();
+        final String textSelection = textOutput.getSelectedText();
 
         if(correctTextSelection(textSelection) && nameIsValid(audioFileName) && canOverwrite(audioFileName)){
 
-            infoText.setText("Creating Audio...");
-            String selectedVoice = (String)voiceSelection.getValue();
+            progressIndicator.setVisible(true);
+            final String selectedVoice = (String)voiceSelection.getValue();
 
             Thread audioThread = new Thread(new Task<Void>(){
                 @Override
@@ -100,7 +113,7 @@ public class CreateAudioScreenController extends Controller{
 
                 @Override
                 protected void done(){
-                    Platform.runLater(() -> setInfoText());
+                    Platform.runLater(() -> postCreateUpdateGUI(audioFileName));
                 }
 
             });
@@ -109,35 +122,21 @@ public class CreateAudioScreenController extends Controller{
     }
 
     /**
-     * Sets the little info text to tell the user how many audio files they created
+     * Adds the file to the list (if it doesn't already exist)
      */
-    private void setInfoText(){
-        int numberOfFiles = new File("audio").listFiles().length;
-        if(numberOfFiles == 1){
-            infoText.setText(numberOfFiles + " Audio File Created");
+    private void postCreateUpdateGUI(String audioFileName){
+        if(!audioFiles.contains(audioFileName)){
+            audioFiles.add(audioFileName);
         }
-        else{
-            infoText.setText(numberOfFiles + " Audio Files Created");
-        }
+        progressIndicator.setVisible(false);
     }
 
     @FXML
     /**
-     * Takes the user back to the search screen. Confirms they are happy to delete any audio files they have made
+     * Takes the user back to the search screen
      */
     private void handleBackToSearch() throws IOException {
-        if(new File("audio").listFiles().length > 0) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to go back?\nAny audio files created will be lost.");
-            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                //only switch scene after confirmation
-                switchScenes(rootBorderPane, "SearchScreen.fxml");
-            }
-        }
-        else{
-            switchScenes(rootBorderPane, "SearchScreen.fxml");
-        }
+        switchScenes(rootBorderPane, "EditText.fxml");
     }
 
     @FXML
@@ -145,11 +144,11 @@ public class CreateAudioScreenController extends Controller{
      * Takes the user to the next screen where they combine audio files
      * Saves the text area so any edits persist if the user wants to go back
      */
-    private void handleNext() throws IOException {
-        //save the current text area status to the text file
-        String text = textOutput.getText();
-        Command command = new Command("echo \"" + text + "\" > .temp_text.txt");
-        command.execute();
+    private void handleCreateFullAudio() throws IOException {
+        //start the createFullAudioJob
+        final List<String> chosenAudioFiles = new ArrayList<String>(audioFiles);
+        createFullAudioJob job = new createFullAudioJob(chosenAudioFiles);
+        worker.submit(job);
         switchScenes(rootBorderPane, "CombineAudioScreen.fxml");
     }
 
@@ -177,12 +176,28 @@ public class CreateAudioScreenController extends Controller{
     }
 
     /**
+     * Adds any created audio files to the audiofile list
+     * Mainly useful when user comes back to this screen after already creating audio
+     */
+    private void populateAudioList(){
+        audioFiles.addAll(populateList("audio", ".wav"));
+
+        ListView<String> audioListView = new ListView<>(audioFiles);
+        Text text = new Text("No Audio Snippets\nhave been Created");
+        text.setTextAlignment(TextAlignment.CENTER);
+        audioListView.setPlaceholder(text);
+        audioListView.setCellFactory(param -> new DeleteAndMoveCell());
+
+        audioListBox.getChildren().add(audioListView);
+    }
+
+    /**
      * Checks if all requirements are met to enable the create button
      * A voice must be selected, some text must be highlighted and a name must be provided for the audio file
      * @return
      */
-    private void updateCreateButtonAccess(){
-        createAudioButton.setDisable(voiceSelection.getValue() == null || textOutput.getSelectedText().isEmpty() || audioFileNameField.getText().isEmpty());
+    private void updateCreateAudioSnippetButtonAccess(){
+        createAudioSnippetButton.setDisable(voiceSelection.getValue() == null || textOutput.getSelectedText().trim().isEmpty() || audioFileNameField.getText().trim().isEmpty());
     }
 
     /**
@@ -190,7 +205,7 @@ public class CreateAudioScreenController extends Controller{
      * @return false if no words are selected, or if the selection is larger than 40 words (too many to synthesise)
      */
     private boolean correctTextSelection(String selection){
-        if (selection == null || selection.isEmpty()){
+        if (selection == null || selection.trim().isEmpty()){
             return false;
         }
         //Splits the selection into a countable array of words

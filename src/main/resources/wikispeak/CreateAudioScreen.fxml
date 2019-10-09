@@ -3,107 +3,55 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="rootBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wikispeak.CreateAudioScreenController">
+<BorderPane fx:id="rootBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wikispeak.CreateAudioScreenController">
    <center>
-      <VBox prefHeight="288.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <AnchorPane>
          <children>
-            <TextArea fx:id="textOutput" prefHeight="254.0" prefWidth="580.0">
+            <TextArea fx:id="textOutput" editable="false" layoutX="5.0" layoutY="30.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="430.0" prefWidth="500.0" wrapText="true">
                <font>
-                  <Font size="12.0" />
+                  <Font size="14.0" />
                </font>
-               <VBox.margin>
-                  <Insets bottom="5.0" top="10.0" />
-               </VBox.margin>
             </TextArea>
+            <TextField fx:id="audioFileNameField" layoutX="515.0" layoutY="233.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="150.0" promptText="Audio File Name..." />
+            <ComboBox fx:id="voiceSelection" layoutX="515.0" layoutY="125.0" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleVoiceSelection" prefHeight="30.0" prefWidth="150.0" promptText="Select Voice" visibleRowCount="5" />
+            <Button fx:id="previewButton" disable="true" layoutX="515.0" layoutY="176.0" mnemonicParsing="false" onAction="#handlePreview" prefHeight="30.0" prefWidth="150.0" text="Preview Selection" />
+            <Button fx:id="createAudioSnippetButton" disable="true" layoutX="515.0" layoutY="286.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCreateAudioSnippet" prefHeight="60.0" prefWidth="150.0" text="Create Audio Snippet" textAlignment="CENTER" wrapText="true" />
+            <VBox fx:id="audioListBox" layoutX="675.0" layoutY="30.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="430.0" prefWidth="220.0" />
+            <ProgressIndicator fx:id="progressIndicator" layoutX="571.0" layoutY="372.0" prefHeight="36.0" prefWidth="39.0" visible="false" />
+            <Text layoutX="703.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Click and drag to reorder" />
+            <Text layoutX="209.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Highlight Text" />
          </children>
-      </VBox>
+      </AnchorPane>
    </center>
    <bottom>
-      <HBox alignment="BOTTOM_LEFT" BorderPane.alignment="CENTER_LEFT">
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="900.0">
          <children>
-            <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleBackToSearch" prefHeight="30.0" prefWidth="100.0" text="&lt; Back">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" />
-               </HBox.margin></Button>
-            <HBox alignment="CENTER" prefHeight="65.0" prefWidth="30.0" />
-            <VBox>
-               <children>
-                  <TextField fx:id="audioFileNameField" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="200.0" promptText="Audio File Name..." />
-                  <HBox>
-                     <children>
-                        <ComboBox fx:id="voiceSelection" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleVoiceSelection" prefHeight="30.0" prefWidth="128.0" promptText="Select Voice" visibleRowCount="5">
-                           <HBox.margin>
-                              <Insets bottom="5.0" />
-                           </HBox.margin>
-                        </ComboBox>
-                        <Button fx:id="previewButton" disable="true" mnemonicParsing="false" onAction="#handlePreview" prefHeight="30.0" prefWidth="72.0" text="Preview">
-                           <HBox.margin>
-                              <Insets bottom="5.0" />
-                           </HBox.margin>
-                        </Button>
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-            <Button fx:id="createAudioButton" defaultButton="true" disable="true" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCreateAudio" prefHeight="60.0" prefWidth="120.0" text="Create Audio">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="10.0" />
-               </HBox.margin>
+            <Button alignment="CENTER" layoutX="5.0" layoutY="40.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleBackToSearch" prefHeight="35.0" prefWidth="100.0" text="&lt; Back" />
+            <Button alignment="CENTER" defaultButton="true" layoutX="745.0" layoutY="5.0" mnemonicParsing="false" onAction="#handleCreateFullAudio" prefHeight="70.0" prefWidth="150.0" text="Create Full Audio" textAlignment="CENTER" wrapText="true">
+               <font>
+                  <Font size="16.0" />
+               </font>
             </Button>
-            <HBox prefHeight="65.0" prefWidth="30.0" />
-            <VBox alignment="BOTTOM_RIGHT">
-               <HBox.margin>
-                  <Insets bottom="5.0" right="5.0" />
-               </HBox.margin>
-               <children>
-                  <Text fx:id="infoText" fill="#0000006f" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="100.0">
-                     <font>
-                        <Font size="11.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets bottom="5.0" />
-                     </VBox.margin>
-                  </Text>
-                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleNext" prefHeight="26.0" prefWidth="100.0" text="Next &gt;" textAlignment="CENTER" />
-               </children>
-            </VBox>
          </children>
-      </HBox>
+      </AnchorPane>
    </bottom>
    <top>
-      <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="71.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Step 2: Create Audio Files" textAlignment="CENTER" wrappingWidth="600.0">
-               <VBox.margin>
-                  <Insets left="20.0" right="20.0" top="10.0" />
-               </VBox.margin>
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Edit the search result below. Highlight some text, select a voice and enter a file name to create an audio file." textAlignment="CENTER" wrappingWidth="400.0">
-               <VBox.margin>
-                  <Insets left="30.0" right="30.0" top="5.0" />
-               </VBox.margin>
-               <font>
-                  <Font size="12.0" />
-               </font>
-            </Text>
-         </children>
-         <opaqueInsets>
-            <Insets bottom="10.0" />
-         </opaqueInsets>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Step 3: Create Audio" textAlignment="CENTER" wrappingWidth="900.0">
+         <font>
+            <Font size="30.0" />
+         </font>
          <BorderPane.margin>
-            <Insets />
+            <Insets bottom="10.0" top="10.0" />
          </BorderPane.margin>
-      </VBox>
+      </Text>
    </top>
 </BorderPane>
