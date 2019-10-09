@@ -12,6 +12,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import wikispeak.components.DeleteAndMoveCell;
 import wikispeak.helpers.Command;
 //import wikispeak.tasks.previewJob;
@@ -29,16 +30,14 @@ import java.util.regex.Pattern;
  */
 public class CreateAudioScreenController extends ListController{
 
-    private ExecutorService workingUnit = Executors.newSingleThreadExecutor();
-    Thread previewVoiceThread;
     @FXML private BorderPane rootBorderPane;
     @FXML private TextArea textOutput;
     @FXML private ComboBox voiceSelection;
     @FXML private Button createAudioSnippetButton;
-    @FXML private Text infoText;
     @FXML private TextField audioFileNameField;
     @FXML private Button previewButton;
     @FXML private VBox audioListBox;
+    @FXML private ProgressIndicator progressIndicator;
 
     private final ObservableList<String> audioFiles = FXCollections.observableArrayList();
 
@@ -95,7 +94,7 @@ public class CreateAudioScreenController extends ListController{
 
         if(correctTextSelection(textSelection) && nameIsValid(audioFileName) && canOverwrite(audioFileName)){
 
-            infoText.setText("Creating Audio...");
+            progressIndicator.setVisible(true);
             final String selectedVoice = (String)voiceSelection.getValue();
 
             Thread audioThread = new Thread(new Task<Void>(){
@@ -117,22 +116,18 @@ public class CreateAudioScreenController extends ListController{
     }
 
     /**
-     * Sets the little info text to tell the user how many audio files they created
+     * Adds the file to the list (if it doesn't already exist)
      */
     private void postCreateUpdateGUI(String audioFileName){
-        audioFiles.add(audioFileName);
-        int numberOfFiles = new File("audio").listFiles().length;
-        if(numberOfFiles == 1){
-            infoText.setText(numberOfFiles + " Audio File Created");
+        if(!audioFiles.contains(audioFileName)){
+            audioFiles.add(audioFileName);
         }
-        else{
-            infoText.setText(numberOfFiles + " Audio Files Created");
-        }
+        progressIndicator.setVisible(false);
     }
 
     @FXML
     /**
-     * Takes the user back to the search screen. Confirms they are happy to delete any audio files they have made
+     * Takes the user back to the search screen
      */
     private void handleBackToSearch() throws IOException {
         switchScenes(rootBorderPane, "EditText.fxml");
@@ -181,10 +176,13 @@ public class CreateAudioScreenController extends ListController{
     private void populateAudioList(){
         audioFiles.addAll(populateList("audio", ".wav"));
 
-        ListView<String> thingList = new ListView<>(audioFiles);
-        thingList.setCellFactory(param -> new DeleteAndMoveCell());
+        ListView<String> audioListView = new ListView<>(audioFiles);
+        Text text = new Text("No Audio Snippets\nhave been Created");
+        text.setTextAlignment(TextAlignment.CENTER);
+        audioListView.setPlaceholder(new Text("No Audio Snippets\nhave been Created"));
+        audioListView.setCellFactory(param -> new DeleteAndMoveCell());
 
-        audioListBox.getChildren().add(thingList);
+        audioListBox.getChildren().add(audioListView);
     }
 
     /**
@@ -193,7 +191,7 @@ public class CreateAudioScreenController extends ListController{
      * @return
      */
     private void updateCreateButtonAccess(){
-        createAudioSnippetButton.setDisable(voiceSelection.getValue() == null || textOutput.getSelectedText().isEmpty() || audioFileNameField.getText().isEmpty());
+        createAudioSnippetButton.setDisable(voiceSelection.getValue() == null || textOutput.getSelectedText().trim().isEmpty() || audioFileNameField.getText().trim().isEmpty());
     }
 
     /**
@@ -201,7 +199,7 @@ public class CreateAudioScreenController extends ListController{
      * @return false if no words are selected, or if the selection is larger than 40 words (too many to synthesise)
      */
     private boolean correctTextSelection(String selection){
-        if (selection == null || selection.isEmpty()){
+        if (selection == null || selection.trim().isEmpty()){
             return false;
         }
         //Splits the selection into a countable array of words

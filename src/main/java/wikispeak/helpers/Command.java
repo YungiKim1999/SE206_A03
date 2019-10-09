@@ -12,6 +12,7 @@ public class Command {
 
     private String _command;
     private String _stream = "Command did not execute";
+    private Process _process;
 
     public Command(String command){
         _command = command;
@@ -25,15 +26,24 @@ public class Command {
         ProcessBuilder pb = new ProcessBuilder("bash", "-c", _command);
 
         try {
-            Process process = pb.start();
-            int exitCode = process.waitFor();
+            _process = pb.start();
+            int exitCode = _process.waitFor();
 
-            saveStream(exitCode, process);
+            saveStream(exitCode, _process);
             return exitCode;
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             return 2;
+        }
+    }
+
+    /**
+     * Terminates the process
+     */
+    public void destroyProcess(){
+        if (_process != null){
+            _process.destroy();
         }
     }
 

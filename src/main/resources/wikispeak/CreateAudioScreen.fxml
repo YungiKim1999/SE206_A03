@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -15,28 +16,26 @@
    <center>
       <AnchorPane>
          <children>
-            <TextArea fx:id="textOutput" editable="false" layoutX="5.0" prefHeight="450.0" prefWidth="474.0" wrapText="true">
+            <TextArea fx:id="textOutput" editable="false" layoutX="5.0" layoutY="30.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="430.0" prefWidth="500.0" wrapText="true">
                <font>
                   <Font size="14.0" />
                </font>
             </TextArea>
-            <TextField fx:id="audioFileNameField" layoutX="489.0" layoutY="101.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="160.0" promptText="Audio File Name..." />
-            <ComboBox fx:id="voiceSelection" layoutX="489.0" layoutY="164.0" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleVoiceSelection" prefHeight="30.0" prefWidth="160.0" promptText="Select Voice" visibleRowCount="5" />
-            <Button fx:id="previewButton" disable="true" layoutX="489.0" layoutY="225.0" mnemonicParsing="false" onAction="#handlePreview" prefHeight="30.0" prefWidth="160.0" text="Preview Selection" />
-            <Button fx:id="createAudioSnippetButton" disable="true" layoutX="489.0" layoutY="286.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCreateAudioSnippet" prefHeight="60.0" prefWidth="160.0" text="Create Audio Snippet" textAlignment="CENTER" wrapText="true" />
-            <Text fx:id="infoText" fill="#0000006f" layoutX="756.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="100.0">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </Text>
-            <VBox fx:id="audioListBox" layoutX="658.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="237.0" />
+            <TextField fx:id="audioFileNameField" layoutX="515.0" layoutY="233.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="150.0" promptText="Audio File Name..." />
+            <ComboBox fx:id="voiceSelection" layoutX="515.0" layoutY="125.0" minHeight="-Infinity" minWidth="-Infinity" onAction="#handleVoiceSelection" prefHeight="30.0" prefWidth="150.0" promptText="Select Voice" visibleRowCount="5" />
+            <Button fx:id="previewButton" disable="true" layoutX="515.0" layoutY="176.0" mnemonicParsing="false" onAction="#handlePreview" prefHeight="30.0" prefWidth="150.0" text="Preview Selection" />
+            <Button fx:id="createAudioSnippetButton" disable="true" layoutX="515.0" layoutY="286.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCreateAudioSnippet" prefHeight="60.0" prefWidth="150.0" text="Create Audio Snippet" textAlignment="CENTER" wrapText="true" />
+            <VBox fx:id="audioListBox" layoutX="675.0" layoutY="30.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="430.0" prefWidth="220.0" />
+            <ProgressIndicator fx:id="progressIndicator" layoutX="571.0" layoutY="372.0" prefHeight="36.0" prefWidth="39.0" visible="false" />
+            <Text layoutX="703.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Click and drag to reorder" />
+            <Text layoutX="209.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Highlight Text" />
          </children>
       </AnchorPane>
    </center>
    <bottom>
       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="900.0">
          <children>
-            <Button alignment="CENTER" layoutX="5.0" layoutY="45.0" mnemonicParsing="false" onAction="#handleBackToSearch" prefHeight="30.0" prefWidth="100.0" text="&lt; Back" />
+            <Button alignment="CENTER" layoutX="5.0" layoutY="40.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleBackToSearch" prefHeight="35.0" prefWidth="100.0" text="&lt; Back" />
             <Button alignment="CENTER" defaultButton="true" layoutX="745.0" layoutY="5.0" mnemonicParsing="false" onAction="#handleNext" prefHeight="70.0" prefWidth="150.0" text="Create Full Audio" textAlignment="CENTER" wrapText="true">
                <font>
                   <Font size="16.0" />

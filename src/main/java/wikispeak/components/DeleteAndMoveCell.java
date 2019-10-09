@@ -13,9 +13,12 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import wikispeak.tasks.deletionJobs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class DeleteAndMoveCell extends ListCell<String> {
 
@@ -24,13 +27,20 @@ public class DeleteAndMoveCell extends ListCell<String> {
     Pane pane = new Pane();
     Button button = new Button();
 
+    private ExecutorService workerTeam = Executors.newSingleThreadExecutor();
+
     public DeleteAndMoveCell() {
 
         hbox.getChildren().addAll(label, pane, button);
         HBox.setHgrow(pane, Priority.ALWAYS);
         Image deleteIcon = new Image(getClass().getResourceAsStream("trashsmaller.png"));
         button.setGraphic(new ImageView(deleteIcon));
-        button.setOnAction(event -> getListView().getItems().remove(getItem()));
+        button.setOnAction(event -> {
+            String itemName = getItem();
+            deletionJobs deleteSelected = new deletionJobs("audio", itemName, ".wav");
+            workerTeam.submit(deleteSelected);
+            getListView().getItems().remove(itemName);
+        });
 
         ListCell thisCell = this;
 
@@ -105,7 +115,6 @@ public class DeleteAndMoveCell extends ListCell<String> {
     protected void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
 
-        super.updateItem(item, empty);
         setText(null);
         setGraphic(null);
 
