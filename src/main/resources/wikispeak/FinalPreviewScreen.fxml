@@ -34,7 +34,7 @@
             <Button layoutX="656.0" layoutY="433.0" mnemonicParsing="false" onAction="#createAllThingsNecessary" prefHeight="90.0" prefWidth="201.0" text="Create!" />
             <ListView fx:id="previousCreations" layoutX="656.0" layoutY="158.0" prefHeight="275.0" prefWidth="200.0" />
             <Label layoutX="695.0" layoutY="142.0" text="Previous Creations" />
-            <Button layoutX="753.0" layoutY="555.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="102.0" text="Back" />
+            <Button layoutX="753.0" layoutY="555.0" mnemonicParsing="false" onAction="#handleBackToImageSelection" prefHeight="26.0" prefWidth="102.0" text="Back" />
             <Label layoutX="215.0" layoutY="84.0" text="Preview Your Creation Here" />
             </children>
         </AnchorPane>

@@ -8,24 +8,25 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.media.MediaView?>
 
-<BorderPane fx:id="rootBorderPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wikispeak.UpgradedPlayScreenController">
-   <bottom>
-      <AnchorPane prefHeight="405.0" prefWidth="610.0" BorderPane.alignment="CENTER">
+<BorderPane fx:id="rootBorderPane" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wikispeak.UpgradedPlayScreenController">
+   <center>
+      <AnchorPane prefHeight="600.0" prefWidth="900.0" BorderPane.alignment="CENTER">
          <children>
-            <ListView fx:id="creationList" layoutX="14.0" layoutY="16.0" prefHeight="310.0" prefWidth="156.0" />
-            <Slider fx:id="volumeSlider" layoutX="405.0" layoutY="367.0" prefHeight="18.0" prefWidth="140.0" />
-            <Button fx:id="playPauseButton" layoutX="181.0" layoutY="363.0" mnemonicParsing="false" onAction="#handlePlayPauseButton" prefHeight="26.0" prefWidth="79.0" text="Play" textAlignment="CENTER" />
-            <Button layoutX="14.0" layoutY="362.0" mnemonicParsing="false" onAction="#handleExitButton" prefHeight="18.0" prefWidth="156.0" text="Main Menu" />
-            <MediaView fx:id="creationViewer" fitHeight="312.0" fitWidth="415.0" layoutX="174.0" layoutY="16.0" />
-            <Button layoutX="300.0" layoutY="363.0" mnemonicParsing="false" onAction="#handleForwardButton" prefHeight="26.0" prefWidth="41.0" text="&gt;&gt;" />
-            <Button layoutX="257.0" layoutY="363.0" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="26.0" prefWidth="43.0" text="&lt;&lt;" />
-            <Label fx:id="timeLabel" layoutX="178.0" layoutY="341.0" prefHeight="16.0" prefWidth="42.0" text="Label" />
-            <Label fx:id="finishTime" layoutX="537.0" layoutY="341.0" prefHeight="16.0" prefWidth="56.0" text="Label" />
-            <Slider fx:id="videoBuffer" layoutX="218.0" layoutY="341.0" prefHeight="16.0" prefWidth="326.0" />
-            <Button fx:id="deleteButton" layoutX="14.0" layoutY="331.0" mnemonicParsing="false" onAction="#handleDeleteButton" prefHeight="26.0" prefWidth="157.0" text="Delete" />
-            <Label fx:id="listIsEmpty" contentDisplay="CENTER" layoutX="24.0" layoutY="25.0" prefHeight="293.0" prefWidth="136.0" textAlignment="CENTER" />
-            <Label layoutX="355.0" layoutY="367.0" text="Volume" />
+            <ListView fx:id="creationList" layoutX="731.0" layoutY="14.0" prefHeight="505.0" prefWidth="156.0" />
+            <Slider fx:id="volumeSlider" layoutX="228.0" layoutY="564.0" prefHeight="18.0" prefWidth="140.0" />
+            <Button fx:id="playPauseButton" layoutX="14.0" layoutY="560.0" mnemonicParsing="false" onAction="#handlePlayPauseButton" prefHeight="26.0" prefWidth="79.0" text="Play" textAlignment="CENTER" />
+            <Button layoutX="730.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleExitButton" prefHeight="18.0" prefWidth="156.0" text="Main Menu" />
+            <MediaView fx:id="creationViewer" fitHeight="505.0" fitWidth="710.0" layoutX="14.0" layoutY="14.0" />
+            <Button layoutX="136.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleForwardButton" prefHeight="26.0" prefWidth="41.0" text="&gt;&gt;" />
+            <Button layoutX="93.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="26.0" prefWidth="43.0" text="&lt;&lt;" />
+            <Label fx:id="timeLabel" layoutX="21.0" layoutY="530.0" prefHeight="16.0" prefWidth="42.0" text="Label" />
+            <Label fx:id="finishTime" layoutX="667.0" layoutY="523.0" prefHeight="30.0" prefWidth="47.0" text="Label" />
+            <Slider fx:id="videoBuffer" layoutX="72.0" layoutY="521.0" prefHeight="34.0" prefWidth="595.0" />
+            <Button fx:id="deleteButton" layoutX="730.0" layoutY="525.0" mnemonicParsing="false" onAction="#handleDeleteButton" prefHeight="26.0" prefWidth="157.0" text="Delete" />
+            <Label fx:id="listIsEmpty" contentDisplay="CENTER" layoutX="731.0" layoutY="13.0" prefHeight="507.0" prefWidth="156.0" textAlignment="CENTER" />
+            <Label layoutX="178.0" layoutY="565.0" text="Volume" />
+            <MediaView fx:id="creationViewer1" fitHeight="505.0" fitWidth="710.0" layoutX="15.0" layoutY="14.0" />
          </children>
       </AnchorPane>
-   </bottom>
+   </center>
 </BorderPane>

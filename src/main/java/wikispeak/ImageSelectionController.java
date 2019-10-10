@@ -25,96 +25,117 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ImageSelectionController extends Controller{
- @FXML private TilePane tilePane;
- @FXML private TilePane selectedImages;
- @FXML private BorderPane rootBorderPane;
- @FXML private Label imageCountLabel;
- @FXML private Button nextButton;
- @FXML private ScrollPane paneOne;
- @FXML private ScrollPane paneTwo;
- @FXML private ProgressBar imageWaitBar;
- @FXML private Label waitLabel;
+    @FXML private TilePane SelectionOfImagesPane;
+    @FXML private TilePane selectedImages;
+    @FXML private BorderPane rootBorderPane;
+    @FXML private Label imageCountLabel;
+    @FXML private Button nextButton;
+    @FXML private ScrollPane paneOne;
+    @FXML private ScrollPane paneTwo;
+    @FXML private ProgressBar imageWaitBar;
+    @FXML private ProgressBar createVideoBar;
+    @FXML private Label waitLabel;
 
 
- private String searchTerm;
- private ExecutorService team = Executors.newSingleThreadExecutor();
+    private String searchTerm;
+    private ExecutorService team = Executors.newSingleThreadExecutor();
 
- private static final double ELEMENT_SIZE = 145;
- private static final double ELEMENT_SIZE_TWO = 235;
- private static final double NO_GAP = ELEMENT_SIZE_TWO/10;
+    private static final double ELEMENT_SIZE = 145;
+    private static final double ELEMENT_SIZE_TWO = 235;
+    private static final double NO_GAP = ELEMENT_SIZE_TWO/10;
 
- ArrayList<File> filesJpg = new ArrayList<>();
- File allImages[];
- ArrayList<File> addedImages = new ArrayList<>();
+    ArrayList<File> filesJpg = new ArrayList<>();
+    ArrayList<File> addedImages = new ArrayList<>();
+    File allUnselectedImages[];
+    File allSelectedImage[];
 
     @FXML
     public void initialize() {
 
+        File unselectedDirectory = new File("downloads");
+        File selectedDirectory = new File("images_to_use");
         nextButton.setDisable(true);
         waitLabel.setVisible(true);
 
-        //should change so back button isn't the same as main menu button
-        deleteImagesToUse();
-        deleteDownloads();
-
-        filesJpg = new ArrayList<>();
         paneOne.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         paneOne.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         paneTwo.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         paneTwo.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        filesJpg = new ArrayList<>();
-        addedImages = new ArrayList<>();
+
         Command command = new Command("cat .temp_searchterm.txt");
         command.execute();
+
+        SelectionOfImagesPane.setHgap(NO_GAP);
+        SelectionOfImagesPane.setVgap(NO_GAP);
+
+        selectedImages.setHgap(NO_GAP);
+        selectedImages.setVgap(NO_GAP);
+
+        FilenameFilter filterJpg = new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().endsWith(".jpg");
+            }
+        };
+
         searchTerm = command.getStream();
 
-        FlickreImageCreator getImages = new FlickreImageCreator(searchTerm,  10);
-        downloadImageJob please = new downloadImageJob(searchTerm, 10, getImages);
-        imageWaitBar.progressProperty().bind(please.progressProperty());
-        team.execute(please);
-        please.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-            @Override
-            public void handle(WorkerStateEvent event) {
-                waitLabel.setVisible(false);
-                tilePane.setHgap(NO_GAP);
-                tilePane.setVgap(NO_GAP);
+        allUnselectedImages = unselectedDirectory.listFiles(filterJpg);
+        allSelectedImage = selectedDirectory.listFiles(filterJpg);
+        for(int i=0; i< allUnselectedImages.length; i++){
+            filesJpg.add(allUnselectedImages[i]);
+        }
+        for(int i=0; i< allSelectedImage.length; i++){
+            addedImages.add(allSelectedImage[i]);
+        }
 
-                selectedImages.setHgap(NO_GAP);
-                selectedImages.setVgap(NO_GAP);
+        if(filesJpg.size()==0 && addedImages.size()==0) {
+            FlickreImageCreator getImages = new FlickreImageCreator(searchTerm,  10);
+            downloadImageJob downloadImages = new downloadImageJob(searchTerm, 10, getImages);
+            imageWaitBar.progressProperty().bind(downloadImages.progressProperty());
+            team.execute(downloadImages);
 
-                File selectedDirectory = new File("downloads");
+            downloadImages.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+                @Override
+                public void handle(WorkerStateEvent event) {
+                    imageWaitBar.setVisible(false);
+                    waitLabel.setVisible(false);
 
-                if (selectedDirectory != null) {
-                    FilenameFilter filterJpg = new FilenameFilter() {
-                        @Override
-                        public boolean accept(File dir, String name) {
-                            return name.toLowerCase().endsWith(".jpg");
-                        }
-                    };
-                    allImages = selectedDirectory.listFiles(filterJpg);
-                    for(int i=0; i< allImages.length; i++){
-                        filesJpg.add(allImages[i]);
+                    allUnselectedImages = unselectedDirectory.listFiles(filterJpg);
+                    allSelectedImage = selectedDirectory.listFiles(filterJpg);
+                    for(int i=0; i< allUnselectedImages.length; i++){
+                        filesJpg.add(allUnselectedImages[i]);
                     }
+                    for(int i=0; i< allSelectedImage.length; i++){
+                        addedImages.add(allSelectedImage[i]);
+                    }
+                    createAllImageSelectionPage(SelectionOfImagesPane, filesJpg);
+                    createAllImageSelectionPage(selectedImages, addedImages);
                 }
-                //now set image in tiles
-                createAllImageSelectionPage();
-            }
-        });
+            });
+        }else{
+            imageWaitBar.setVisible(false);
+            waitLabel.setVisible(false);
 
+        }
+
+        //have all the arraylists ready, set images into tilePane using it
+        createAllImageSelectionPage(SelectionOfImagesPane, filesJpg);
+        createAllImageSelectionPage(selectedImages, addedImages);
     }
 
-    private void createAllImageSelectionPage() {
-        tilePane.getChildren().clear();
-        for(int i=0; i<filesJpg.size(); i++){
-            tilePane.getChildren().add(createElements(i));
+    private void createAllImageSelectionPage(TilePane givenPane, ArrayList<File> filesGiven ) {
+        givenPane.getChildren().clear();
+        for(int i=0; i<filesGiven.size(); i++){
+            givenPane.getChildren().add(createElements(i,filesGiven));
         }
     }
 
-    private VBox createElements(int index) {
+    private VBox createElements(int index, ArrayList<File> filesGiven) {
 
         ImageView imageView = new ImageView();
 
-        File file = filesJpg.get(index);
+        File file = filesGiven.get(index);
         Image image = new Image(file.toURI().toString());
         imageView.setImage(image);
 
@@ -129,8 +150,8 @@ public class ImageSelectionController extends Controller{
                     if(addedImages.get(i).equals(file)){
                         filesJpg.add(0,addedImages.get(i));
                         addedImages.remove(addedImages.get(i));
-                        tilePane.getChildren().add(imageView);
-                        createAllImageSelectionPage();
+                        createAllImageSelectionPage(SelectionOfImagesPane, filesJpg);
+                        createAllImageSelectionPage(selectedImages, addedImages);
                         found = true;
                         imageCountLabel.setText(addedImages.size()+" Images selected for the creation");
                     }
@@ -142,8 +163,8 @@ public class ImageSelectionController extends Controller{
                             imageView.setFitHeight(ELEMENT_SIZE_TWO);
                             addedImages.add(file);
                             filesJpg.remove(file);
-                            selectedImages.getChildren().add(imageView);
-                            createAllImageSelectionPage();
+                            createAllImageSelectionPage(SelectionOfImagesPane, filesJpg);
+                            createAllImageSelectionPage(selectedImages, addedImages);
                             imageCountLabel.setText(addedImages.size()+" Images selected for the creation");
                         }
                     }
@@ -168,6 +189,7 @@ public class ImageSelectionController extends Controller{
     @FXML
     public void handleCreate() throws IOException {
         createCreationJob work = new createCreationJob(searchTerm, addedImages);
+        createVideoBar.progressProperty().bind(work.progressProperty());
         team.submit(work);
         work.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
@@ -213,18 +235,10 @@ public class ImageSelectionController extends Controller{
 
     }
 
+
     @FXML
     public void habdleBackButton() throws IOException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to go back?");
-        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            //only switch scene after confirmation
-            deleteDownloads();
-            deleteImagesToUse();
-            switchScenes(rootBorderPane, "CreateAudioScreen.fxml");
-        }
-
+        switchScenes(rootBorderPane, "CreateAudioScreen.fxml");
     }
 
 }

@@ -15,6 +15,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.util.Duration;
 import wikispeak.tasks.deletionJobs;
+import wikispeak.tasks.newDeletionJob;
 
 
 import java.io.File;
@@ -31,9 +32,11 @@ public class UpgradedPlayScreenController extends ListController {
 
     ObservableList<String> creationsStrings = FXCollections.observableArrayList(populateList("creations", ""));
     String selectedCreation = null;
+    String selectedDir = null;
     File fileURL;
 
     private boolean play = false;
+    private boolean deleted = false;
     private boolean firsTime;
     private MediaPlayer creationMediaPlayer = null;
 
@@ -77,9 +80,15 @@ public class UpgradedPlayScreenController extends ListController {
                     setEmptyLabelText();
                     getUserChoice(newValue);
                     setMediaForPlay();
-                    playMedia();
                     firsTime = false;
-                    play = true;
+                    if(deleted){
+                        deleted = false;
+                        play = false;
+                    }else {
+                        playMedia();
+                        play = true;
+                    }
+
                 } else {
                     setEmptyLabelText();
                     creationMediaPlayer.dispose();
@@ -183,7 +192,7 @@ public class UpgradedPlayScreenController extends ListController {
         if (!firsTime && creationMediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             creationMediaPlayer.dispose();
         }
-        fileURL = new File("." + System.getProperty("file.separator") + "creations" + System.getProperty("file.separator") + selectedCreation + ".mp4");
+        fileURL = new File( "creations" + System.getProperty("file.separator") + selectedCreation + ".mp4");
         Media playCreation = new Media(fileURL.toURI().toString());
         creationMediaPlayer = new MediaPlayer(playCreation);
         creationViewer.setMediaPlayer(creationMediaPlayer);
@@ -192,7 +201,8 @@ public class UpgradedPlayScreenController extends ListController {
     }
 
     private void getUserChoice(String selection) {
-        selectedCreation = selection;
+        selectedCreation = selection + System.getProperty("file.separator") + selection;
+        selectedDir = selection;
     }
 
     /**
@@ -210,7 +220,7 @@ public class UpgradedPlayScreenController extends ListController {
             } else if (creationMediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
                 pauseMedia();
                 play = false;
-            } else if (creationMediaPlayer.getStatus() == MediaPlayer.Status.PAUSED) {
+            } else{
                 playMedia();
                 play = true;
 
@@ -225,10 +235,11 @@ public class UpgradedPlayScreenController extends ListController {
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                deletionJobs deleteSelected = new deletionJobs("creations", selectedCreation, ".mp4");
+                newDeletionJob deleteSelected = new newDeletionJob(selectedDir);
                 workerTeam.submit(deleteSelected);
-                creationList.getItems().remove(selectedCreation);
+                creationList.getItems().remove(selectedDir);
                 setEmptyLabelText();
+                deleted = true;
 
             }
         }

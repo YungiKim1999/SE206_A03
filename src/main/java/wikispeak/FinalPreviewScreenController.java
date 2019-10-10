@@ -99,6 +99,26 @@ public class FinalPreviewScreenController extends ListController {
             }
         });
     }
+
+    @FXML
+    private void handleBackToImageSelection() throws IOException {
+        if(play == true){
+            pauseMedia();
+        }
+        File deleteFile = new File("final_creation.mp4");
+        deleteFile.delete();
+        deleteFile = new File("quiz1.mp4");
+        deleteFile.delete();
+        deleteFile = new File("quiz2.mp4");
+        deleteFile.delete();
+        deleteFile = new File(".blankVideo.mp4");
+        deleteFile.delete();
+        deleteFile = new File(".noTextVideo.mp4");
+        deleteFile.delete();
+        deleteFile = new File(".temp_video.mp4");
+        deleteFile.delete();
+        switchScenes(rootBorderPane, "ImageSelectionScreen.fxml");
+    }
     @FXML
     private void handleExitButton()throws IOException {
         if(play == true){
@@ -170,25 +190,36 @@ public class FinalPreviewScreenController extends ListController {
 
     @FXML
     private void createAllThingsNecessary(){
-        File containerForAll = new File(creationNameInput.getText());
-        containerForAll.mkdir();
-        File blankVideo = new File(".blankVideo.mp4");
-        File noTextVideo = new File(".noTextVideo.mp4");
-        File userCreation = new File("final_creation.mp4");
-        File quizElement1 = new File("quiz1.mp4");
-        File quizElement2 = new File("quiz2.mp4");
-        userCreation.renameTo(new File(creationNameInput.getText() + System.getProperty("file.separator") + creationNameInput.getText() + ".mp4"));
-        quizElement1.renameTo(new File(creationNameInput.getText() + System.getProperty("file.separator") + "quiz1.mp4"));
-        quizElement2.renameTo(new File(creationNameInput.getText() + System.getProperty("file.separator") + "quiz2.mp4"));
-        containerForAll.renameTo(new File("creations" + System.getProperty("file.separator") + creationNameInput.getText()));
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Your creation is complete!");
-        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-        Optional<ButtonType> result = alert.showAndWait();
-        try {
-            deleteAllFiles();
-            switchScenes(rootBorderPane, "MainMenu.fxml");
-        }catch(Exception e){
+        boolean okayName = true;
+        File creationFile = new File("creations");
+        for(File creationMade : creationFile.listFiles()){
+            if(creationMade.getName().equals(creationNameInput.getText())){
+                okayName = false;
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "A Creation already has this name. Please try again");
+                alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                Optional<ButtonType> result = alert.showAndWait();
+                break;
+            }
+        }
+        if(okayName) {
+            File containerForAll = new File(creationNameInput.getText());
+            containerForAll.mkdir();
+            File userCreation = new File("final_creation.mp4");
+            File quizElement1 = new File("quiz1.mp4");
+            File quizElement2 = new File("quiz2.mp4");
+            userCreation.renameTo(new File(creationNameInput.getText() + System.getProperty("file.separator") + creationNameInput.getText() + ".mp4"));
+            quizElement1.renameTo(new File(creationNameInput.getText() + System.getProperty("file.separator") + "quiz1.mp4"));
+            quizElement2.renameTo(new File(creationNameInput.getText() + System.getProperty("file.separator") + "quiz2.mp4"));
+            containerForAll.renameTo(new File("creations" + System.getProperty("file.separator") + creationNameInput.getText()));
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Your creation is complete!");
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            Optional<ButtonType> result = alert.showAndWait();
+            try {
+                deleteAllFiles();
+                switchScenes(rootBorderPane, "MainMenu.fxml");
+            } catch (Exception e) {
 
+            }
         }
     }
 
@@ -207,7 +238,7 @@ public class FinalPreviewScreenController extends ListController {
         deleteFile.delete();
         deleteFile = new File(".temp_text.txt");
         deleteFile.delete();
-        deleteFile = new File("temp_video.mp4");
+        deleteFile = new File(".temp_video.mp4");
         deleteFile.delete();
         deleteFile = new File(".temp_creationName.txt");
         deleteFile.delete();
