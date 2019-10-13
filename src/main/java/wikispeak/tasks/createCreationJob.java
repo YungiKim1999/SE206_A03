@@ -23,18 +23,7 @@ public class createCreationJob extends Task<Void> {
 
     @Override
     protected Void call() throws Exception {
-        //delete all unselected files
-        updateProgress(0,10);
-        for (File file : new File("images_to_use").listFiles()){
-            file.delete();
-        }
-        updateProgress(1,10);
-        int count = 0;
-        for(File image : images){
-            image.renameTo(new File("images_to_use" + System.getProperty("file.separator") + "image"+count + ".jpg"));
-            count++;
-        }
-        updateProgress(2,10);
+
         //get number of images
         File file = new File("images_to_use");
         int _numberOfImages = file.listFiles().length;

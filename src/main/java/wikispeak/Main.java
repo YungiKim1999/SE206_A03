@@ -42,6 +42,16 @@ public class Main extends Application {
     public void stop(){
         File file = new File(".temp_text.txt");
         file.delete();
+        file = new File("final_creation.mp4");
+        file.delete();
+        file = new File("quiz1.mp4");
+        file.delete();
+        file = new File("quiz2.mp4");
+        file.delete();
+        file = new File(".blankVideo.mp4");
+        file.delete();
+        file = new File(".noTextVideo.mp4");
+        file.delete();
         file = new File(".temp_video.mp4");
         file.delete();
         file = new File(".temp_audio.wav");

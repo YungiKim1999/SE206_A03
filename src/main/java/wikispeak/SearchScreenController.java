@@ -33,6 +33,12 @@ public class SearchScreenController extends Controller {
         for (File file : new File("audio").listFiles()){
             file.delete();
         }
+        for (File file : new File("downloads").listFiles()){
+            file.delete();
+        }
+        for (File file : new File("images_to_use").listFiles()){
+            file.delete();
+        }
     }
 
     @FXML

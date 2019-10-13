@@ -190,17 +190,24 @@ public class ImageSelectionController extends Controller{
 
     @FXML
     public void handleCreate() throws IOException {
+        moveUsedImages moveFirst = new moveUsedImages(addedImages, filesJpg);
         createCreationJob work = new createCreationJob(searchTerm, addedImages);
         createVideoBar.progressProperty().bind(work.progressProperty());
-        team.submit(work);
-        work.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+        team.submit(moveFirst);
+        moveFirst.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
-                try {
-                    switchScenes(rootBorderPane, "FinalPreviewScreen.fxml");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                team.submit(work);
+                work.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+                    @Override
+                    public void handle(WorkerStateEvent event) {
+                        try {
+                            switchScenes(rootBorderPane, "FinalPreviewScreen.fxml");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
 
             }
         });
@@ -240,19 +247,23 @@ public class ImageSelectionController extends Controller{
 
     @FXML
     public void habdleBackButton() throws IOException {
-        moveUsedImages moveImages = new moveUsedImages(addedImages);
-        team.submit(moveImages);
-        moveImages.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+        moveUsedImages moveFirst = new moveUsedImages(addedImages, filesJpg);
+        team.submit(moveFirst);
+        moveFirst.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
-                try {
-                    switchScenes(rootBorderPane, "CreateAudioScreen.fxml");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                        try {
+                            switchScenes(rootBorderPane, "CreateAudioScreen.fxml");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+
             }
-        });
+
 
     }
 
-}
+
