@@ -18,6 +18,8 @@ import javafx.util.Duration;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class FinalPreviewScreenController extends ListController {
@@ -37,9 +39,15 @@ public class FinalPreviewScreenController extends ListController {
     @FXML private Slider videoBuffer;
     @FXML private TextField creationNameInput;
     @FXML private ListView previousCreations;
+    @FXML private Button createButton;
 
     @FXML
     public void initialize(){
+
+        //create button is only available if some text is entered in the field
+        creationNameInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            createButton.setDisable(creationNameInput.getText().trim().isEmpty());
+        });
 
         previousCreations.setItems(creationsStrings);
         firsTime = true;
@@ -198,6 +206,11 @@ public class FinalPreviewScreenController extends ListController {
     private void createAllThingsNecessary(){
         boolean okayName = true;
         File creationFile = new File("creations");
+
+        if(!nameIsValid(creationNameInput.getText())){
+            return;
+        }
+
         for(File creationMade : creationFile.listFiles()){
             if(creationMade.getName().equals(creationNameInput.getText())){
                 okayName = false;
@@ -253,5 +266,21 @@ public class FinalPreviewScreenController extends ListController {
         deleteFile.delete();
         deleteFile = new File(".temp_searchTerm.txt");
         deleteFile.delete();
+    }
+
+    /**
+     * Checks if the given filename doesn't contain forbidden characters
+     * @param fileName
+     * @return true or false
+     */
+    private boolean nameIsValid(String fileName){
+        Pattern p = Pattern.compile("[\\s<>:\"/\\\\|?*]");
+        Matcher m = p.matcher(fileName);
+        if (m.find()){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid Creation file name");
+            alert.showAndWait();
+            return false;
+        }
+        return true;
     }
 }
