@@ -25,7 +25,7 @@
                <font>
                   <Font size="20.0" />
                </font></Button>
-            <Button mnemonicParsing="false" onAction="#handleCreate" prefHeight="100.0" prefWidth="450.0" text="Coming Soon: Play Quiz">
+            <Button mnemonicParsing="false" prefHeight="100.0" prefWidth="450.0" text="Coming Soon: Play Quiz">
                <font>
                   <Font name="System Italic" size="20.0" />
                </font>
