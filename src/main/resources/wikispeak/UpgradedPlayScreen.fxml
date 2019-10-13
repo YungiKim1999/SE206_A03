@@ -25,7 +25,7 @@
             <Button fx:id="deleteButton" layoutX="730.0" layoutY="525.0" mnemonicParsing="false" onAction="#handleDeleteButton" prefHeight="26.0" prefWidth="157.0" text="Delete" />
             <Label fx:id="listIsEmpty" contentDisplay="CENTER" layoutX="731.0" layoutY="13.0" prefHeight="507.0" prefWidth="156.0" textAlignment="CENTER" />
             <Label layoutX="178.0" layoutY="565.0" text="Volume" />
-            <MediaView fx:id="creationViewer1" fitHeight="505.0" fitWidth="710.0" layoutX="15.0" layoutY="14.0" />
+            <MediaView fx:id="creationViewer1" fitHeight="504.0" fitWidth="710.0" layoutX="15.0" layoutY="14.0" />
          </children>
       </AnchorPane>
    </center>
