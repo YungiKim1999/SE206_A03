@@ -41,7 +41,6 @@ public class ImageSelectionController extends Controller{
     private String searchTerm;
     private ExecutorService team = Executors.newSingleThreadExecutor();
 
-    private static final double ELEMENT_SIZE = 145;
     private static final double ELEMENT_SIZE_TWO = 235;
     private static final double NO_GAP = ELEMENT_SIZE_TWO/10;
 
@@ -55,7 +54,11 @@ public class ImageSelectionController extends Controller{
 
         File unselectedDirectory = new File("downloads");
         File selectedDirectory = new File("images_to_use");
-        nextButton.setDisable(true);
+        if(addedImages.size()>0){
+            nextButton.setDisable(false);
+        }else{
+            nextButton.setDisable(true);
+        }
         waitLabel.setVisible(true);
 
         paneOne.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
