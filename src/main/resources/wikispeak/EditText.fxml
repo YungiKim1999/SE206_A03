@@ -28,6 +28,7 @@
                </font>
             </Button>
             <Button alignment="CENTER" layoutX="5.0" layoutY="40.0" mnemonicParsing="false" onAction="#handleBackToSearch" prefHeight="35.0" prefWidth="100.0" text="&lt; Back" />
+            <Button alignment="CENTER" layoutX="115.0" layoutY="40.0" mnemonicParsing="false" onAction="#handleBackToMainMenu" prefHeight="35.0" prefWidth="100.0" text="Main Menu" />
          </children>
       </AnchorPane>
    </bottom>
