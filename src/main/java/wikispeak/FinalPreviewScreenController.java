@@ -117,6 +117,9 @@ public class FinalPreviewScreenController extends ListController {
         deleteFile.delete();
         deleteFile = new File(".temp_video.mp4");
         deleteFile.delete();
+        if(creationPlayingThing.getStatus() == MediaPlayer.Status.PLAYING){
+            creationPlayingThing.pause();
+        }
         switchScenes(rootBorderPane, "ImageSelectionScreen.fxml");
     }
     @FXML
@@ -128,6 +131,9 @@ public class FinalPreviewScreenController extends ListController {
         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
+            if(creationPlayingThing.getStatus() == MediaPlayer.Status.PLAYING){
+                creationPlayingThing.pause();
+            }
             deleteAllFiles();
             switchScenes(rootBorderPane, "MainMenu.fxml");
 
@@ -216,6 +222,9 @@ public class FinalPreviewScreenController extends ListController {
             Optional<ButtonType> result = alert.showAndWait();
             try {
                 deleteAllFiles();
+                if(creationPlayingThing.getStatus() == MediaPlayer.Status.PLAYING){
+                    creationPlayingThing.pause();
+                }
                 switchScenes(rootBorderPane, "MainMenu.fxml");
             } catch (Exception e) {
 
