@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class moveUsedImages extends Task<Void> {
+
     private ArrayList<File> images;
 
         public moveUsedImages(ArrayList<File> images){

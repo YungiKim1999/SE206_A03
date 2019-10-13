@@ -15,6 +15,7 @@ import wikispeak.helpers.Command;
 import wikispeak.helpers.FlickreImageCreator;
 import wikispeak.tasks.createCreationJob;
 import wikispeak.tasks.downloadImageJob;
+import wikispeak.tasks.moveUsedImages;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -139,8 +140,8 @@ public class ImageSelectionController extends Controller{
         Image image = new Image(file.toURI().toString());
         imageView.setImage(image);
 
-        imageView.setFitWidth(ELEMENT_SIZE);
-        imageView.setFitHeight(ELEMENT_SIZE);
+        imageView.setFitWidth(ELEMENT_SIZE_TWO);
+        imageView.setFitHeight(ELEMENT_SIZE_TWO);
 
         imageView.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
@@ -159,8 +160,6 @@ public class ImageSelectionController extends Controller{
                 if(!found) {
                     for (int i = 0; i < filesJpg.size(); i++) {
                         if (filesJpg.get(i).equals(file)) {
-                            imageView.setFitWidth(ELEMENT_SIZE_TWO);
-                            imageView.setFitHeight(ELEMENT_SIZE_TWO);
                             addedImages.add(file);
                             filesJpg.remove(file);
                             createAllImageSelectionPage(SelectionOfImagesPane, filesJpg);
@@ -238,7 +237,19 @@ public class ImageSelectionController extends Controller{
 
     @FXML
     public void habdleBackButton() throws IOException {
-        switchScenes(rootBorderPane, "CreateAudioScreen.fxml");
+        moveUsedImages moveImages = new moveUsedImages(addedImages);
+        team.submit(moveImages);
+        moveImages.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent event) {
+                try {
+                    switchScenes(rootBorderPane, "CreateAudioScreen.fxml");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
 }

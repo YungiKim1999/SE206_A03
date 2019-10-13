@@ -213,7 +213,8 @@ public class UpgradedPlayScreenController extends ListController {
         if (!firsTime && !creationList.getItems().isEmpty()) {
             if (playPauseButton.getText().equals("Repeat")) {
                 creationMediaPlayer.stop();
-                selectedCreation = creationList.getSelectionModel().getSelectedItem();
+                String repeatingCreation = creationList.getSelectionModel().getSelectedItem();
+                getUserChoice(repeatingCreation);
                 setMediaForPlay();
                 playMedia();
                 play = true;
