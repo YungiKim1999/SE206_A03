@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="rootBorderPane" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wikispeak.ImageSelectionController">
+<BorderPane fx:id="rootBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wikispeak.ImageSelectionController">
    <center>
       <AnchorPane fx:id="myAnchor1" prefHeight="600.0" prefWidth="900.0" BorderPane.alignment="CENTER">
          <children>
@@ -23,10 +23,13 @@
                   <TilePane fx:id="selectedImages" prefHeight="392.0" prefWidth="255.0" />
                </content>
             </ScrollPane>
-            <Button fx:id="nextButton" layoutX="623.0" layoutY="538.0" mnemonicParsing="false" onAction="#handleCreate" prefHeight="45.0" prefWidth="259.0" text="Next" />
-            <Button layoutX="14.0" layoutY="542.0" mnemonicParsing="false" onAction="#habdleBackButton" prefHeight="37.0" prefWidth="114.0" text="Back" />
-            <Button layoutX="128.0" layoutY="542.0" mnemonicParsing="false" onAction="#handleMainMenuButton" prefHeight="37.0" prefWidth="114.0" text="Main Menu" />
-            <Label layoutX="105.0" layoutY="47.0" prefHeight="29.0" prefWidth="315.0" text="Click on the images to add into the video">
+            <Button fx:id="nextButton" defaultButton="true" layoutX="623.0" layoutY="538.0" mnemonicParsing="false" onAction="#handleCreate" prefHeight="45.0" prefWidth="259.0" text="Next">
+               <font>
+                  <Font size="16.0" />
+               </font></Button>
+            <Button layoutX="5.0" layoutY="560.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#habdleBackButton" prefHeight="35.0" prefWidth="100.0" text="&lt; Back" />
+            <Button layoutX="115.0" layoutY="560.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleMainMenuButton" prefHeight="35.0" prefWidth="100.0" text="Main Menu" />
+            <Label layoutX="106.0" layoutY="56.0" prefHeight="29.0" prefWidth="315.0" text="Click on the images to add into the video">
                <font>
                   <Font size="15.0" />
                </font></Label>
@@ -34,13 +37,13 @@
                <font>
                   <Font size="15.0" />
                </font></Label>
-            <Label layoutX="664.0" layoutY="61.0" prefHeight="19.0" prefWidth="177.0" text="Remove from the video">
+            <Label layoutX="664.0" layoutY="61.0" prefHeight="19.0" prefWidth="177.0" text="remove from the video">
                <font>
                   <Font size="15.0" />
                </font></Label>
-            <Label layoutX="291.0" prefHeight="36.0" prefWidth="318.0" text="Step 5:Select Images for Video">
+            <Label alignment="CENTER" layoutY="5.0" prefHeight="41.0" prefWidth="900.0" text="Step 5: Select Images for Video" textAlignment="CENTER">
                <font>
-                  <Font size="20.0" />
+                  <Font size="30.0" />
                </font>
             </Label>
             <Label fx:id="imageCountLabel" alignment="CENTER" layoutX="512.0" layoutY="233.0" prefHeight="134.0" prefWidth="112.0" text="No Images selected for video" textAlignment="CENTER" wrapText="true" />

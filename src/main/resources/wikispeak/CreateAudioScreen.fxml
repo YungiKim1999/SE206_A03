@@ -27,8 +27,14 @@
             <Button fx:id="createAudioSnippetButton" disable="true" layoutX="515.0" layoutY="286.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCreateAudioSnippet" prefHeight="60.0" prefWidth="150.0" text="Create Audio Snippet" textAlignment="CENTER" wrapText="true" />
             <VBox fx:id="audioListBox" layoutX="675.0" layoutY="30.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="430.0" prefWidth="220.0" />
             <ProgressIndicator fx:id="progressIndicator" layoutX="571.0" layoutY="372.0" prefHeight="36.0" prefWidth="39.0" visible="false" />
-            <Text layoutX="703.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Click and drag to reorder" />
-            <Text layoutX="209.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Highlight Text" />
+            <Text layoutX="691.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Click and drag to reorder">
+               <font>
+                  <Font size="15.0" />
+               </font></Text>
+            <Text layoutX="202.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Highlight Text">
+               <font>
+                  <Font size="15.0" />
+               </font></Text>
          </children>
       </AnchorPane>
    </center>
