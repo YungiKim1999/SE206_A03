@@ -1,2 +1,2 @@
-apiKey = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-sharedSecret = xxxxxxxxxxxxxxxx
+apiKey = 929a96e38d5b1e413f255f82cba55274
+sharedSecret = 3c5987b7ae377ba1
