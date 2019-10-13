@@ -18,6 +18,7 @@ public class Main extends Application {
         new File("creations").mkdir();
         new File("audio").mkdir();
         new File("downloads").mkdir();
+        new File("images_to_use").mkdir();
         try{
             //Load in and display the Home screen (Main Menu)
             FXMLLoader loader = new FXMLLoader();
