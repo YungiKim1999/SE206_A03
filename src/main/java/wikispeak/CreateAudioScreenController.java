@@ -2,7 +2,6 @@ package wikispeak;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -43,7 +42,6 @@ public class CreateAudioScreenController extends ListController{
     @FXML private Button previewButton;
     @FXML private VBox audioListBox;
     @FXML private ProgressIndicator progressIndicator;
-    @FXML private Button createFullAudioButton;
 
     private ExecutorService worker = Executors.newSingleThreadExecutor();
 
@@ -58,18 +56,6 @@ public class CreateAudioScreenController extends ListController{
         textOutput.selectedTextProperty().addListener(((observable, oldValue, newValue) -> {
             updateCreateAudioSnippetButtonAccess();
         }));
-        //listens to the length of audioFiles and disables createFullAudioButton when length is 0
-        audioFiles.addListener(new ListChangeListener<String>() {
-            @Override
-            public void onChanged(Change<? extends String> change) {
-                if (audioFiles.size() == 0){
-                    createFullAudioButton.setDisable(true);
-                }
-                else{
-                    createFullAudioButton.setDisable(false);
-                }
-            }
-        });
         populateVoiceSelectionBox();
         populateTextArea();
         populateAudioList();
@@ -147,24 +133,10 @@ public class CreateAudioScreenController extends ListController{
 
     @FXML
     /**
-     * Takes the user back to the editText screen
+     * Takes the user back to the search screen
      */
-    private void handleBackToEditText() throws IOException {
+    private void handleBackToSearch() throws IOException {
         switchScenes(rootBorderPane, "EditText.fxml");
-    }
-
-    @FXML
-    /**
-     * Takes the user back to the Main Menu screen. Confirms they are happy to abandon any progress
-     */
-    private void handleBackToMainMenu() throws IOException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to go back?\nAny progress will be lost.");
-        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            //only switch scene after confirmation
-            switchScenes(rootBorderPane, "MainMenu.fxml");
-        }
     }
 
     @FXML

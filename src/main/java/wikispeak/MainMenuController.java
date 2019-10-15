@@ -28,4 +28,9 @@ public class MainMenuController extends Controller {
         switchScenes(rootBorderPane,"UpgradedPlayScreen.fxml");
     }
 
+    @FXML
+    private void handleQuiz() throws IOException {
+        switchScenes(rootBorderPane,"QuizScreen.fxml");
+    }
+
 }

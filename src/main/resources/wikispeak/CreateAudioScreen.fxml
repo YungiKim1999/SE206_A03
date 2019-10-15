@@ -35,13 +35,12 @@
    <bottom>
       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="900.0">
          <children>
-            <Button alignment="CENTER" layoutX="5.0" layoutY="40.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleBackToEditText" prefHeight="35.0" prefWidth="100.0" text="&lt; Back" />
-            <Button fx:id="createFullAudioButton" alignment="CENTER" defaultButton="true" disable="true" layoutX="745.0" layoutY="5.0" mnemonicParsing="false" onAction="#handleCreateFullAudio" prefHeight="70.0" prefWidth="150.0" text="Create Full Audio" textAlignment="CENTER" wrapText="true">
+            <Button alignment="CENTER" layoutX="5.0" layoutY="40.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleBackToSearch" prefHeight="35.0" prefWidth="100.0" text="&lt; Back" />
+            <Button alignment="CENTER" defaultButton="true" layoutX="745.0" layoutY="5.0" mnemonicParsing="false" onAction="#handleCreateFullAudio" prefHeight="70.0" prefWidth="150.0" text="Create Full Audio" textAlignment="CENTER" wrapText="true">
                <font>
                   <Font size="16.0" />
                </font>
             </Button>
-            <Button alignment="CENTER" layoutX="115.0" layoutY="40.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleBackToMainMenu" prefHeight="35.0" prefWidth="100.0" text="Main Menu" />
          </children>
       </AnchorPane>
    </bottom>

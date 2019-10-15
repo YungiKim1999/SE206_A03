@@ -61,19 +61,11 @@ public class MediaPlayerAPI {
 
     @FXML
     public void initialize() {
-        getQuizChoice("", "");//For the 2 strings, you must changes them so that the correct quiz element is picked
+        quizRandomizer();
         getVideoReady();
     }
 
-    /**
-     * This method sets the variables up so that the correct creation as well as the quiz element is selected for the viewer to see
-     * @param creationChoice : The name of the creation/directory name for the creation
-     * @param quizChoice : the choice of whether the video played is audio and images or just audio.
-     */
-    private void getQuizChoice(String creationChoice, String quizChoice){
-        selectedCreationToPlay = creationChoice;
-        selectedQuizElement = quizChoice;
-    }
+
     /**
      *This will set the media file ready for it to be played
      */
@@ -188,7 +180,31 @@ public class MediaPlayerAPI {
 
             }
         }
+
+    @FXML
+    private void handleForwardButton() {
+            mediaPlayer.seek(mediaPlayer.getCurrentTime().add(Duration.seconds(2)));
     }
+
+    @FXML
+    private void handleBackButton() {
+            mediaPlayer.seek(mediaPlayer.getCurrentTime().subtract(Duration.seconds(2)));
+
+    }
+
+    /**
+     * This is the function which will be used to randomise the quiz stuff
+     * The way I set up the API is you just need to set the "selectedCreationToPlay" and the "selectedQuizElement"
+     * and then call "getVideoReady" method and everything will be done for you.
+     * I have put this in the "initialize" method as i think you would randomize, set the video, and then have the
+     * user answer the question
+     * Right now, it is just playing a creation that i have made...
+     */
+    private void quizRandomizer(){
+        selectedCreationToPlay = "goats";
+        selectedQuizElement = "quiz2";
+    }
+}
 
 
 
