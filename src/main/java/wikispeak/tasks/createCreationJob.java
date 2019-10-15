@@ -36,15 +36,22 @@ public class createCreationJob extends Task<Void> {
         Double framerate = (_numberOfImages/duration);
         updateProgress(4,10);
         //make the video
-        //TODO: check the output resolution is the same as the resolution of the video player
+        //TODO: change the output resolution to be the same as the new video player
         updateProgress(5,10);
-        command = new Command("cat images_to_use" + System.getProperty("file.separator") + "*.jpg | ffmpeg -f image2pipe -framerate " + framerate + " -i - -vf \"scale=414:312, drawtext=fontsize=50:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:shadowcolor=black:shadowx=2:shadowy=2:text=" + _searchTerm + "\" -r 25 -y .temp_video.mp4");
+        command = new Command("cat images_to_use" + System.getProperty("file.separator") + "*.jpg | ffmpeg -f image2pipe -framerate " + framerate + " -i - -vf \"scale=710:504, drawtext=fontsize=50:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:shadowcolor=black:shadowx=2:shadowy=2:text=" + _searchTerm + "\" -r 25 -y .temp_video.mp4");
         command.execute();
         updateProgress(6,10);
         command = new Command("ffmpeg -f lavfi -i color=c=black:s=900x400:d=5 -vf \"drawtext=fontfile=myfont.ttf:fontsize=30: fontcolor=black:x=(w-text_w)/2:y=(h-text_h)/2:text='awesome'\" .blankVideo.mp4\n");
         command.execute();
+<<<<<<< HEAD
         //change the scale or s= numbers in order to change the scale of the video
         command = new Command("cat images_to_use" + System.getProperty("file.separator") + "*.jpg | ffmpeg -f image2pipe -framerate " + framerate + " -i - -vf \"scale=900:400, drawtext=fontsize=50:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:shadowcolor=black:shadowx=2:shadowy=2:text=" + blankText + "\" -r 25 -y .noTextVideo.mp4");
+=======
+
+        //TODO: check that this globbing method of video creation is working (it might be missing the last two images)
+        //TODO: it also must match the resolution of the Quiz player that we use
+        command = new Command("ffmpeg -framerate " + framerate + " -pattern_type glob -i 'images_to_use/*.jpg' -vf \"scale=414:312, drawtext=fontfile=fonts/myfont.ttf:fontsize=100: fontcolor=black:x=(w-text_w)/2:y=(h-text_h)/2:text=" + blankText + "\" .noTextVideo.mp4");
+>>>>>>> 7a05dec18a943fe5f0fd31bbcb1a0ed89924f5ed
         command.execute();
         updateProgress(7,10);
         command = new Command("ffmpeg -y -i .temp_audio.wav -i .temp_video.mp4 -c:v copy -c:a aac -strict experimental final_creation.mp4");
