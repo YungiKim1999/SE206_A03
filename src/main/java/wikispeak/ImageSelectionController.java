@@ -52,8 +52,8 @@ public class ImageSelectionController extends Controller{
     @FXML
     public void initialize() {
 
-        File unselectedDirectory = new File("downloads");
-        File selectedDirectory = new File("images_to_use");
+        File unselectedDirectory = new File(".temp" + System.getProperty("file.separator") + "downloads");
+        File selectedDirectory = new File(".temp" + System.getProperty("file.separator") + "images_to_use");
         if(addedImages.size()>0){
             nextButton.setDisable(false);
         }else{
@@ -66,7 +66,7 @@ public class ImageSelectionController extends Controller{
         paneTwo.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         paneTwo.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-        Command command = new Command("cat .temp_searchterm.txt");
+        Command command = new Command("cat .temp" + System.getProperty("file.separator") + "temp_searchterm.txt");
         command.execute();
 
         SelectionOfImagesPane.setHgap(NO_GAP);
@@ -215,7 +215,7 @@ public class ImageSelectionController extends Controller{
     }
 
     private void deleteDownloads(){
-        File dirForDownloads =new File("downloads");
+        File dirForDownloads =new File(".temp" + System.getProperty("file.separator") + "downloads");
         File contentsInDownloads[] = dirForDownloads.listFiles();
         for(File image : contentsInDownloads){
             image.delete();
@@ -223,7 +223,7 @@ public class ImageSelectionController extends Controller{
     }
 
     private void deleteImagesToUse(){
-        File dirForImages = new File("images_to_use");
+        File dirForImages = new File(".temp" + System.getProperty("file.separator") + "images_to_use");
         File contentsInImagesToUse[] = dirForImages.listFiles();
         for(File image : contentsInImagesToUse){
             image.delete();

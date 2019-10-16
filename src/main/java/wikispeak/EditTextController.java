@@ -22,7 +22,7 @@ public class EditTextController extends Controller{
 
     //Populates the text area
     public void initialize() throws IOException {
-        Command command = new Command("cat .temp_text.txt");
+        Command command = new Command("cat .temp" + System.getProperty("file.separator") + "temp_text.txt");
         command.execute();
         textOutput.setText(command.getStream());
     }
@@ -49,7 +49,7 @@ public class EditTextController extends Controller{
     private void handleDone() throws IOException {
         //save the current text area status to the text file
         String text = textOutput.getText();
-        Command command = new Command("echo \"" + text + "\" > .temp_text.txt");
+        Command command = new Command("echo \"" + text + "\" > .temp" + System.getProperty("file.separator") + "temp_text.txt");
         command.execute();
         switchScenes(rootBorderPane, "CreateAudioScreen.fxml");
     }

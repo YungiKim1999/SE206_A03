@@ -17,6 +17,8 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -113,17 +115,17 @@ public class FinalPreviewScreenController extends ListController {
         if(play == true){
             pauseMedia();
         }
-        File deleteFile = new File("final_creation.mp4");
+        File deleteFile = new File(".temp" + System.getProperty("file.separator") + "final_creation.mp4");
         deleteFile.delete();
-        deleteFile = new File("quiz1.mp4");
+        deleteFile = new File(".temp" + System.getProperty("file.separator") + "quiz1.mp4");
         deleteFile.delete();
-        deleteFile = new File("quiz2.mp4");
+        deleteFile = new File(".temp" + System.getProperty("file.separator") + "quiz2.mp4");
         deleteFile.delete();
-        deleteFile = new File(".blankVideo.mp4");
+        deleteFile = new File(".temp" + System.getProperty("file.separator") + "blankVideo.mp4");
         deleteFile.delete();
-        deleteFile = new File(".noTextVideo.mp4");
+        deleteFile = new File(".temp" + System.getProperty("file.separator") + "noTextVideo.mp4");
         deleteFile.delete();
-        deleteFile = new File(".temp_video.mp4");
+        deleteFile = new File(".temp" + System.getProperty("file.separator") + "temp_video.mp4");
         deleteFile.delete();
         if(creationPlayingThing.getStatus() == MediaPlayer.Status.PLAYING){
             creationPlayingThing.pause();
@@ -162,7 +164,7 @@ public class FinalPreviewScreenController extends ListController {
         if (!firsTime && creationPlayingThing.getStatus() == MediaPlayer.Status.PLAYING){
             creationPlayingThing.dispose();
         }
-        fileURL =new File( "final_creation.mp4");
+        fileURL =new File( ".temp" + System.getProperty("file.separator") + "final_creation.mp4");
         Media playCreation = new Media(fileURL.toURI().toString());
         creationPlayingThing = new MediaPlayer(playCreation);
         creationViewer.setMediaPlayer(creationPlayingThing);
@@ -223,9 +225,9 @@ public class FinalPreviewScreenController extends ListController {
         if(okayName) {
             File containerForAll = new File(creationNameInput.getText());
             containerForAll.mkdir();
-            File userCreation = new File("final_creation.mp4");
-            File quizElement1 = new File("quiz1.mp4");
-            File quizElement2 = new File("quiz2.mp4");
+            File userCreation = new File(".temp" + System.getProperty("file.separator") + "final_creation.mp4");
+            File quizElement1 = new File(".temp" + System.getProperty("file.separator") + "quiz1.mp4");
+            File quizElement2 = new File(".temp" + System.getProperty("file.separator") + "quiz2.mp4");
             userCreation.renameTo(new File(creationNameInput.getText() + System.getProperty("file.separator") + creationNameInput.getText() + ".mp4"));
             quizElement1.renameTo(new File(creationNameInput.getText() + System.getProperty("file.separator") + "quiz1.mp4"));
             quizElement2.renameTo(new File(creationNameInput.getText() + System.getProperty("file.separator") + "quiz2.mp4"));
@@ -245,27 +247,11 @@ public class FinalPreviewScreenController extends ListController {
         }
     }
 
-    private void deleteAllFiles(){
-        File deleteFile = new File("final_creation.mp4");
-        deleteFile.delete();
-        deleteFile = new File("quiz1.mp4");
-        deleteFile.delete();
-        deleteFile = new File("quiz2.mp4");
-        deleteFile.delete();
-        deleteFile = new File(".blankVideo.mp4");
-        deleteFile.delete();
-        deleteFile = new File(".noTextVideo.mp4");
-        deleteFile.delete();
-        deleteFile = new File(".temp_audio.wav");
-        deleteFile.delete();
-        deleteFile = new File(".temp_text.txt");
-        deleteFile.delete();
-        deleteFile = new File(".temp_video.mp4");
-        deleteFile.delete();
-        deleteFile = new File(".temp_creationName.txt");
-        deleteFile.delete();
-        deleteFile = new File(".temp_searchTerm.txt");
-        deleteFile.delete();
+    private void deleteAllFiles() throws IOException {
+        File file = new File(".temp");
+        for (File insideFile : file.listFiles()) {
+            insideFile.delete();
+        }
     }
 
     /**

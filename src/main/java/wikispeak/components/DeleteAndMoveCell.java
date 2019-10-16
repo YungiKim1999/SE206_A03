@@ -38,7 +38,7 @@ public class DeleteAndMoveCell extends ListCell<String> {
         button.setOnAction(event -> {
             //TODO make this delete method customisable
             String itemName = getItem();
-            deletionJobs deleteSelected = new deletionJobs("audio", itemName, ".wav");
+            deletionJobs deleteSelected = new deletionJobs(".temp" + System.getProperty("file.separator") + "audio", itemName, ".wav");
             workerTeam.submit(deleteSelected);
             getListView().getItems().remove(itemName);
         });
