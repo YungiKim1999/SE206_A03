@@ -228,9 +228,11 @@ public class FinalPreviewScreenController extends ListController {
             File userCreation = new File(".temp" + System.getProperty("file.separator") + "final_creation.mp4");
             File quizElement1 = new File(".temp" + System.getProperty("file.separator") + "quiz1.mp4");
             File quizElement2 = new File(".temp" + System.getProperty("file.separator") + "quiz2.mp4");
+            File quizElement3 = new File(".temp" + System.getProperty("file.separator") + "quiz3.mp4");
             userCreation.renameTo(new File(creationNameInput.getText() + System.getProperty("file.separator") + creationNameInput.getText() + ".mp4"));
             quizElement1.renameTo(new File(creationNameInput.getText() + System.getProperty("file.separator") + "quiz1.mp4"));
             quizElement2.renameTo(new File(creationNameInput.getText() + System.getProperty("file.separator") + "quiz2.mp4"));
+            quizElement3.renameTo(new File(creationNameInput.getText() + System.getProperty("file.separator") + "quiz3.mp4"));
             containerForAll.renameTo(new File("creations" + System.getProperty("file.separator") + creationNameInput.getText()));
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Your creation is complete!");
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
