@@ -17,8 +17,6 @@ public class QuizQuestion {
     }
 
     public Boolean answerIsCorrect(String response){
-        System.out.println(_answer);
-        System.out.println(response);
         return _answer.toLowerCase().equals(response.toLowerCase());
     }
 

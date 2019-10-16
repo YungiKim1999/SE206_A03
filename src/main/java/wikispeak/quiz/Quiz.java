@@ -32,13 +32,14 @@ public class Quiz {
 
     public boolean submitResponse(String response){
         //this question has been responded to, increment "current question"
-        currentQuestion++;
         if(randomisedListOfQuestions.get(currentQuestion).answerIsCorrect(response)){
             numberCorrect++;
+            currentQuestion++;
             return true;
         }
         else{
             numberIncorrect++;
+            currentQuestion++;
             return false;
         }
     }
@@ -77,9 +78,12 @@ public class Quiz {
         return  fullList;
     }
 
+    /**
+     * This was for testing purposes.
+     */
     @Override
     public String toString(){
-        return "" + totalNumberOfQuestions + "requested. List:" + randomisedListOfQuestions.subList(0,totalNumberOfQuestions).toString();
+        return "" + totalNumberOfQuestions + " requested. List:" + randomisedListOfQuestions.subList(0,totalNumberOfQuestions).toString();
     }
 
 }

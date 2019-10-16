@@ -43,6 +43,20 @@ public class EditTextController extends Controller{
 
     @FXML
     /**
+     * Takes the user back to the main menu. Confirms they are happy to abandon any progress
+     */
+    private void handleMainMenu() throws IOException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to go to Main Menu?\nAny progress will be lost.");
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            //only switch scene after confirmation
+            switchScenes(rootBorderPane, "MainMenu.fxml");
+        }
+    }
+
+    @FXML
+    /**
      * Takes the user to the next screen where they combine audio files
      * Saves the text area so any edits persist if the user wants to go back
      */

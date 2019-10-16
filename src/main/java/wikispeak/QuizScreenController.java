@@ -67,7 +67,6 @@ public class QuizScreenController extends Controller {
             submitButton.setDisable(newValue.trim().isEmpty());
         });
         quiz = QuizPasser.getCurrentQuiz();
-        System.out.println(quiz);
         startCurrentQuestion();
     }
 
@@ -176,25 +175,25 @@ public class QuizScreenController extends Controller {
      */
     @FXML
     private void handlePlayPauseButton() {
-            if (playPauseRepeatButton.getText().equals("Repeat")) {
-                getVideoReady();
-                playMedia();
-            } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-                pauseMedia();
-            } else{
-                playMedia();
+        if (playPauseRepeatButton.getText().equals("Repeat")) {
+            getVideoReady();
+            playMedia();
+        } else if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            pauseMedia();
+        } else{
+            playMedia();
 
-            }
         }
+    }
 
     @FXML
     private void handleForwardButton() {
-            mediaPlayer.seek(mediaPlayer.getCurrentTime().add(Duration.seconds(2)));
+        mediaPlayer.seek(mediaPlayer.getCurrentTime().add(Duration.seconds(2)));
     }
 
     @FXML
     private void handleBackButton() {
-            mediaPlayer.seek(mediaPlayer.getCurrentTime().subtract(Duration.seconds(2)));
+        mediaPlayer.seek(mediaPlayer.getCurrentTime().subtract(Duration.seconds(2)));
 
     }
 
@@ -202,7 +201,9 @@ public class QuizScreenController extends Controller {
      * Puts GUI in the "Current Question" state
      */
     private void startCurrentQuestion(){
+        videoBuffingSlider.setValue(0);
         playPauseRepeatButton.setText("Play");
+        answerField.setText("");
         setQuizLabels();
         selectedQuestionToPlay = quiz.getCurrentQuestion();
         getVideoReady();
