@@ -14,18 +14,18 @@
    <bottom>
         <AnchorPane prefHeight="600.0" prefWidth="900.0" BorderPane.alignment="CENTER">
             <children>
-                <Slider fx:id="volumeSlider" layoutX="257.0" layoutY="538.0" prefHeight="18.0" prefWidth="140.0" />
-                <Button fx:id="playPauseButton" layoutX="19.0" layoutY="534.0" mnemonicParsing="false" onAction="#handlePlayPauseButton" prefHeight="26.0" prefWidth="81.0" text="Preview" textAlignment="CENTER" />
-                <Button layoutX="795.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleExitButton" prefHeight="35.0" prefWidth="100.0" text="Main Menu" />
-                <MediaView fx:id="creationViewer" fitHeight="400.0" fitWidth="600.0" layoutX="20.0" layoutY="100.0" />
-                <Button layoutX="143.0" layoutY="534.0" mnemonicParsing="false" onAction="#handleForwardButton" prefHeight="26.0" prefWidth="41.0" text="&gt;&gt;" />
-                <Button layoutX="100.0" layoutY="534.0" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="26.0" prefWidth="43.0" text="&lt;&lt;" />
-                <Label fx:id="timeLabel" layoutX="18.0" layoutY="514.0" prefHeight="16.0" prefWidth="42.0" text="Label" />
-                <Label fx:id="finishTime" layoutX="569.0" layoutY="514.0" prefHeight="16.0" prefWidth="56.0" text="Label" />
-                <Slider fx:id="videoBuffer" layoutX="59.0" layoutY="514.0" prefHeight="16.0" prefWidth="510.0" />
-                <Label layoutX="207.0" layoutY="539.0" text="Volume" />
-            <TextField fx:id="creationNameInput" layoutX="655.0" layoutY="110.0" prefHeight="26.0" prefWidth="199.0" />
-            <Label layoutX="669.0" layoutY="91.0" text="Name of Your Creation">
+                <Slider fx:id="volumeSlider" layoutX="260.0" layoutY="510.0" prefHeight="18.0" prefWidth="140.0" />
+                <Button fx:id="playPauseButton" layoutX="23.0" layoutY="506.0" mnemonicParsing="false" onAction="#handlePlayPauseButton" prefHeight="26.0" prefWidth="81.0" text="Preview" textAlignment="CENTER" />
+                <Button layoutX="110.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleExitButton" prefHeight="35.0" prefWidth="100.0" text="Main Menu" />
+                <MediaView fx:id="creationViewer" fitHeight="400.0" fitWidth="600.0" layoutX="22.0" layoutY="72.0" />
+                <Button layoutX="147.0" layoutY="506.0" mnemonicParsing="false" onAction="#handleForwardButton" prefHeight="26.0" prefWidth="41.0" text="&gt;&gt;" />
+                <Button layoutX="104.0" layoutY="506.0" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="26.0" prefWidth="43.0" text="&lt;&lt;" />
+                <Label fx:id="timeLabel" layoutX="21.0" layoutY="475.0" prefHeight="16.0" prefWidth="42.0" text="Label" />
+                <Label fx:id="finishTime" layoutX="577.0" layoutY="475.0" prefHeight="16.0" prefWidth="56.0" text="Label" />
+                <Slider fx:id="videoBuffer" layoutX="67.0" layoutY="475.0" prefHeight="16.0" prefWidth="510.0" />
+                <Label layoutX="210.0" layoutY="511.0" text="Volume" />
+            <TextField fx:id="creationNameInput" layoutX="658.0" layoutY="411.0" prefHeight="30.0" prefWidth="200.0" />
+            <Label layoutX="671.0" layoutY="381.0" text="Name of Your Creation">
                <font>
                   <Font size="15.0" />
                </font></Label>
@@ -34,17 +34,17 @@
                   <Font size="30.0" />
                </font>
             </Label>
-            <Button fx:id="createButton" defaultButton="true" disable="true" layoutX="656.0" layoutY="438.0" mnemonicParsing="false" onAction="#createAllThingsNecessary" prefHeight="90.0" prefWidth="201.0" text="Create!">
+            <Button fx:id="createButton" defaultButton="true" disable="true" layoutX="658.0" layoutY="452.0" mnemonicParsing="false" onAction="#createAllThingsNecessary" prefHeight="90.0" prefWidth="200.0" text="Create!">
                <font>
                   <Font size="16.0" />
                </font></Button>
-            <ListView fx:id="previousCreations" layoutX="656.0" layoutY="158.0" prefHeight="275.0" prefWidth="200.0" />
-            <Label layoutX="684.0" layoutY="139.0" text="Previous Creations">
+            <ListView fx:id="previousCreations" layoutX="657.0" layoutY="95.0" prefHeight="275.0" prefWidth="200.0" />
+            <Label layoutX="687.0" layoutY="66.0" text="Previous Creations">
                <font>
                   <Font size="15.0" />
                </font></Label>
-            <Button layoutX="690.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleBackToImageSelection" prefHeight="35.0" prefWidth="100.0" text="&lt; Back" />
-            <Label layoutX="217.0" layoutY="81.0" text="Preview Your Creation Here">
+            <Button layoutX="5.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleBackToImageSelection" prefHeight="35.0" prefWidth="100.0" text="&lt; Back" />
+            <Label layoutX="218.0" layoutY="48.0" text="Preview Your Creation Here">
                <font>
                   <Font size="15.0" />
                </font></Label>

@@ -5,17 +5,25 @@ import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
+import wikispeak.quiz.Quiz;
+import wikispeak.quiz.QuizPasser;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
 
-public class QuizScreenController {
+public class QuizScreenController extends Controller {
+
+    @FXML private BorderPane rootBorderPane;
+
     /**
      * The "viewingWindow" is the physical "window" that you put into in the scene builder
      * This "window" has a "MediaPlayer" type object which will play your video for you.
@@ -30,39 +38,37 @@ public class QuizScreenController {
      */
     private MediaPlayer mediaPlayer;
 
-    /**
-     * I'll just have one button to do most of these things for this player
-     */
+    //Video related components
     @FXML private Button playPauseRepeatButton;
-    /**
-     * This is the slider that will be used in order to show the user where the video is currently
-     */
     @FXML private Slider videoBuffingSlider;
-    /**
-     * Yeah, I don't know how to comment on this without repeating the name...
-     */
     @FXML private Slider volumeSlider;
-    /**
-     * This is the label to show the current time of the video
-     */
     @FXML private Label currentTimeLabel;
-    /**
-     * This is the label to show the end time of the video
-     */
     @FXML private Label finishTimeLabel;
+
+    //Quiz related components
+    @FXML private Text currentQuestionNumber;
+    @FXML private Text correctNumber;
+    @FXML private Text incorrectNumber;
+
+    @FXML private TextField answerField;
+    @FXML private Button submitButton;
+
+    private Quiz quiz;
+
     /**
-     * This string will determine what creation folder you would like to go into
+     * This string will determine what creation quiz video to play
      */
-    private String selectedCreationToPlay;
-    /**
-     * This String will determine what quiz video will be selected
-     */
-    private String selectedQuizElement;
+    private String selectedQuestionToPlay;
+
 
     @FXML
     public void initialize() {
-        quizRandomizer();
-        getVideoReady();
+        answerField.textProperty().addListener((observable, oldValue, newValue) -> {
+            submitButton.setDisable(newValue.trim().isEmpty());
+        });
+        quiz = QuizPasser.getCurrentQuiz();
+        System.out.println(quiz);
+        startCurrentQuestion();
     }
 
 
@@ -70,7 +76,7 @@ public class QuizScreenController {
      *This will set the media file ready for it to be played
      */
     private void getVideoReady(){
-        File quizURL = new File("creations" + System.getProperty("file.separator") + selectedCreationToPlay + System.getProperty("file.separator") + selectedQuizElement +".mp4");
+        File quizURL = new File("creations" + System.getProperty("file.separator") + selectedQuestionToPlay + ".mp4");
         Media quizToPay = new Media(quizURL.toURI().toString());
         mediaPlayer = new MediaPlayer(quizToPay);
         viewingWindow.setMediaPlayer(mediaPlayer);
@@ -193,17 +199,77 @@ public class QuizScreenController {
     }
 
     /**
-     * This is the function which will be used to randomise the quiz stuff
-     * The way I set up the API is you just need to set the "selectedCreationToPlay" and the "selectedQuizElement"
-     * and then call "getVideoReady" method and everything will be done for you.
-     * I have put this in the "initialize" method as i think you would randomize, set the video, and then have the
-     * user answer the question
-     * Right now, it is just playing a creation that i have made...
+     * Puts GUI in the "Current Question" state
      */
-    private void quizRandomizer(){
-        selectedCreationToPlay = "goats";
-        selectedQuizElement = "quiz2";
+    private void startCurrentQuestion(){
+        playPauseRepeatButton.setText("Play");
+        setQuizLabels();
+        selectedQuestionToPlay = quiz.getCurrentQuestion();
+        getVideoReady();
     }
+
+    /**
+     * Sets all GUI quiz labels based on the current state of the quiz
+     */
+    private void setQuizLabels(){
+        currentQuestionNumber.setText("" + quiz.getCurrentQuestionNumber() + "/" + quiz.getTotalNumberOfQuestions());
+        correctNumber.setText("" + quiz.getNumberCorrect());
+        incorrectNumber.setText("" + quiz.getNumberIncorrect());
+    }
+
+    /**
+     * Handles the progression of the quiz
+     */
+    @FXML
+    private void handleSubmit() throws IOException {
+        Boolean result = quiz.submitResponse(answerField.getText());
+        if(result){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Well done you got it right!");
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            alert.showAndWait();
+        }
+        else{
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Your answer was wrong :(");
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            alert.showAndWait();
+        }
+
+        if(quiz.isFinished()){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "You got " + quiz.getNumberCorrect() + " questions right and " + quiz.getNumberIncorrect() + " wrong");
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            alert.showAndWait();
+            switchScenes(rootBorderPane, "QuizStartScreen.fxml");
+        }
+        else{
+            startCurrentQuestion();
+        }
+
+    }
+
+    /**
+     * Gives a pop-up hint to the user based on the current question
+     */
+    @FXML
+    private void handleGetHint(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "The answer starts with the letter " + quiz.getCurrentHint());
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        alert.showAndWait();
+    }
+
+    /**
+     * Takes the user back to the quiz start page, confirms they want to end the quiz
+     */
+    @FXML
+    private void handleExitQuiz() throws IOException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to stop the quiz?");
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            //only switch scene after confirmation
+            switchScenes(rootBorderPane, "QuizStartScreen.fxml");
+        }
+    }
+
 }
 
 

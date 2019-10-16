@@ -12,9 +12,19 @@ public class QuizQuestion {
         _answer = answer;
     }
 
+    public String hint(){
+        return _answer.substring(0,1).toUpperCase();
+    }
+
+    public Boolean answerIsCorrect(String response){
+        System.out.println(_answer);
+        System.out.println(response);
+        return _answer.toLowerCase().equals(response.toLowerCase());
+    }
+
     @Override
     public String toString(){
-        return "" + _creationName + " " + _quizElement + " " + _answer;
+        return "" + _creationName + System.getProperty("file.separator") + "quiz" + _quizElement;
     }
 
 

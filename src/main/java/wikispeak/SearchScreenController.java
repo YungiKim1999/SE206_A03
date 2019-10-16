@@ -47,7 +47,7 @@ public class SearchScreenController extends Controller {
      */
     private void handleSearch() {
 
-        final String currentSearch = searchField.getText();
+        final String currentSearch = searchField.getText().toLowerCase();
 
         if (!currentSearch.isEmpty()) {
             infoText.setText("");

@@ -50,7 +50,7 @@ public class createCreationJob extends Task<Void> {
 
         //Make quiz video with only audio,
         // TODO: does this duration need to be fixed??
-        command = new Command("ffmpeg -f lavfi -i color=c=gray:s=900x400:d=5 -vf \"drawtext=fontsize=50: fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:shadowcolor=black:shadowx=2:shadowy=2:text='Enter the English Word'\" .temp" + System.getProperty("file.separator") + "blankVideo.mp4");
+        command = new Command("ffmpeg -f lavfi -i color=c=gray:s=710x450:d=" + duration + " -vf \"drawtext=fontsize=50: fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:shadowcolor=black:shadowx=2:shadowy=2:text='Only Sound'\" .temp" + System.getProperty("file.separator") + "blankVideo.mp4");
         command.execute();
         command = new Command("ffmpeg -y -i .temp" + System.getProperty("file.separator") + "temp_audio.wav -i .temp" + System.getProperty("file.separator") + "blankVideo.mp4 -c:v copy -c:a aac -strict experimental .temp" + System.getProperty("file.separator") + "quiz1.mp4");
         command.execute();
@@ -59,13 +59,15 @@ public class createCreationJob extends Task<Void> {
 
         //Make video with only pictures
         //change the scale or s= numbers in order to change the scale of the video
-        command = new Command("cat .temp" + System.getProperty("file.separator") + "images_to_use" + System.getProperty("file.separator") + "*.jpg | ffmpeg -f image2pipe -framerate " + framerate + " -i - -vf \"scale=900:400, drawtext=fontsize=50:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:shadowcolor=black:shadowx=2:shadowy=2:text='Enter the English Word'\" -r 25 -y .temp" + System.getProperty("file.separator") + "quiz2.mp4");
+        command = new Command("cat .temp" + System.getProperty("file.separator") + "images_to_use" + System.getProperty("file.separator") + "*.jpg | ffmpeg -f image2pipe -framerate " + framerate + " -i - -vf \"scale=710:450, drawtext=fontsize=50:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:shadowcolor=black:shadowx=2:shadowy=2:text='Only Pictures'\" -r 25 -y .temp" + System.getProperty("file.separator") + "quiz2.mp4");
         command.execute();
 
         updateProgress(8,10);
 
         //Make quiz video with audio and pictures
-        command = new Command("ffmpeg -y -i .temp" + System.getProperty("file.separator") + "temp_audio.wav -i .temp" + System.getProperty("file.separator") + "quiz2.mp4 -c:v copy -c:a aac -strict experimental .temp" + System.getProperty("file.separator") + "quiz3.mp4");
+        command = new Command("cat .temp" + System.getProperty("file.separator") + "images_to_use" + System.getProperty("file.separator") + "*.jpg | ffmpeg -f image2pipe -framerate " + framerate + " -i - -vf \"scale=710:450, drawtext=fontsize=50:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:shadowcolor=black:shadowx=2:shadowy=2:text='Sound and Pictures'\" -r 25 -y .temp" + System.getProperty("file.separator") + "soundAndPictures.mp4");
+        command.execute();
+        command = new Command("ffmpeg -y -i .temp" + System.getProperty("file.separator") + "temp_audio.wav -i .temp" + System.getProperty("file.separator") + "soundAndPictures.mp4 -c:v copy -c:a aac -strict experimental .temp" + System.getProperty("file.separator") + "quiz3.mp4");
         command.execute();
 
         updateProgress(10,10);

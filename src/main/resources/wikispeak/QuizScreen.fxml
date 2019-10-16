@@ -7,27 +7,70 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.media.MediaView?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wikispeak.QuizScreenController">
+<BorderPane fx:id="rootBorderPane" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wikispeak.QuizScreenController">
    <center>
       <AnchorPane prefHeight="600.0" prefWidth="900.0" BorderPane.alignment="CENTER">
          <children>
-            <MediaView fx:id="viewingWindow" fitHeight="400.0" fitWidth="900.0" layoutX="2.0" layoutY="80.0" />
-            <TextField layoutX="273.0" layoutY="14.0" prefHeight="60.0" prefWidth="300.0" />
-            <Button layoutX="13.0" layoutY="531.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="134.0" text="Main Menu" />
-            <Button layoutX="622.0" layoutY="531.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="134.0" text="Back" />
-            <Button layoutX="756.0" layoutY="531.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="134.0" text="Skip" />
-            <Button layoutX="573.0" layoutY="14.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="134.0" text="Next" />
-            <Slider fx:id="videoBuffingSlider" layoutX="58.0" layoutY="477.0" prefHeight="20.0" prefWidth="460.0" />
-            <Button fx:id="playPauseRepeatButton" layoutX="13.0" layoutY="497.0" mnemonicParsing="false" onAction="#handlePlayPauseButton" prefHeight="26.0" prefWidth="74.0" text="Button" />
-            <Button layoutX="87.0" layoutY="497.0" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="26.0" prefWidth="73.0" text="Back" />
-            <Button layoutX="160.0" layoutY="497.0" mnemonicParsing="false" onAction="#handleForwardButton" prefHeight="26.0" prefWidth="73.0" text="Forward" />
-            <Label fx:id="currentTimeLabel" layoutX="14.0" layoutY="479.0" text="Label" />
-            <Label fx:id="finishTimeLabel" layoutX="518.0" layoutY="479.0" text="Label" />
-            <Slider fx:id="volumeSlider" layoutX="283.0" layoutY="502.0" />
-            <Label layoutX="233.0" layoutY="502.0" text="Volume" />
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="12.0" layoutY="8.0" prefHeight="72.0" prefWidth="271.0" text="Maybe have instructions/congrats message here?" textAlignment="CENTER" wrapText="true" />
+            <MediaView fx:id="viewingWindow" fitHeight="450.0" fitWidth="710.0" layoutX="14.0" layoutY="14.0" />
+            <Slider fx:id="videoBuffingSlider" layoutX="58.0" layoutY="472.0" prefHeight="20.0" prefWidth="460.0" />
+            <Button fx:id="playPauseRepeatButton" layoutX="13.0" layoutY="497.0" mnemonicParsing="false" onAction="#handlePlayPauseButton" prefHeight="26.0" prefWidth="74.0" text="Play" />
+            <Button layoutX="87.0" layoutY="497.0" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="26.0" prefWidth="49.0" text="&lt;&lt;" />
+            <Button layoutX="136.0" layoutY="497.0" mnemonicParsing="false" onAction="#handleForwardButton" prefHeight="26.0" prefWidth="43.0" text="&gt;&gt;" />
+            <Label fx:id="currentTimeLabel" layoutX="14.0" layoutY="474.0" />
+            <Label fx:id="finishTimeLabel" layoutX="518.0" layoutY="474.0" />
+            <Slider fx:id="volumeSlider" layoutX="252.0" layoutY="502.0" prefHeight="16.0" prefWidth="130.0" value="100.0" />
+            <Label layoutX="197.0" layoutY="501.0" text="Volume" />
+            <Button layoutX="741.0" layoutY="234.0" mnemonicParsing="false" onAction="#handleGetHint" prefHeight="55.0" prefWidth="134.0" text="Show Hint" />
+            <Button layoutX="741.0" layoutY="304.0" mnemonicParsing="false" onAction="#handleSubmit" prefHeight="55.0" prefWidth="134.0" text="Skip Question" />
+            <Text layoutX="763.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Question">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <Text fx:id="currentQuestionNumber" layoutX="791.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1/5">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <Text layoutX="751.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Correct:" textAlignment="RIGHT" wrappingWidth="80.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <Text fx:id="correctNumber" layoutX="842.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="RIGHT" wrappingWidth="20.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <Text layoutX="751.0" layoutY="178.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Incorrect:" textAlignment="RIGHT" wrappingWidth="80.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <Text fx:id="incorrectNumber" layoutX="842.0" layoutY="178.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="RIGHT" wrappingWidth="20.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
          </children>
       </AnchorPane>
    </center>
+   <bottom>
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="900.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button layoutX="5.0" layoutY="40.0" mnemonicParsing="false" onAction="#handleExitQuiz" prefHeight="35.0" prefWidth="100.0" text="Exit Quiz" />
+            <Button fx:id="submitButton" defaultButton="true" disable="true" layoutX="745.0" layoutY="5.0" mnemonicParsing="false" onAction="#handleSubmit" prefHeight="70.0" prefWidth="150.0" text="Submit">
+               <font>
+                  <Font size="16.0" />
+               </font></Button>
+            <TextField fx:id="answerField" layoutX="390.0" layoutY="5.0" prefHeight="70.0" prefWidth="350.0" promptText="Write your answer in English">
+               <font>
+                  <Font size="16.0" />
+               </font></TextField>
+         </children>
+      </AnchorPane>
+   </bottom>
 </BorderPane>

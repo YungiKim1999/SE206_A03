@@ -5,7 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
-import wikispeak.quiz.Quiz;
+import wikispeak.quiz.QuizPasser;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -55,10 +55,11 @@ public class QuizStartScreenController extends Controller {
     }
 
     @FXML
-    public void handleStartQuiz(){
+    public void handleStartQuiz() throws IOException {
         Double valueSelected = numberSlider.getValue();
         int valueSelectedInt = valueSelected.intValue();
-        Quiz.generateQuiz(valueSelectedInt);
+        QuizPasser.makeQuiz(valueSelectedInt);
+        switchScenes(rootBorderPane, "QuizScreen.fxml");
     }
 
     @FXML
