@@ -18,9 +18,9 @@ public class QuizStartScreenController extends Controller {
     @FXML private Text alertText;
     @FXML private Button startButton;
 
-    private int numberOfQuestionsAvailable = 0;
-
     public void initialize() throws IOException {
+
+        int numberOfQuestionsAvailable;
 
         //Finds number of questions available
         File file = new File("creations");

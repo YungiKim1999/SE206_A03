@@ -26,8 +26,6 @@ public class createFullAudioJob extends Task<Void> {
             audioFileString = audioFileString + " .temp" + System.getProperty("file.separator") + "audio" + System.getProperty("file.separator") + file + ".wav";
         }
 
-        System.out.println(audioFileString);
-
         //merge the selected audiofiles
         File file = new File(".temp" + System.getProperty("file.separator") + "temp_audio.wav"); //delete the file if it already exists
         file.delete();
