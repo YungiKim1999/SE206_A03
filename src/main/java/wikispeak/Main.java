@@ -8,6 +8,8 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 
 public class Main extends Application {
 
@@ -15,10 +17,13 @@ public class Main extends Application {
     //TODO: these mkdir() should be added JUST before the folder is used in case the user deletes them halfway through
     //TODO: research "you can't delete this because it is in use" protection to stop the user deleting stuff
     public void start(Stage primaryStage) {
+        new File(".temp").mkdir();
+        new File(".temp" + System.getProperty("file.separator") + "audio").mkdir();
+        new File(".temp" + System.getProperty("file.separator") + "downloads").mkdir();
+        new File(".temp" + System.getProperty("file.separator") + "images_to_use").mkdir();
+
         new File("creations").mkdir();
-        new File("audio").mkdir();
-        new File("downloads").mkdir();
-        new File("images_to_use").mkdir();
+
         try{
             //Load in and display the Home screen (Main Menu)
             FXMLLoader loader = new FXMLLoader();
@@ -36,47 +41,24 @@ public class Main extends Application {
     }
 
     /**
-     * Shutdown clean-up, deletes all temp files
+     * Shutdown clean-up, deletes the entire temp file structure
      */
     @Override
-    public void stop(){
-        File file = new File(".temp_text.txt");
-        file.delete();
-        file = new File("final_creation.mp4");
-        file.delete();
-        file = new File("quiz1.mp4");
-        file.delete();
-        file = new File("quiz2.mp4");
-        file.delete();
-        file = new File(".blankVideo.mp4");
-        file.delete();
-        file = new File(".noTextVideo.mp4");
-        file.delete();
-        file = new File(".temp_video.mp4");
-        file.delete();
-        file = new File(".temp_audio.wav");
-        file.delete();
-        file = new File(".temp_searchterm.txt");
-        file.delete();
-        file = new File(".temp_creationName.txt");
-        file.delete();
-        file = new File("audio");
-        for (File insideFile : file.listFiles()){
-            insideFile.delete();
-        }
-        file.delete();
+    public void stop() throws IOException {
+        Path directory = Paths.get(".temp");
+        Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
 
-        file = new File("downloads");
-        for (File insideFile : file.listFiles()){
-            insideFile.delete();
-        }
-        file.delete();
-
-        file = new File("images_to_use");
-        for (File insideFile : file.listFiles()){
-            insideFile.delete();
-        }
-        file.delete();
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                Files.delete(dir);
+                return FileVisitResult.CONTINUE;
+            }
+        });
     }
 
     public static void main(String[] args) {

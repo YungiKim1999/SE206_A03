@@ -23,26 +23,26 @@ public class moveUsedImages extends Task<Void> {
             int countUnused = unusedImages.size();
            for(File image : usedImages){
                boolean alreadyInside = false;
-               for(File checkImage : new File("images_to_use").listFiles()){
+               for(File checkImage : new File(".temp" + System.getProperty("file.separator") + "images_to_use").listFiles()){
                    if(checkImage.equals(image)){
                        alreadyInside = true;
                    }
                }
                if(!alreadyInside){
-                   image.renameTo(new File("images_to_use" + System.getProperty("file.separator") + image.getName()));
+                   image.renameTo(new File(".temp" + System.getProperty("file.separator") + "images_to_use" + System.getProperty("file.separator") + image.getName()));
                    countUsed++;
                }
            }
 
             for(File image : unusedImages){
                 boolean alreadyInside = false;
-                for(File checkImage : new File("downloads").listFiles()){
+                for(File checkImage : new File(".temp" + System.getProperty("file.separator") + "downloads").listFiles()){
                     if(checkImage.equals(image)){
                         alreadyInside = true;
                     }
                 }
                 if(!alreadyInside){
-                    image.renameTo(new File("downloads" + System.getProperty("file.separator") + image.getName()));
+                    image.renameTo(new File(".temp" + System.getProperty("file.separator") + "downloads" + System.getProperty("file.separator") + image.getName()));
                     countUnused++;
                 }
             }

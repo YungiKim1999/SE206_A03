@@ -2,6 +2,7 @@ package wikispeak;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -42,6 +43,8 @@ public class CreateAudioScreenController extends ListController{
     @FXML private Button previewButton;
     @FXML private VBox audioListBox;
     @FXML private ProgressIndicator progressIndicator;
+    @FXML private Button createFullAudioButton;
+    @FXML private Text promptText;
 
     private ExecutorService worker = Executors.newSingleThreadExecutor();
 
@@ -56,6 +59,20 @@ public class CreateAudioScreenController extends ListController{
         textOutput.selectedTextProperty().addListener(((observable, oldValue, newValue) -> {
             updateCreateAudioSnippetButtonAccess();
         }));
+        //listens to the amount of audio files created
+        audioFiles.addListener(new ListChangeListener<String>() {
+            @Override
+            public void onChanged(Change<? extends String> change) {
+                if(audioFiles.size() == 0){
+                    createFullAudioButton.setDisable(true);
+                    promptText.setText("Create Some Audio Snippets");
+                }
+                else{
+                    createFullAudioButton.setDisable(false);
+                    promptText.setText("Click and Drag to Reorder");
+                }
+            }
+        });
         populateVoiceSelectionBox();
         populateTextArea();
         populateAudioList();
@@ -106,7 +123,7 @@ public class CreateAudioScreenController extends ListController{
             Thread audioThread = new Thread(new Task<Void>(){
                 @Override
                 protected Void call() throws Exception {
-                    Command command = new Command("echo \"" + textSelection + "\" | text2wave -eval \"(voice_" + selectedVoice + ")\" -o audio" + System.getProperty("file.separator") + audioFileName + ".wav");
+                    Command command = new Command("echo \"" + textSelection + "\" | text2wave -eval \"(voice_" + selectedVoice + ")\" -o .temp" + System.getProperty("file.separator") + "audio" + System.getProperty("file.separator") + audioFileName + ".wav");
                     command.execute();
                     return null;
                 }
@@ -141,6 +158,20 @@ public class CreateAudioScreenController extends ListController{
 
     @FXML
     /**
+     * Takes the user back to the main menu. Confirms they are happy to abandon any progress
+     */
+    private void handleMainMenu() throws IOException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to go to Main Menu?\nAny progress will be lost.");
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            //only switch scene after confirmation
+            switchScenes(rootBorderPane, "MainMenu.fxml");
+        }
+    }
+
+    @FXML
+    /**
      * Takes the user to the next screen where they combine audio files
      * Saves the text area so any edits persist if the user wants to go back
      */
@@ -170,7 +201,7 @@ public class CreateAudioScreenController extends ListController{
      * Adds the search result text to the text area
      */
     private void populateTextArea(){
-        Command command = new Command("cat .temp_text.txt");
+        Command command = new Command("cat .temp" + System.getProperty("file.separator") + "temp_text.txt");
         command.execute();
         textOutput.setText(command.getStream());
     }
@@ -180,7 +211,7 @@ public class CreateAudioScreenController extends ListController{
      * Mainly useful when user comes back to this screen after already creating audio
      */
     private void populateAudioList(){
-        audioFiles.addAll(populateList("audio", ".wav"));
+        audioFiles.addAll(populateList(".temp" + System.getProperty("file.separator") + "audio", ".wav"));
 
         ListView<String> audioListView = new ListView<>(audioFiles);
         Text text = new Text("No Audio Snippets\nhave been Created");
@@ -242,7 +273,7 @@ public class CreateAudioScreenController extends ListController{
      * @param fileName the name of the creation trying to be made
      */
     private boolean canOverwrite(String fileName){
-        File file = new File("audio" + System.getProperty("file.separator") + fileName + ".wav");
+        File file = new File(".temp" + System.getProperty("file.separator") + "audio" + System.getProperty("file.separator") + fileName + ".wav");
         if(file.exists()){
 
             //show an alert

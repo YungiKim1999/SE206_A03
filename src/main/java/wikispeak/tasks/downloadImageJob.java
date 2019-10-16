@@ -49,8 +49,7 @@ public class downloadImageJob extends Task<Boolean> {
                     BufferedImage image = photos.getImage(photo, Size.LARGE);
                     String filename = query.trim().replace(' ', '-')+"-"+System.currentTimeMillis()+"-"+photo.getId()+".jpg";
                     //you can change the name of the file that the photos are to be outputted by changing "downloads" to whatever~
-                    new File("downloads").mkdir();
-                    File outputfile = new File("downloads",filename);
+                    File outputfile = new File(".temp" + System.getProperty("file.separator") + "downloads",filename);
 
                     ImageIO.write(image, "jpg", outputfile);
                     updateProgress(progressCount,10);

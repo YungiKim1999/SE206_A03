@@ -30,13 +30,13 @@ public class SearchScreenController extends Controller {
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             searchButton.setDisable(newValue.trim().isEmpty());
         });
-        for (File file : new File("audio").listFiles()){
+        for (File file : new File(".temp" + System.getProperty("file.separator") + "audio").listFiles()){
             file.delete();
         }
-        for (File file : new File("downloads").listFiles()){
+        for (File file : new File(".temp" + System.getProperty("file.separator") + "downloads").listFiles()){
             file.delete();
         }
-        for (File file : new File("images_to_use").listFiles()){
+        for (File file : new File(".temp" + System.getProperty("file.separator") + "images_to_use").listFiles()){
             file.delete();
         }
     }
@@ -47,7 +47,7 @@ public class SearchScreenController extends Controller {
      */
     private void handleSearch() {
 
-        final String currentSearch = searchField.getText();
+        final String currentSearch = searchField.getText().toLowerCase();
 
         if (!currentSearch.isEmpty()) {
             infoText.setText("");
@@ -56,7 +56,7 @@ public class SearchScreenController extends Controller {
             Thread searchThread = new Thread(new Task<Void>() {
                 @Override
                 protected Void call() throws Exception {
-                    Command wikitCommand = new Command("wikit " + currentSearch + " | sed 's/\\([.!?]\\) \\([[:upper:]]\\)/\\1\\n\\n\\2/g' > .temp_text.txt");
+                    Command wikitCommand = new Command("wikit " + currentSearch + " | sed 's/\\([.!?]\\) \\([[:upper:]]\\)/\\1\\n\\n\\2/g' > .temp" + System.getProperty("file.separator") + "temp_text.txt");
                     wikitCommand.execute();
                     return null;
                 }
@@ -81,16 +81,16 @@ public class SearchScreenController extends Controller {
      * Updates the GUI appropriately based on the outcome of a Wikit Search
      */
     private void postSearchUpdateGUI(String currentSearch) throws IOException {
-        Command command = new Command("cat .temp_text.txt | grep -Fwq \":^(\"");
+        Command command = new Command("cat .temp" + System.getProperty("file.separator") + "temp_text.txt | grep -Fwq \":^(\"");
         if(command.execute() == 0){
             //nothing found on Wikipedia, update GUI to inform user
-            command = new Command("cat .temp_text.txt");
+            command = new Command("cat .temp" + System.getProperty("file.separator") + "temp_text.txt");
             command.execute();
             infoText.setText(command.getStream());
             searchProgress.setVisible(false);
         }
         else {
-            command = new Command("echo \"" + currentSearch + "\" > .temp_searchterm.txt");
+            command = new Command("echo \"" + currentSearch + "\" > .temp" + System.getProperty("file.separator") + "temp_searchterm.txt");
             command.execute();
             //term found on wikipedia, go to next screen
             switchScenes(rootBorderPane, "EditText.fxml");

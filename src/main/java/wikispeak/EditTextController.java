@@ -22,7 +22,7 @@ public class EditTextController extends Controller{
 
     //Populates the text area
     public void initialize() throws IOException {
-        Command command = new Command("cat .temp_text.txt");
+        Command command = new Command("cat .temp" + System.getProperty("file.separator") + "temp_text.txt");
         command.execute();
         textOutput.setText(command.getStream());
     }
@@ -32,13 +32,27 @@ public class EditTextController extends Controller{
      * Takes the user back to the search screen. Confirms they are happy to abandon any progress
      */
     private void handleBackToSearch() throws IOException {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to go back?\nAny progress will be lost.");
-            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                //only switch scene after confirmation
-                switchScenes(rootBorderPane, "SearchScreen.fxml");
-            }
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to go back?\nAny progress will be lost.");
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            //only switch scene after confirmation
+            switchScenes(rootBorderPane, "SearchScreen.fxml");
+        }
+    }
+
+    @FXML
+    /**
+     * Takes the user back to the main menu. Confirms they are happy to abandon any progress
+     */
+    private void handleMainMenu() throws IOException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to go to Main Menu?\nAny progress will be lost.");
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            //only switch scene after confirmation
+            switchScenes(rootBorderPane, "MainMenu.fxml");
+        }
     }
 
     @FXML
@@ -49,7 +63,7 @@ public class EditTextController extends Controller{
     private void handleDone() throws IOException {
         //save the current text area status to the text file
         String text = textOutput.getText();
-        Command command = new Command("echo \"" + text + "\" > .temp_text.txt");
+        Command command = new Command("echo \"" + text + "\" > .temp" + System.getProperty("file.separator") + "temp_text.txt");
         command.execute();
         switchScenes(rootBorderPane, "CreateAudioScreen.fxml");
     }

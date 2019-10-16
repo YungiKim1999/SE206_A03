@@ -23,15 +23,13 @@ public class createFullAudioJob extends Task<Void> {
 
         String audioFileString = "";
         for(String file : _audioFileList){
-            audioFileString = audioFileString + " audio" + System.getProperty("file.separator") + file + ".wav";
+            audioFileString = audioFileString + " .temp" + System.getProperty("file.separator") + "audio" + System.getProperty("file.separator") + file + ".wav";
         }
 
-        System.out.println(audioFileString);
-
         //merge the selected audiofiles
-        File file = new File(".temp_audio.wav"); //delete the file if it already exists
+        File file = new File(".temp" + System.getProperty("file.separator") + "temp_audio.wav"); //delete the file if it already exists
         file.delete();
-        Command command = new Command("sox " + audioFileString + " .temp_audio.wav");
+        Command command = new Command("sox " + audioFileString + " .temp" + System.getProperty("file.separator") + "temp_audio.wav");
         command.execute();
 
         return null;

@@ -25,9 +25,9 @@
                <font>
                   <Font size="20.0" />
                </font></Button>
-            <Button mnemonicParsing="false" onAction="#handleQuiz" prefHeight="100.0" prefWidth="450.0" text="New Update! Play Quiz">
+            <Button mnemonicParsing="false" onAction="#handleQuiz" prefHeight="100.0" prefWidth="450.0" text="Vocabulary Test">
                <font>
-                  <Font name="System Italic" size="20.0" />
+                  <Font size="20.0" />
                </font>
                <VBox.margin>
                   <Insets bottom="25.0" />
