@@ -36,6 +36,7 @@ public class DeleteAndMoveCell extends ListCell<String> {
         Image deleteIcon = new Image(getClass().getResourceAsStream("trashsmaller.png"));
         button.setGraphic(new ImageView(deleteIcon));
         button.setOnAction(event -> {
+            //TODO make this delete method customisable
             String itemName = getItem();
             deletionJobs deleteSelected = new deletionJobs("audio", itemName, ".wav");
             workerTeam.submit(deleteSelected);

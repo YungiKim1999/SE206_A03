@@ -30,7 +30,7 @@ public class MainMenuController extends Controller {
 
     @FXML
     private void handleQuiz() throws IOException {
-        switchScenes(rootBorderPane,"QuizScreen.fxml");
+        switchScenes(rootBorderPane,"QuizStartScreen.fxml");
     }
 
 }

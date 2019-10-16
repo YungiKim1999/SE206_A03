@@ -15,7 +15,7 @@ import javafx.util.Duration;
 
 import java.io.File;
 
-public class MediaPlayerAPI {
+public class QuizScreenController {
     /**
      * The "viewingWindow" is the physical "window" that you put into in the scene builder
      * This "window" has a "MediaPlayer" type object which will play your video for you.
