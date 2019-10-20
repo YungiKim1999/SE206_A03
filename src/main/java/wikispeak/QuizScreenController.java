@@ -68,6 +68,7 @@ public class QuizScreenController extends Controller {
         });
         quiz = QuizPasser.getCurrentQuiz();
         startCurrentQuestion();
+        setTimeLabels(new Duration(0));
     }
 
 
@@ -75,6 +76,9 @@ public class QuizScreenController extends Controller {
      *This will set the media file ready for it to be played
      */
     private void getVideoReady(){
+        if(mediaPlayer != null){
+            mediaPlayer.dispose();
+        }
         File quizURL = new File("creations" + System.getProperty("file.separator") + selectedQuestionToPlay + ".mp4");
         Media quizToPay = new Media(quizURL.toURI().toString());
         mediaPlayer = new MediaPlayer(quizToPay);
@@ -194,7 +198,6 @@ public class QuizScreenController extends Controller {
     @FXML
     private void handleBackButton() {
         mediaPlayer.seek(mediaPlayer.getCurrentTime().subtract(Duration.seconds(2)));
-
     }
 
     /**
@@ -267,6 +270,9 @@ public class QuizScreenController extends Controller {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             //only switch scene after confirmation
+            if(mediaPlayer != null){
+                mediaPlayer.dispose();
+            }
             switchScenes(rootBorderPane, "QuizStartScreen.fxml");
         }
     }

@@ -24,8 +24,8 @@
                 <Label fx:id="finishTime" layoutX="577.0" layoutY="475.0" prefHeight="16.0" prefWidth="56.0" text="Label" />
                 <Slider fx:id="videoBuffer" layoutX="67.0" layoutY="475.0" prefHeight="16.0" prefWidth="510.0" />
                 <Label layoutX="210.0" layoutY="511.0" text="Volume" />
-            <TextField fx:id="creationNameInput" layoutX="658.0" layoutY="411.0" prefHeight="30.0" prefWidth="200.0" />
-            <Label layoutX="671.0" layoutY="381.0" text="Name of Your Creation">
+            <TextField fx:id="creationNameInput" layoutX="686.0" layoutY="468.0" prefHeight="30.0" prefWidth="200.0" />
+            <Label layoutX="701.0" layoutY="449.0" text="Name of Your Creation">
                <font>
                   <Font size="15.0" />
                </font></Label>
@@ -34,12 +34,12 @@
                   <Font size="30.0" />
                </font>
             </Label>
-            <Button fx:id="createButton" defaultButton="true" disable="true" layoutX="658.0" layoutY="452.0" mnemonicParsing="false" onAction="#createAllThingsNecessary" prefHeight="90.0" prefWidth="200.0" text="Create!">
+            <Button fx:id="createButton" defaultButton="true" disable="true" layoutX="686.0" layoutY="506.0" mnemonicParsing="false" onAction="#createAllThingsNecessary" prefHeight="90.0" prefWidth="200.0" text="Create!">
                <font>
                   <Font size="16.0" />
                </font></Button>
-            <ListView fx:id="previousCreations" layoutX="657.0" layoutY="95.0" prefHeight="275.0" prefWidth="200.0" />
-            <Label layoutX="687.0" layoutY="66.0" text="Previous Creations">
+            <ListView fx:id="previousCreations" layoutX="686.0" layoutY="77.0" prefHeight="364.0" prefWidth="200.0" />
+            <Label layoutX="716.0" layoutY="58.0" text="Previous Creations">
                <font>
                   <Font size="15.0" />
                </font></Label>
@@ -48,6 +48,8 @@
                <font>
                   <Font size="15.0" />
                </font></Label>
+            <Button fx:id="addMusicButton" layoutX="530.0" layoutY="511.0" mnemonicParsing="false" onAction="#handleAddMusic" prefHeight="80.0" prefWidth="90.0" text="Add Music" />
+            <Button fx:id="removeMusicButton" alignment="CENTER" layoutX="440.0" layoutY="511.0" mnemonicParsing="false" onAction="#handleRemoveMusic" prefHeight="80.0" prefWidth="90.0" text="Remove Music" textAlignment="CENTER" wrapText="true" />
             </children>
         </AnchorPane>
    </bottom>

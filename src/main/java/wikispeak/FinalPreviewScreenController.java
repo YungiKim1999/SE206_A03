@@ -6,6 +6,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -13,13 +15,19 @@ import javafx.scene.layout.Region;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
 import javafx.util.Duration;
+import wikispeak.tasks.addMusicJob;
+import wikispeak.tasks.removeMusicJob;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,7 +38,11 @@ public class FinalPreviewScreenController extends ListController {
     ObservableList<String> creationsStrings = FXCollections.observableArrayList(populateList("creations", ""));
     private boolean play = false;
     private boolean firsTime;
+    private boolean addedMusic = false;
     private  MediaPlayer creationPlayingThing = null;
+    private FileChooser musicSelector = new FileChooser();
+    private Window musicSelectorWindow;
+    private ExecutorService team = Executors.newSingleThreadExecutor();
 
     @FXML private MediaView creationViewer;
     @FXML private BorderPane rootBorderPane;
@@ -42,10 +54,16 @@ public class FinalPreviewScreenController extends ListController {
     @FXML private TextField creationNameInput;
     @FXML private ListView previousCreations;
     @FXML private Button createButton;
+    @FXML private Button addMusicButton;
+    @FXML private Button removeMusicButton;
+
 
     @FXML
     public void initialize(){
 
+        musicSelector.setInitialDirectory(new File("music"));
+        musicSelector.getExtensionFilters().add(new FileChooser.ExtensionFilter("Mp3 Files", "*.mp3"));
+        setMusicButtons();
         //create button is only available if some text is entered in the field
         creationNameInput.textProperty().addListener((observable, oldValue, newValue) -> {
             createButton.setDisable(creationNameInput.getText().trim().isEmpty());
@@ -54,7 +72,7 @@ public class FinalPreviewScreenController extends ListController {
         previousCreations.setItems(creationsStrings);
         firsTime = true;
         timeLabel.setText("00:00");
-        finishTime.setText("00:00");
+        finishTime.setText("--:--");
         setMediaForPlay();
         addVideoListener();
         addVolumeListener();
@@ -153,11 +171,12 @@ public class FinalPreviewScreenController extends ListController {
 
     private void playMedia(){
         creationPlayingThing.play();
-        playPauseButton.setText("Play/Pause");
+        playPauseButton.setText("Pause");
     }
 
     private void pauseMedia(){
         creationPlayingThing.pause();
+        playPauseButton.setText("Play");
     }
 
     private void setMediaForPlay(){
@@ -203,6 +222,45 @@ public class FinalPreviewScreenController extends ListController {
             creationPlayingThing.seek(creationPlayingThing.getCurrentTime().subtract(Duration.seconds(2)));
         }
     }
+
+    @FXML
+    private void handleAddMusic(){
+        File selectedMusic = musicSelector.showOpenDialog(musicSelectorWindow);
+        if(selectedMusic != null) {
+            addMusicJob addMusic = new addMusicJob(selectedMusic);
+            team.submit(addMusic);
+            addMusic.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+                @Override
+                public void handle(WorkerStateEvent event) {
+                    File file = new File(".temp" + System.getProperty("file.separator") + "The_final_creation.mp4");
+                    file.delete();
+                    addedMusic = true;
+                    if(creationPlayingThing.getStatus() == MediaPlayer.Status.PLAYING){
+                        pauseMedia();
+                    }
+                    initialize();
+                }
+            });
+        }
+
+    }
+    @FXML
+    private void handleRemoveMusic(){
+            removeMusicJob removeMusic = new removeMusicJob();
+            team.submit(removeMusic);
+            removeMusic.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+                @Override
+                public void handle(WorkerStateEvent event) {
+                    addedMusic = false;
+                    if(creationPlayingThing.getStatus() == MediaPlayer.Status.PLAYING){
+                        pauseMedia();
+                    }
+                    initialize();
+                }
+            });
+    }
+
+
 
     @FXML
     private void createAllThingsNecessary(){
@@ -258,6 +316,14 @@ public class FinalPreviewScreenController extends ListController {
         }
     }
 
+    private void setMusicButtons(){
+        if(addedMusic){
+            removeMusicButton.setDisable(false);
+        }else{
+            removeMusicButton.setDisable(true);
+        }
+        addMusicButton.setDisable(false);
+    }
     /**
      * Checks if the given filename doesn't contain forbidden characters
      * @param fileName

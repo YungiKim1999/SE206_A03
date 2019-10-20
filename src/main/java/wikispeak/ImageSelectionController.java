@@ -52,13 +52,9 @@ public class ImageSelectionController extends Controller{
     @FXML
     public void initialize() {
 
+        nextButton.setDisable(true);
         File unselectedDirectory = new File(".temp" + System.getProperty("file.separator") + "downloads");
         File selectedDirectory = new File(".temp" + System.getProperty("file.separator") + "images_to_use");
-        if(addedImages.size()>0){
-            nextButton.setDisable(false);
-        }else{
-            nextButton.setDisable(true);
-        }
         waitLabel.setVisible(true);
 
         paneOne.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
@@ -120,6 +116,12 @@ public class ImageSelectionController extends Controller{
         }else{
             imageWaitBar.setVisible(false);
             waitLabel.setVisible(false);
+            if(addedImages.size()>0){
+                nextButton.setDisable(false);
+                imageCountLabel.setText(addedImages.size()+" Images selected for the creation");
+            }else{
+                nextButton.setDisable(true);
+            }
 
         }
 

@@ -15,12 +15,11 @@
       <AnchorPane prefHeight="600.0" prefWidth="900.0" BorderPane.alignment="CENTER">
          <children>
             <MediaView fx:id="viewingWindow" fitHeight="450.0" fitWidth="710.0" layoutX="14.0" layoutY="14.0" />
-            <Slider fx:id="videoBuffingSlider" layoutX="58.0" layoutY="472.0" prefHeight="20.0" prefWidth="460.0" />
+            <Slider fx:id="videoBuffingSlider" layoutX="56.0" layoutY="472.0" prefHeight="20.0" prefWidth="632.0" />
             <Button fx:id="playPauseRepeatButton" layoutX="13.0" layoutY="497.0" mnemonicParsing="false" onAction="#handlePlayPauseButton" prefHeight="26.0" prefWidth="74.0" text="Play" />
             <Button layoutX="87.0" layoutY="497.0" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="26.0" prefWidth="49.0" text="&lt;&lt;" />
             <Button layoutX="136.0" layoutY="497.0" mnemonicParsing="false" onAction="#handleForwardButton" prefHeight="26.0" prefWidth="43.0" text="&gt;&gt;" />
             <Label fx:id="currentTimeLabel" layoutX="14.0" layoutY="474.0" />
-            <Label fx:id="finishTimeLabel" layoutX="518.0" layoutY="474.0" />
             <Slider fx:id="volumeSlider" layoutX="252.0" layoutY="502.0" prefHeight="16.0" prefWidth="130.0" value="100.0" />
             <Label layoutX="197.0" layoutY="501.0" text="Volume" />
             <Button layoutX="741.0" layoutY="234.0" mnemonicParsing="false" onAction="#handleGetHint" prefHeight="55.0" prefWidth="134.0" text="Show Hint" />
@@ -55,6 +54,7 @@
                   <Font size="16.0" />
                </font>
             </Text>
+            <Label fx:id="finishTimeLabel" layoutX="688.0" layoutY="474.0" text="Label" />
          </children>
       </AnchorPane>
    </center>

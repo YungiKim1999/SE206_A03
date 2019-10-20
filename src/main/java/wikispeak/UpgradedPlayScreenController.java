@@ -77,11 +77,14 @@ public class UpgradedPlayScreenController extends ListController {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 if (!creationList.getItems().isEmpty()) {
+                    System.out.println(deleted);
                     setEmptyLabelText();
                     getUserChoice(newValue);
                     setMediaForPlay();
                     firsTime = false;
                     if(deleted){
+                        playMedia();
+                        pauseMedia();
                         deleted = false;
                         play = false;
                     }else {
@@ -236,27 +239,30 @@ public class UpgradedPlayScreenController extends ListController {
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
+                deleted = true;
                 newDeletionJob deleteSelected = new newDeletionJob(selectedDir);
                 workerTeam.submit(deleteSelected);
                 creationList.getItems().remove(selectedDir);
                 setEmptyLabelText();
-                deleted = true;
-
             }
         }
     }
 
     @FXML
     private void handleForwardButton() {
-        if (play) {
-            creationMediaPlayer.seek(creationMediaPlayer.getCurrentTime().add(Duration.seconds(2)));
+        creationMediaPlayer.seek(creationMediaPlayer.getCurrentTime().add(Duration.seconds(2)));
+        if (!play) {
+            playMedia();
+            play = true;
         }
     }
 
     @FXML
     private void handleBackButton() {
-        if (play) {
-            creationMediaPlayer.seek(creationMediaPlayer.getCurrentTime().subtract(Duration.seconds(2)));
+        creationMediaPlayer.seek(creationMediaPlayer.getCurrentTime().subtract(Duration.seconds(2)));
+        if (!play) {
+            playMedia();
+            play = true;
         }
     }
 }
