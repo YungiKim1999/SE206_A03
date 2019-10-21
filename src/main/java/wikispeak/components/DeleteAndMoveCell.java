@@ -13,13 +13,18 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
-import wikispeak.tasks.deletionJobs;
+import wikispeak.tasks.generalDeletionJob;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Custom cell for a ListView.
+ * The cell can be clicked and dragged for reordering and features a delete button with icon.
+ * Adapted from: https://gist.github.com/jewelsea/7821196
+ */
 public class DeleteAndMoveCell extends ListCell<String> {
 
     HBox hbox = new HBox();
@@ -27,9 +32,20 @@ public class DeleteAndMoveCell extends ListCell<String> {
     Pane pane = new Pane();
     Button button = new Button();
 
+    String containingFolder;
+    String extension;
+
     private ExecutorService workerTeam = Executors.newSingleThreadExecutor();
 
-    public DeleteAndMoveCell() {
+    /**
+     *
+     * @param containingFolder specifies the directory where deleted items will be located
+     * @param extension the file extension of the folders to be deleted
+     */
+    public DeleteAndMoveCell(String containingFolder, String extension) {
+
+        this.containingFolder = containingFolder;
+        this.extension = extension;
 
         hbox.getChildren().addAll(label, pane, button);
         HBox.setHgrow(pane, Priority.ALWAYS);
@@ -38,7 +54,7 @@ public class DeleteAndMoveCell extends ListCell<String> {
         button.setOnAction(event -> {
             //TODO make this delete method customisable
             String itemName = getItem();
-            deletionJobs deleteSelected = new deletionJobs(".temp" + System.getProperty("file.separator") + "audio", itemName, ".wav");
+            generalDeletionJob deleteSelected = new generalDeletionJob(containingFolder, itemName, extension);
             workerTeam.submit(deleteSelected);
             getListView().getItems().remove(itemName);
         });
