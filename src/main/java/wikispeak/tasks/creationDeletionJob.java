@@ -4,13 +4,13 @@ import javafx.concurrent.Task;
 
 import java.io.File;
 
-public class newDeletionJob extends Task<Boolean> {
+public class creationDeletionJob extends Task<Boolean> {
 
     private String fileName;
     private File creationFile = new File("creations");
     private File[] allCreations = creationFile.listFiles();
 
-    public newDeletionJob(String fileName) {
+    public creationDeletionJob(String fileName) {
         this.fileName = fileName;
     }
 

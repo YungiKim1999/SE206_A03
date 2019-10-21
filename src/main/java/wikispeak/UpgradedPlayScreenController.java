@@ -14,8 +14,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.util.Duration;
-import wikispeak.tasks.deletionJobs;
-import wikispeak.tasks.newDeletionJob;
+import wikispeak.tasks.creationDeletionJob;
 
 
 import java.io.File;
@@ -240,7 +239,7 @@ public class UpgradedPlayScreenController extends ListController {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 deleted = true;
-                newDeletionJob deleteSelected = new newDeletionJob(selectedDir);
+                creationDeletionJob deleteSelected = new creationDeletionJob(selectedDir);
                 workerTeam.submit(deleteSelected);
                 creationList.getItems().remove(selectedDir);
                 setEmptyLabelText();

@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -47,6 +48,8 @@ public class CreateAudioScreenController extends ListController{
     @FXML private Text promptText;
 
     private ExecutorService worker = Executors.newSingleThreadExecutor();
+
+    private HashMap<String, String> voices = new HashMap<>();
 
     private final ObservableList<String> audioFiles = FXCollections.observableArrayList();
 
@@ -86,12 +89,13 @@ public class CreateAudioScreenController extends ListController{
 
     @FXML
     private void handlePreview() throws InterruptedException, IOException {
-        String selectedVoice = (String)voiceSelection.getValue();
+        String selectedKey = (String)voiceSelection.getValue();
+        final String selectedVoice = voices.get(selectedKey);
         String textSelection = textOutput.getSelectedText();
         if(!correctTextSelection(textSelection)){
             textSelection = "This is my voice";
         }
-        String finalTextSelection = textSelection;
+        final String finalTextSelection = textSelection;
 
         //read out the selected text in the selected voice
         Thread previewVoiceThread = new Thread(new Task<Void>(){
@@ -118,7 +122,8 @@ public class CreateAudioScreenController extends ListController{
         if(correctTextSelection(textSelection) && nameIsValid(audioFileName) && canOverwrite(audioFileName)){
 
             progressIndicator.setVisible(true);
-            final String selectedVoice = (String)voiceSelection.getValue();
+            String selectedKey = (String)voiceSelection.getValue();
+            final String selectedVoice = voices.get(selectedKey);
 
             Thread audioThread = new Thread(new Task<Void>(){
                 @Override
@@ -188,12 +193,12 @@ public class CreateAudioScreenController extends ListController{
      */
     private void populateVoiceSelectionBox() throws IOException {
 
-        Command command = new Command("ls " +  System.getProperty("file.separator") + "usr" + System.getProperty("file.separator") + "share" + System.getProperty("file.separator") + "festival" + System.getProperty("file.separator") + "voices" + System.getProperty("file.separator") + "english");
-        command.execute();
+        voices.put("NZ Female", "akl_nz_cw_cg_cg");
+        voices.put("NZ Male", "akl_nz_jdt_diphone");
+        voices.put("Default Male", "kal_diphone");
 
-        String[] voiceNameArray = command.getStream().split("\\s+");
-        for(int i = 0; i < voiceNameArray.length; i++){
-            voiceSelection.getItems().add(voiceNameArray[i]);
+        for(String voice : voices.keySet()){
+            voiceSelection.getItems().add(voice);
         }
     }
 
@@ -217,7 +222,7 @@ public class CreateAudioScreenController extends ListController{
         Text text = new Text("No Audio Snippets\nhave been Created");
         text.setTextAlignment(TextAlignment.CENTER);
         audioListView.setPlaceholder(text);
-        audioListView.setCellFactory(param -> new DeleteAndMoveCell());
+        audioListView.setCellFactory(param -> new DeleteAndMoveCell(".temp" + System.getProperty("file.separator") + "audio", ".wav"));
 
         audioListBox.getChildren().add(audioListView);
     }
