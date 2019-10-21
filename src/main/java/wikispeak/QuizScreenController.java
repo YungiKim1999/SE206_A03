@@ -265,7 +265,7 @@ public class QuizScreenController extends Controller {
      */
     @FXML
     private void handleExitQuiz() throws IOException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to stop the quiz?");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to stop the test?");
         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
