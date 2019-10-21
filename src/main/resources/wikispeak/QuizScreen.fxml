@@ -61,7 +61,7 @@
    <bottom>
       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="900.0" BorderPane.alignment="CENTER">
          <children>
-            <Button layoutX="5.0" layoutY="40.0" mnemonicParsing="false" onAction="#handleExitQuiz" prefHeight="35.0" prefWidth="100.0" text="Exit Quiz" />
+            <Button layoutX="5.0" layoutY="40.0" mnemonicParsing="false" onAction="#handleExitQuiz" prefHeight="35.0" prefWidth="100.0" text="Exit Test" />
             <Button fx:id="submitButton" defaultButton="true" disable="true" layoutX="745.0" layoutY="5.0" mnemonicParsing="false" onAction="#handleSubmit" prefHeight="70.0" prefWidth="150.0" text="Submit">
                <font>
                   <Font size="16.0" />
