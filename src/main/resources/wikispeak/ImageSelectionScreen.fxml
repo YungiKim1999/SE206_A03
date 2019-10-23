@@ -41,7 +41,7 @@
                <font>
                   <Font size="15.0" />
                </font></Label>
-            <Label alignment="CENTER" layoutY="5.0" prefHeight="41.0" prefWidth="900.0" text="Step 5: Select Images for Video" textAlignment="CENTER">
+            <Label alignment="CENTER" layoutY="5.0" prefHeight="41.0" prefWidth="900.0" text="Step 4: Select Images for Video" textAlignment="CENTER">
                <font>
                   <Font size="30.0" />
                </font>
