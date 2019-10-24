@@ -32,32 +32,57 @@ public class DeleteAndMoveCell extends ListCell<String> {
     Pane pane = new Pane();
     Button button = new Button();
 
-    String containingFolder;
-    String extension;
+    //String containingFolder;
+    //String extension;
 
     private ExecutorService workerTeam = Executors.newSingleThreadExecutor();
 
     /**
-     *
-     * @param containingFolder specifies the directory where deleted items will be located
-     * @param extension the file extension of the folders to be deleted
+     * Adds delete functionality
+     * Constructor to use when deleting creations
+     * @param fileName
      */
-    public DeleteAndMoveCell(String containingFolder, String extension) {
-
-        this.containingFolder = containingFolder;
-        this.extension = extension;
+    public DeleteAndMoveCell(String fileName){
 
         hbox.getChildren().addAll(label, pane, button);
         HBox.setHgrow(pane, Priority.ALWAYS);
         Image deleteIcon = new Image(getClass().getResourceAsStream("trashsmaller.png"));
         button.setGraphic(new ImageView(deleteIcon));
+
+        new DeleteAndMoveCell();
+    }
+
+    /**
+     * Adds delete functionality
+     * Consructor to use when deleting audio files
+     * @param containingFolder
+     * @param extension
+     */
+    public DeleteAndMoveCell(String containingFolder, String extension){
+
+        //confirm if these fields are necessary
+        //this.containingFolder = containingFolder;
+        //this.extension = extension;
+
+        hbox.getChildren().addAll(label, pane, button);
+        HBox.setHgrow(pane, Priority.ALWAYS);
+        Image deleteIcon = new Image(getClass().getResourceAsStream("trashsmaller.png"));
+        button.setGraphic(new ImageView(deleteIcon));
+
         button.setOnAction(event -> {
-            //TODO make this delete method customisable
             String itemName = getItem();
             generalDeletionJob deleteSelected = new generalDeletionJob(containingFolder, itemName, extension);
             workerTeam.submit(deleteSelected);
             getListView().getItems().remove(itemName);
         });
+        new DeleteAndMoveCell();
+    }
+
+
+    /**
+     * General constructor - adds reorderable functionality
+     */
+    public DeleteAndMoveCell() {
 
         ListCell thisCell = this;
 
