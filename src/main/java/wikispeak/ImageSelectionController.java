@@ -125,7 +125,6 @@ public class ImageSelectionController extends Controller{
 
         }
 
-        //have all the arraylists ready, set images into tilePane using it
         createAllImageSelectionPage(SelectionOfImagesPane, filesJpg);
         createAllImageSelectionPage(selectedImages, addedImages);
     }
