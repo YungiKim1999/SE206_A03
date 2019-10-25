@@ -3,7 +3,7 @@ package wikispeak.quiz;
 /**
  * A quiz holder that allows a quiz to be passed between QuizStartScreenController and QuizScreenController
  */
-public final class QuizPasser {
+public final class QuizHolder {
 
     private static Quiz currentQuiz;
 

@@ -5,7 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
-import wikispeak.quiz.QuizPasser;
+import wikispeak.quiz.QuizHolder;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -42,6 +42,8 @@ public class QuizStartScreenController extends Controller {
         }
         //show the alert text if no creations have been made
         if(numberOfQuestionsAvailable == 0){
+            numberSlider.setDisable(true);
+            startButton.setDisable(true);
             alertText.setVisible(true);
         }
 
@@ -58,7 +60,7 @@ public class QuizStartScreenController extends Controller {
     public void handleStartQuiz() throws IOException {
         Double valueSelected = numberSlider.getValue();
         int valueSelectedInt = valueSelected.intValue();
-        QuizPasser.makeQuiz(valueSelectedInt);
+        QuizHolder.makeQuiz(valueSelectedInt);
         switchScenes(rootBorderPane, "QuizScreen.fxml");
     }
 

@@ -249,7 +249,7 @@ public class ImageSelectionController extends Controller{
 
     @FXML
     public void handleMainMenuButton() throws IOException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to go to main menu?");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to go to the main menu?");
         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {

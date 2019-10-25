@@ -13,7 +13,7 @@
    <bottom>
       <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="900.0">
          <children>
-            <Button fx:id="startButton" alignment="CENTER" defaultButton="true" disable="true" layoutX="745.0" layoutY="5.0" mnemonicParsing="false" onAction="#handleStartQuiz" prefHeight="70.0" prefWidth="150.0" style="-fx-base: #5ABDFF;" text="Start!" textAlignment="CENTER">
+            <Button fx:id="startButton" alignment="CENTER" defaultButton="true" layoutX="745.0" layoutY="5.0" mnemonicParsing="false" onAction="#handleStartQuiz" prefHeight="70.0" prefWidth="150.0" style="-fx-base: #5ABDFF;" text="Start!" textAlignment="CENTER">
                <font>
                   <Font size="16.0" />
                </font>
@@ -50,12 +50,8 @@
                   <Font size="16.0" />
                </font>
             </Text>
-            <Slider fx:id="numberSlider" layoutX="212.0" layoutY="368.0" majorTickUnit="1.0" max="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" minorTickCount="0" prefHeight="20.0" prefWidth="500.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
-            <Text fx:id="alertText" layoutX="772.0" layoutY="447.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You must make&#10;a creation first" textAlignment="CENTER" visible="false">
-               <font>
-                  <Font size="12.0" />
-               </font>
-            </Text>
+            <Slider fx:id="numberSlider" layoutX="212.0" layoutY="368.0" majorTickUnit="1.0" max="10.0" maxHeight="-Infinity" maxWidth="-Infinity" min="1.0" minHeight="-Infinity" minWidth="-Infinity" minorTickCount="0" prefHeight="20.0" prefWidth="500.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1.0" />
+            <Text fx:id="alertText" layoutX="768.0" layoutY="448.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You must make&#10;a creation first" textAlignment="CENTER" visible="false" />
          </children>
       </AnchorPane>
    </center>

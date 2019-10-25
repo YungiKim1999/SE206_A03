@@ -14,7 +14,7 @@ import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import wikispeak.quiz.Quiz;
-import wikispeak.quiz.QuizPasser;
+import wikispeak.quiz.QuizHolder;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,7 +66,7 @@ public class QuizScreenController extends Controller {
         answerField.textProperty().addListener((observable, oldValue, newValue) -> {
             submitButton.setDisable(newValue.trim().isEmpty());
         });
-        quiz = QuizPasser.getCurrentQuiz();
+        quiz = QuizHolder.getCurrentQuiz();
         startCurrentQuestion();
         setTimeLabels(new Duration(0));
     }
@@ -226,21 +226,29 @@ public class QuizScreenController extends Controller {
      */
     @FXML
     private void handleSubmit() throws IOException {
+        String answer = quiz.getCurrentAnswer();
         Boolean result = quiz.submitResponse(answerField.getText());
         if(result){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Well done you got it right!");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "The answer was: " + answer);
+            alert.setHeaderText("Correct");
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             alert.showAndWait();
         }
         else{
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Your answer was wrong :(");
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "The correct answer was: " + answer);
+            alert.setHeaderText("Incorrect");
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             alert.showAndWait();
         }
 
         if(quiz.isFinished()){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "You got " + quiz.getNumberCorrect() + " questions right and " + quiz.getNumberIncorrect() + " wrong");
-            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            String message = "You got " + quiz.getNumberCorrect() + " questions right and " + quiz.getNumberIncorrect() + " wrong";
+            if(quiz.getNumberIncorrect() > 0){
+                message += "\n\nYou should review the following Creations: \n" + quiz.getCreationsToReview();
+            }
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, message);
+            alert.setHeaderText("Vocabulary Test Results");
             alert.showAndWait();
             switchScenes(rootBorderPane, "QuizStartScreen.fxml");
         }
@@ -256,6 +264,7 @@ public class QuizScreenController extends Controller {
     @FXML
     private void handleGetHint(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "The answer starts with the letter " + quiz.getCurrentHint());
+        alert.setHeaderText("Question Hint");
         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         alert.showAndWait();
     }
