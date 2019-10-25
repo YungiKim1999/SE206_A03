@@ -82,11 +82,19 @@ public class FinalPreviewScreenController extends ListController {
 
     }
 
+    /**
+     * adds the volume slides listener to the preview window
+     */
     private void addVolumeListener(){
         volumeSlider.valueProperty().addListener(observable -> {
             creationPlayingThing.setVolume(volumeSlider.getValue() / 100);
         });
     }
+
+    /**
+     * sets the time labels onto the preview area according to where the video currently is
+     * @param newVakue
+     */
     private void setTimeLabels(Duration newVakue){
         String currentTime = "";
         currentTime += String.format("%02d", (int)newVakue.toMinutes());
@@ -100,6 +108,9 @@ public class FinalPreviewScreenController extends ListController {
         finishTime.setText(stopTime);
     }
 
+    /**
+     * adds the listeners for the video components which the user will interact with
+     */
     private void addVideoListener() {
         creationPlayingThing.currentTimeProperty().addListener(new ChangeListener<Duration>() {
             @Override
@@ -128,6 +139,10 @@ public class FinalPreviewScreenController extends ListController {
         });
     }
 
+    /**
+     * allows the user to go back to image selection
+     * @throws IOException
+     */
     @FXML
     private void handleBackToImageSelection() throws IOException {
         if(play == true){
@@ -150,6 +165,11 @@ public class FinalPreviewScreenController extends ListController {
         }
         switchScenes(rootBorderPane, "ImageSelectionScreen.fxml");
     }
+
+    /**
+     * exits the creation process
+     * @throws IOException
+     */
     @FXML
     private void handleExitButton()throws IOException {
         if(play == true){
@@ -169,16 +189,25 @@ public class FinalPreviewScreenController extends ListController {
 
     }
 
+    /**
+     * plays the creation under final previewing
+     */
     private void playMedia(){
         creationPlayingThing.play();
         playPauseButton.setText("Pause");
     }
 
+    /**
+     * pauses the creation under final previewing
+     */
     private void pauseMedia(){
         creationPlayingThing.pause();
         playPauseButton.setText("Play");
     }
 
+    /**
+     * sets the creation into the media player so the user can preview the creation before accepting it
+     */
     private void setMediaForPlay(){
         if (!firsTime && creationPlayingThing.getStatus() == MediaPlayer.Status.PLAYING){
             creationPlayingThing.dispose();
@@ -189,7 +218,9 @@ public class FinalPreviewScreenController extends ListController {
         creationViewer.setMediaPlayer(creationPlayingThing);
     }
 
-
+    /**
+     * allows the user to play, pause, and repeat the creation under final previewing
+     */
     @FXML
     private void handlePlayPauseButton(){
             if(playPauseButton.getText().equals("Repeat")){
@@ -209,6 +240,9 @@ public class FinalPreviewScreenController extends ListController {
             }
     }
 
+    /**
+     * buffer the creation under final preview sligjtly forward
+     */
     @FXML
     private void handleForwardButton(){
         if(play){
@@ -216,6 +250,9 @@ public class FinalPreviewScreenController extends ListController {
         }
     }
 
+    /**
+     * buffer the creation under final preview sligjtly forward
+     */
     @FXML
     private void handleBackButton(){
         if(play){
@@ -223,6 +260,9 @@ public class FinalPreviewScreenController extends ListController {
         }
     }
 
+    /**
+     * allows the user to add music onto the creation
+     */
     @FXML
     private void handleAddMusic(){
         File selectedMusic = musicSelector.showOpenDialog(musicSelectorWindow);
@@ -244,6 +284,10 @@ public class FinalPreviewScreenController extends ListController {
         }
 
     }
+
+    /**
+     * allows the user to remove music from the creation
+     */
     @FXML
     private void handleRemoveMusic(){
             removeMusicJob removeMusic = new removeMusicJob();
@@ -260,8 +304,9 @@ public class FinalPreviewScreenController extends ListController {
             });
     }
 
-
-
+    /**
+     * creates all the files required so the creation which the user is creating can be accessed by the media player and can be accessed by the quiz page.
+     */
     @FXML
     private void createAllThingsNecessary(){
         boolean okayName = true;
@@ -309,6 +354,10 @@ public class FinalPreviewScreenController extends ListController {
         }
     }
 
+    /**
+     * delets all the unnecessary files that are left behind
+     * @throws IOException
+     */
     private void deleteAllFiles() throws IOException {
         File file = new File(".temp");
         for (File insideFile : file.listFiles()) {
@@ -316,6 +365,9 @@ public class FinalPreviewScreenController extends ListController {
         }
     }
 
+    /**
+     * makes the "remove music" button enabled or disabled
+     */
     private void setMusicButtons(){
         if(addedMusic){
             removeMusicButton.setDisable(false);
