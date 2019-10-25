@@ -13,7 +13,7 @@
    <bottom>
       <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="900.0">
          <children>
-            <Button fx:id="startButton" alignment="CENTER" defaultButton="true" disable="true" layoutX="745.0" layoutY="5.0" mnemonicParsing="false" onAction="#handleStartQuiz" prefHeight="70.0" prefWidth="150.0" text="Start!" textAlignment="CENTER">
+            <Button fx:id="startButton" alignment="CENTER" defaultButton="true" disable="true" layoutX="745.0" layoutY="5.0" mnemonicParsing="false" onAction="#handleStartQuiz" prefHeight="70.0" prefWidth="150.0" style="-fx-base: #5ABDFF;" text="Start!" textAlignment="CENTER">
                <font>
                   <Font size="16.0" />
                </font>

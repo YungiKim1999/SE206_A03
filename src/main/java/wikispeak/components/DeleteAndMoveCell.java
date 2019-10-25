@@ -1,6 +1,7 @@
 package wikispeak.components;
 
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -13,6 +14,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import wikispeak.tasks.creationDeletionJob;
 import wikispeak.tasks.generalDeletionJob;
 
 import java.util.ArrayList;
@@ -32,32 +34,60 @@ public class DeleteAndMoveCell extends ListCell<String> {
     Pane pane = new Pane();
     Button button = new Button();
 
-    String containingFolder;
-    String extension;
-
     private ExecutorService workerTeam = Executors.newSingleThreadExecutor();
 
     /**
-     *
-     * @param containingFolder specifies the directory where deleted items will be located
-     * @param extension the file extension of the folders to be deleted
+     * Adds delete functionality
+     * Constructor to use when deleting creations
      */
-    public DeleteAndMoveCell(String containingFolder, String extension) {
-
-        this.containingFolder = containingFolder;
-        this.extension = extension;
+    public DeleteAndMoveCell(){
 
         hbox.getChildren().addAll(label, pane, button);
         HBox.setHgrow(pane, Priority.ALWAYS);
-        Image deleteIcon = new Image(getClass().getResourceAsStream("trashsmaller.png"));
+        Image deleteIcon = new Image(getClass().getResourceAsStream("redcross.png"));
         button.setGraphic(new ImageView(deleteIcon));
+        button.setPadding(new Insets(2,3,2,3));
+
         button.setOnAction(event -> {
-            //TODO make this delete method customisable
+            String itemName = getItem();
+            creationDeletionJob deleteSelected = new creationDeletionJob(itemName);
+            workerTeam.submit(deleteSelected);
+            getListView().getItems().remove(itemName);
+        });
+
+        makeReorderable();
+    }
+
+    /**
+     * Adds delete functionality
+     * Consructor to use when deleting audio files
+     * @param containingFolder
+     * @param extension
+     */
+    public DeleteAndMoveCell(String containingFolder, String extension){
+
+        hbox.getChildren().addAll(label, pane, button);
+        HBox.setHgrow(pane, Priority.ALWAYS);
+        Image deleteIcon = new Image(getClass().getResourceAsStream("redcross.png"));
+        button.setGraphic(new ImageView(deleteIcon));
+
+        button.setPadding(new Insets(2,3,2,3));
+
+        button.setOnAction(event -> {
             String itemName = getItem();
             generalDeletionJob deleteSelected = new generalDeletionJob(containingFolder, itemName, extension);
             workerTeam.submit(deleteSelected);
             getListView().getItems().remove(itemName);
         });
+
+        makeReorderable();
+    }
+
+
+    /**
+     * Adds reordorable functionality.
+     */
+    private void makeReorderable() {
 
         ListCell thisCell = this;
 

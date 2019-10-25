@@ -35,7 +35,7 @@
                   <Font size="18.0" />
                </font>
             </TextField>
-            <Button fx:id="searchButton" defaultButton="true" disable="true" layoutX="740.0" layoutY="164.0" mnemonicParsing="false" onAction="#handleSearch" prefHeight="70.0" prefWidth="150.0" text="Search">
+            <Button fx:id="searchButton" defaultButton="true" disable="true" layoutX="740.0" layoutY="164.0" mnemonicParsing="false" onAction="#handleSearch" prefHeight="70.0" prefWidth="150.0" style="-fx-base: #5ABDFF;" text="Search">
                <font>
                   <Font size="16.0" />
                </font>
