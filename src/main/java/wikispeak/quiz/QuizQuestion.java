@@ -12,9 +12,13 @@ public class QuizQuestion {
         _answer = answer;
     }
 
-    public String hint(){
+    public String getHint(){
         return _answer.substring(0,1).toUpperCase();
     }
+
+    public String getAnswer() { return _answer; }
+
+    public String getCreationName() { return _creationName; }
 
     public Boolean answerIsCorrect(String response){
         return _answer.toLowerCase().equals(response.toLowerCase());

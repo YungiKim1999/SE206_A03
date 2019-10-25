@@ -8,7 +8,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import wikispeak.helpers.Command;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 

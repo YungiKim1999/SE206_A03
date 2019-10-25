@@ -28,7 +28,7 @@
                   <Font size="16.0" />
                </font></Button>
             <Button layoutX="5.0" layoutY="560.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#habdleBackButton" prefHeight="35.0" prefWidth="100.0" text="&lt; Back" />
-            <Button layoutX="115.0" layoutY="560.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleMainMenuButton" prefHeight="35.0" prefWidth="100.0" text="Main Menu" />
+            <Button layoutX="110.0" layoutY="560.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleMainMenuButton" prefHeight="35.0" prefWidth="100.0" text="Main Menu" />
             <Label layoutX="106.0" layoutY="56.0" prefHeight="29.0" prefWidth="315.0" text="Click on the images to add into the video">
                <font>
                   <Font size="15.0" />
@@ -46,7 +46,7 @@
                   <Font size="30.0" />
                </font>
             </Label>
-            <Label fx:id="imageCountLabel" alignment="CENTER" layoutX="512.0" layoutY="233.0" prefHeight="134.0" prefWidth="112.0" text="No Images selected for video" textAlignment="CENTER" wrapText="true" />
+            <Label fx:id="imageCountLabel" alignment="CENTER" layoutX="519.0" layoutY="233.0" prefHeight="134.0" prefWidth="96.0" text="No Images selected for video" textAlignment="CENTER" wrapText="true" />
             <ProgressBar fx:id="imageWaitBar" layoutX="14.0" layoutY="498.0" prefHeight="30.0" prefWidth="498.0" progress="0.0" />
             <Label fx:id="waitLabel" alignment="CENTER" layoutX="63.0" layoutY="157.0" prefHeight="210.0" prefWidth="398.0" text="Getting images from Flickr..." />
             <ProgressBar fx:id="createVideoBar" layoutX="624.0" layoutY="497.0" prefHeight="32.0" prefWidth="257.0" progress="0.0" />

@@ -8,7 +8,8 @@ import java.util.List;
 
 public class Quiz {
 
-    private List<QuizQuestion> randomisedListOfQuestions = new ArrayList<>();
+    private List<QuizQuestion> randomisedListOfQuestions;
+    private List<String> creationsToReview = new ArrayList<>();
 
     private int totalNumberOfQuestions;
     private int numberCorrect = 0;
@@ -26,12 +27,12 @@ public class Quiz {
         return randomisedListOfQuestions.get(currentQuestion).toString();
     }
 
-    public String getCurrentHint(){
-        return randomisedListOfQuestions.get(currentQuestion).hint();
+    public String getCurrentHint(){ return randomisedListOfQuestions.get(currentQuestion).getHint();
     }
 
+    public String getCurrentAnswer(){ return randomisedListOfQuestions.get(currentQuestion).getAnswer(); }
+
     public boolean submitResponse(String response){
-        //this question has been responded to, increment "current question"
         if(randomisedListOfQuestions.get(currentQuestion).answerIsCorrect(response)){
             numberCorrect++;
             currentQuestion++;
@@ -39,6 +40,10 @@ public class Quiz {
         }
         else{
             numberIncorrect++;
+            String creationName = randomisedListOfQuestions.get(currentQuestion).getCreationName();
+            if(!creationsToReview.contains(creationName)){
+                creationsToReview.add(creationName);
+            }
             currentQuestion++;
             return false;
         }
@@ -55,6 +60,14 @@ public class Quiz {
     public int getCurrentQuestionNumber(){ return currentQuestion + 1; }
 
     public int getTotalNumberOfQuestions(){ return totalNumberOfQuestions; }
+
+    public String getCreationsToReview(){
+        String output = "";
+        for(String creation : creationsToReview){
+            output += "\n" + creation;
+        }
+        return output;
+    }
 
     /**
      * Lists all possible questions that could be put into the quiz
@@ -79,7 +92,7 @@ public class Quiz {
     }
 
     /**
-     * This was for testing purposes.
+     * toString method for testing purposes
      */
     @Override
     public String toString(){
