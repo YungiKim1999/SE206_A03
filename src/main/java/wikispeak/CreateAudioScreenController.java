@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import wikispeak.components.DeleteAndMoveCell;
@@ -46,6 +47,7 @@ public class CreateAudioScreenController extends ListController{
     @FXML private ProgressIndicator progressIndicator;
     @FXML private Button createFullAudioButton;
     @FXML private Text promptText;
+    @FXML private Text selectionInfoText;
 
     private ExecutorService worker = Executors.newSingleThreadExecutor();
 
@@ -56,24 +58,21 @@ public class CreateAudioScreenController extends ListController{
     public void initialize() throws IOException {
         //listens to changes in the audio file name field
         audioFileNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-            updateCreateAudioSnippetButtonAccess();
+            updateCreateAndPreviewButtonAccess();
         });
         //listens to changes in the selected text
         textOutput.selectedTextProperty().addListener(((observable, oldValue, newValue) -> {
-            updateCreateAudioSnippetButtonAccess();
+            updateSelectionGUI();
         }));
         //listens to the amount of audio files created
-        audioFiles.addListener(new ListChangeListener<String>() {
-            @Override
-            public void onChanged(Change<? extends String> change) {
-                if(audioFiles.size() == 0){
-                    createFullAudioButton.setDisable(true);
-                    promptText.setText("Create Some Audio Snippets");
-                }
-                else{
-                    createFullAudioButton.setDisable(false);
-                    promptText.setText("Click and Drag to Reorder");
-                }
+        audioFiles.addListener((ListChangeListener<String>) change -> {
+            if(audioFiles.size() == 0){
+                createFullAudioButton.setDisable(true);
+                promptText.setText("Create Some Audio Snippets");
+            }
+            else{
+                createFullAudioButton.setDisable(false);
+                promptText.setText("Click and Drag to Reorder");
             }
         });
         populateVoiceSelectionBox();
@@ -82,19 +81,10 @@ public class CreateAudioScreenController extends ListController{
     }
 
     @FXML
-    private void handleVoiceSelection(){
-        updateCreateAudioSnippetButtonAccess();
-        previewButton.setDisable(false);
-    }
-
-    @FXML
     private void handlePreview() throws InterruptedException, IOException {
         String selectedKey = (String)voiceSelection.getValue();
         final String selectedVoice = voices.get(selectedKey);
         String textSelection = textOutput.getSelectedText();
-        if(!correctTextSelection(textSelection)){
-            textSelection = "This is my voice";
-        }
         final String finalTextSelection = textSelection;
 
         //read out the selected text in the selected voice
@@ -117,10 +107,10 @@ public class CreateAudioScreenController extends ListController{
     private void handleCreateAudioSnippet(){
 
         final String audioFileName = audioFileNameField.getText();
-        final String textSelection = textOutput.getSelectedText();
 
-        if(correctTextSelection(textSelection) && nameIsValid(audioFileName) && canOverwrite(audioFileName)){
+        if(nameIsValid(audioFileName) && canOverwrite(audioFileName)){
 
+            final String textSelection = textOutput.getSelectedText().trim();
             progressIndicator.setVisible(true);
             String selectedKey = (String)voiceSelection.getValue();
             final String selectedVoice = voices.get(selectedKey);
@@ -153,18 +143,19 @@ public class CreateAudioScreenController extends ListController{
         progressIndicator.setVisible(false);
     }
 
-    @FXML
     /**
      * Takes the user back to the search screen
      */
+    @FXML
     private void handleBackToSearch() throws IOException {
         switchScenes(rootBorderPane, "EditText.fxml");
     }
 
-    @FXML
+
     /**
      * Takes the user back to the main menu. Confirms they are happy to abandon any progress
      */
+    @FXML
     private void handleMainMenu() throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to go to Main Menu?\nAny progress will be lost.");
         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
@@ -175,11 +166,11 @@ public class CreateAudioScreenController extends ListController{
         }
     }
 
-    @FXML
     /**
      * Takes the user to the next screen where they combine audio files
      * Saves the text area so any edits persist if the user wants to go back
      */
+    @FXML
     private void handleCreateFullAudio() throws IOException {
         //start the createFullAudioJob
         final List<String> chosenAudioFiles = new ArrayList<String>(audioFiles);
@@ -193,13 +184,15 @@ public class CreateAudioScreenController extends ListController{
      */
     private void populateVoiceSelectionBox() throws IOException {
 
+        voices.put("Default Male", "kal_diphone");
         voices.put("NZ Female", "akl_nz_cw_cg_cg");
         voices.put("NZ Male", "akl_nz_jdt_diphone");
-        voices.put("Default Male", "kal_diphone");
 
         for(String voice : voices.keySet()){
             voiceSelection.getItems().add(voice);
         }
+
+        voiceSelection.setValue("Default Male");
     }
 
     /**
@@ -228,38 +221,60 @@ public class CreateAudioScreenController extends ListController{
     }
 
     /**
-     * Checks if all requirements are met to enable the create button
-     * A voice must be selected, some text must be highlighted and a name must be provided for the audio file
-     * @return
+     * Changes GUI dynamically as the user changes the amount of text highlighted
      */
-    private void updateCreateAudioSnippetButtonAccess(){
-        createAudioSnippetButton.setDisable(voiceSelection.getValue() == null || textOutput.getSelectedText().trim().isEmpty() || audioFileNameField.getText().trim().isEmpty());
+    private void updateSelectionGUI(){
+        int wordsSelected = getNumberOfWordsSelected();
+
+        //Provide an auto-generated name suggestion
+        if((wordsSelected > 0) && (wordsSelected <= 40)){
+            for(int i = 1; i <= audioFiles.size() + 1; i++) {
+                File file = new File(".temp" + System.getProperty("file.separator") + "audio" + System.getProperty("file.separator") + "audio_" + i + ".wav");
+                if (!file.exists()) {
+                    audioFileNameField.setText("audio_" + i);
+                    break;
+                }
+            }
+            selectionInfoText.setText("" + wordsSelected + " words selected.");
+            selectionInfoText.setFill(Color.BLUE);
+        }
+        else if(wordsSelected <= 0){
+            selectionInfoText.setText("0 words selected.");
+            selectionInfoText.setFill(Color.RED);
+        }
+        else{
+            selectionInfoText.setText("Too many words selected.");
+            selectionInfoText.setFill(Color.RED);
+        }
+        updateCreateAndPreviewButtonAccess();
     }
 
     /**
-     * Checks the user has selected the right amount of text to synthesise
-     * @return false if no words are selected, or if the selection is larger than 40 words (too many to synthesise)
+     * Updates access to the create button
+     * A voice must be selected, some text must be highlighted and a name must be provided for the audio file
      */
-    private boolean correctTextSelection(String selection){
+    private void updateCreateAndPreviewButtonAccess(){
+        int wordsSelected = getNumberOfWordsSelected();
+        createAudioSnippetButton.setDisable(voiceSelection.getValue() == null || wordsSelected <= 0 || wordsSelected > 40 || audioFileNameField.getText().trim().isEmpty());
+        previewButton.setDisable(voiceSelection.getValue() == null || wordsSelected <= 0 || wordsSelected > 40);
+    }
+
+    /**
+     * Finds the number of words selected by the user
+     */
+    private int getNumberOfWordsSelected(){
+        String selection = textOutput.getSelectedText();
         if (selection == null || selection.trim().isEmpty()){
-            return false;
+            return 0;
         }
         //Splits the selection into a countable array of words
-        String[] words = selection.split("\\s+");
-        //More than 40 words is too many to synthesize, return false
-        if(words.length > 40) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Too many words selected");
-            alert.showAndWait();
-            return false;
-        }
-        else{
-            return true;
-        }
+        String[] words = selection.trim().split("\\s+");
+        return words.length;
     }
 
     /**
      * Checks if the given filename doesn't contain forbidden characters
-     * @param fileName
+     * @param fileName the name of the file entered
      * @return true or false
      */
     private boolean nameIsValid(String fileName){
