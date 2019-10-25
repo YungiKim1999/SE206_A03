@@ -59,8 +59,6 @@ public class DeleteAndMoveCell extends ListCell<String> {
                 getListView().getItems().remove(itemName);
             }
         });
-
-        makeReorderable();
     }
 
     /**
