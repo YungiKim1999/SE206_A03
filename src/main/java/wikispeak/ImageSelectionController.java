@@ -163,7 +163,13 @@ public class ImageSelectionController extends Controller{
                         createAllImageSelectionPage(SelectionOfImagesPane, filesJpg);
                         createAllImageSelectionPage(selectedImages, addedImages);
                         found = true;
-                        imageCountLabel.setText(addedImages.size()+" Images selected for the creation");
+                        if(addedImages.size() == 1){
+                            imageCountLabel.setText("1 image selected for the creation");
+                        }
+                        else{
+                            imageCountLabel.setText(addedImages.size()+" images selected for the creation");
+                        }
+
                     }
                 }
                 if(!found) {
@@ -173,7 +179,12 @@ public class ImageSelectionController extends Controller{
                             filesJpg.remove(file);
                             createAllImageSelectionPage(SelectionOfImagesPane, filesJpg);
                             createAllImageSelectionPage(selectedImages, addedImages);
-                            imageCountLabel.setText(addedImages.size()+" Images selected for the creation");
+                            if(addedImages.size() == 1){
+                                imageCountLabel.setText("1 image selected for the creation");
+                            }
+                            else{
+                                imageCountLabel.setText(addedImages.size()+" images selected for the creation");
+                            }
                         }
                     }
                 }
