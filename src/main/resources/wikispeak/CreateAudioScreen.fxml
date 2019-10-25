@@ -23,7 +23,7 @@
             </TextArea>
             <TextField fx:id="audioFileNameField" layoutX="515.0" layoutY="233.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="150.0" promptText="Audio File Name..." />
             <ComboBox fx:id="voiceSelection" layoutX="515.0" layoutY="125.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="150.0" promptText="Select Voice" visibleRowCount="5" />
-            <Button fx:id="previewButton" layoutX="515.0" layoutY="176.0" mnemonicParsing="false" onAction="#handlePreview" prefHeight="30.0" prefWidth="150.0" text="Preview Selection" />
+            <Button fx:id="previewButton" disable="true" layoutX="515.0" layoutY="176.0" mnemonicParsing="false" onAction="#handlePreview" prefHeight="30.0" prefWidth="150.0" text="Preview Selection" />
             <Button fx:id="createAudioSnippetButton" disable="true" layoutX="515.0" layoutY="286.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCreateAudioSnippet" prefHeight="60.0" prefWidth="150.0" text="Create Audio Snippet" textAlignment="CENTER" wrapText="true" />
             <VBox fx:id="audioListBox" layoutX="675.0" layoutY="30.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="430.0" prefWidth="220.0" />
             <ProgressIndicator fx:id="progressIndicator" layoutX="571.0" layoutY="372.0" prefHeight="36.0" prefWidth="39.0" visible="false" />
@@ -48,7 +48,7 @@
                </font>
             </Button>
             <Button alignment="CENTER" layoutX="110.0" layoutY="40.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleMainMenu" prefHeight="35.0" prefWidth="100.0" text="Main Menu" />
-            <Text fx:id="selectionInfoText" fill="RED" layoutX="5.0" layoutY="13.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0 Words Selected" textAlignment="CENTER" wrappingWidth="500.0" />
+            <Text fx:id="selectionInfoText" fill="RED" layoutX="5.0" layoutY="13.0" strokeType="OUTSIDE" strokeWidth="0.0" text="No Words Selected." textAlignment="CENTER" wrappingWidth="500.0" />
          </children>
       </AnchorPane>
    </bottom>

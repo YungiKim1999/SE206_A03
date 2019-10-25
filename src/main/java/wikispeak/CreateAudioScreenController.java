@@ -37,6 +37,9 @@ import java.util.regex.Pattern;
  */
 public class CreateAudioScreenController extends ListController{
 
+    private static final int MAX_WORDS = 40;
+    private static final int MIN_WORDS = 1;
+
     @FXML private BorderPane rootBorderPane;
     @FXML private TextArea textOutput;
     @FXML private ComboBox voiceSelection;
@@ -222,12 +225,13 @@ public class CreateAudioScreenController extends ListController{
 
     /**
      * Changes GUI dynamically as the user changes the amount of text highlighted
+     * Provides an auto-generated name suggestion
+     * Updates to prompt text to indicate how many words are selected
      */
     private void updateSelectionGUI(){
         int wordsSelected = getNumberOfWordsSelected();
 
-        //Provide an auto-generated name suggestion
-        if((wordsSelected > 0) && (wordsSelected <= 40)){
+        if((wordsSelected >= MIN_WORDS) && (wordsSelected <= MAX_WORDS)){
             for(int i = 1; i <= audioFiles.size() + 1; i++) {
                 File file = new File(".temp" + System.getProperty("file.separator") + "audio" + System.getProperty("file.separator") + "audio_" + i + ".wav");
                 if (!file.exists()) {
@@ -238,8 +242,8 @@ public class CreateAudioScreenController extends ListController{
             selectionInfoText.setText("" + wordsSelected + " words selected.");
             selectionInfoText.setFill(Color.BLUE);
         }
-        else if(wordsSelected <= 0){
-            selectionInfoText.setText("0 words selected.");
+        else if(wordsSelected < MIN_WORDS){
+            selectionInfoText.setText("No words selected.");
             selectionInfoText.setFill(Color.RED);
         }
         else{
@@ -250,13 +254,14 @@ public class CreateAudioScreenController extends ListController{
     }
 
     /**
-     * Updates access to the create button
-     * A voice must be selected, some text must be highlighted and a name must be provided for the audio file
+     * Updates access to the create button and preview button
      */
     private void updateCreateAndPreviewButtonAccess(){
         int wordsSelected = getNumberOfWordsSelected();
-        createAudioSnippetButton.setDisable(voiceSelection.getValue() == null || wordsSelected <= 0 || wordsSelected > 40 || audioFileNameField.getText().trim().isEmpty());
-        previewButton.setDisable(voiceSelection.getValue() == null || wordsSelected <= 0 || wordsSelected > 40);
+        //For the creation button: a voice must be selected, the correct number of words must be selected, there must be a name in the audio name field
+        createAudioSnippetButton.setDisable(voiceSelection.getValue() == null || wordsSelected < MIN_WORDS || wordsSelected > MAX_WORDS || audioFileNameField.getText().trim().isEmpty());
+        //For the preview button: a voice must be selected and the correct number of words must be selected
+        previewButton.setDisable(voiceSelection.getValue() == null || wordsSelected < MIN_WORDS || wordsSelected > MAX_WORDS);
     }
 
     /**
