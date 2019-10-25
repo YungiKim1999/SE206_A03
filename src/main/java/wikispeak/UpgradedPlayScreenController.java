@@ -14,12 +14,11 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.util.Duration;
-import wikispeak.tasks.creationDeletionJob;
+import wikispeak.components.DeleteAndMoveCell;
 
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -38,8 +37,6 @@ public class UpgradedPlayScreenController extends ListController {
     private boolean deleted = false;
     private MediaPlayer creationMediaPlayer = null;
 
-    @FXML
-    private Button deleteButton;
     @FXML
     private MediaView creationViewer;
     @FXML
@@ -67,12 +64,11 @@ public class UpgradedPlayScreenController extends ListController {
     @FXML
     public void initialize() {
 
-        playPauseButton.setStyle("-fx-base: rgb(30,170,255);");
-        deleteButton.setStyle("-fx-base: red;");
         disableAllControls();
 
         creationList.setItems(creationsStrings);
         creationList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        creationList.setCellFactory(param -> new DeleteAndMoveCell());
 
         listIsEmpty.setText("There seems to be\nno creation to\nplay/delete");
         setEmptyLabelText();
@@ -262,24 +258,6 @@ public class UpgradedPlayScreenController extends ListController {
     }
 
     /**
-     * handles the delete functionality of creations
-     */
-    @FXML
-    private void handleDeleteButton() {
-        if (selectedCreation != null && !creationList.getItems().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete \"" + selectedCreation + "\"?");
-            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                deleted = true;
-                creationDeletionJob deleteSelected = new creationDeletionJob(selectedDir);
-                workerTeam.submit(deleteSelected);
-                creationList.getItems().remove(selectedDir);
-                setEmptyLabelText();
-            }
-        }
-    }
-    /**
      *handles buffering a few seconds ahead of current time
      */
     @FXML
@@ -307,7 +285,6 @@ public class UpgradedPlayScreenController extends ListController {
      */
     private void disableAllControls(){
         playPauseButton.setDisable(true);
-        deleteButton.setDisable(true);
         videoBuffer.setDisable(true);
         forwardButton.setDisable(true);
         backButton.setDisable(true);
@@ -318,7 +295,6 @@ public class UpgradedPlayScreenController extends ListController {
      */
     private void enableAllControls(){
         playPauseButton.setDisable(false);
-        deleteButton.setDisable(false);
         videoBuffer.setDisable(false);
         forwardButton.setDisable(false);
         backButton.setDisable(false);

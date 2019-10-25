@@ -22,8 +22,8 @@
             <Label fx:id="currentTimeLabel" layoutX="14.0" layoutY="474.0" />
             <Slider fx:id="volumeSlider" layoutX="252.0" layoutY="502.0" prefHeight="16.0" prefWidth="130.0" value="100.0" />
             <Label layoutX="197.0" layoutY="501.0" text="Volume" />
-            <Button layoutX="741.0" layoutY="234.0" mnemonicParsing="false" onAction="#handleGetHint" prefHeight="55.0" prefWidth="134.0" text="Show Hint" />
-            <Button layoutX="741.0" layoutY="304.0" mnemonicParsing="false" onAction="#handleSubmit" prefHeight="55.0" prefWidth="134.0" text="Skip Question" />
+            <Button layoutX="750.0" layoutY="234.0" mnemonicParsing="false" onAction="#handleGetHint" prefHeight="55.0" prefWidth="134.0" text="Show Hint" />
+            <Button layoutX="750.0" layoutY="304.0" mnemonicParsing="false" onAction="#handleSubmit" prefHeight="55.0" prefWidth="134.0" text="Skip Question" />
             <Text layoutX="763.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Question">
                <font>
                   <Font size="20.0" />
@@ -62,7 +62,7 @@
       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="900.0" BorderPane.alignment="CENTER">
          <children>
             <Button layoutX="5.0" layoutY="40.0" mnemonicParsing="false" onAction="#handleExitQuiz" prefHeight="35.0" prefWidth="100.0" text="Exit Test" />
-            <Button fx:id="submitButton" defaultButton="true" disable="true" layoutX="745.0" layoutY="5.0" mnemonicParsing="false" onAction="#handleSubmit" prefHeight="70.0" prefWidth="150.0" text="Submit">
+            <Button fx:id="submitButton" defaultButton="true" disable="true" layoutX="745.0" layoutY="5.0" mnemonicParsing="false" onAction="#handleSubmit" prefHeight="70.0" prefWidth="150.0" style="-fx-base: #5ABDFF;" text="Submit">
                <font>
                   <Font size="16.0" />
                </font></Button>

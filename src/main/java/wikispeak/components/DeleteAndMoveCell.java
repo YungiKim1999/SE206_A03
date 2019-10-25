@@ -1,6 +1,7 @@
 package wikispeak.components;
 
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -13,6 +14,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import wikispeak.tasks.creationDeletionJob;
 import wikispeak.tasks.generalDeletionJob;
 
 import java.util.ArrayList;
@@ -32,24 +34,28 @@ public class DeleteAndMoveCell extends ListCell<String> {
     Pane pane = new Pane();
     Button button = new Button();
 
-    //String containingFolder;
-    //String extension;
-
     private ExecutorService workerTeam = Executors.newSingleThreadExecutor();
 
     /**
      * Adds delete functionality
      * Constructor to use when deleting creations
-     * @param fileName
      */
-    public DeleteAndMoveCell(String fileName){
+    public DeleteAndMoveCell(){
 
         hbox.getChildren().addAll(label, pane, button);
         HBox.setHgrow(pane, Priority.ALWAYS);
-        Image deleteIcon = new Image(getClass().getResourceAsStream("trashsmaller.png"));
+        Image deleteIcon = new Image(getClass().getResourceAsStream("redcross.png"));
         button.setGraphic(new ImageView(deleteIcon));
+        button.setPadding(new Insets(2,3,2,3));
 
-        new DeleteAndMoveCell();
+        button.setOnAction(event -> {
+            String itemName = getItem();
+            creationDeletionJob deleteSelected = new creationDeletionJob(itemName);
+            workerTeam.submit(deleteSelected);
+            getListView().getItems().remove(itemName);
+        });
+
+        makeReorderable();
     }
 
     /**
@@ -60,14 +66,12 @@ public class DeleteAndMoveCell extends ListCell<String> {
      */
     public DeleteAndMoveCell(String containingFolder, String extension){
 
-        //confirm if these fields are necessary
-        //this.containingFolder = containingFolder;
-        //this.extension = extension;
-
         hbox.getChildren().addAll(label, pane, button);
         HBox.setHgrow(pane, Priority.ALWAYS);
-        Image deleteIcon = new Image(getClass().getResourceAsStream("trashsmaller.png"));
+        Image deleteIcon = new Image(getClass().getResourceAsStream("redcross.png"));
         button.setGraphic(new ImageView(deleteIcon));
+
+        button.setPadding(new Insets(2,3,2,3));
 
         button.setOnAction(event -> {
             String itemName = getItem();
@@ -75,14 +79,15 @@ public class DeleteAndMoveCell extends ListCell<String> {
             workerTeam.submit(deleteSelected);
             getListView().getItems().remove(itemName);
         });
-        new DeleteAndMoveCell();
+
+        makeReorderable();
     }
 
 
     /**
-     * General constructor - adds reorderable functionality
+     * Adds reordorable functionality.
      */
-    public DeleteAndMoveCell() {
+    private void makeReorderable() {
 
         ListCell thisCell = this;
 
