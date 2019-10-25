@@ -239,8 +239,14 @@ public class CreateAudioScreenController extends ListController{
                     break;
                 }
             }
-            selectionInfoText.setText("" + wordsSelected + " words selected.");
-            selectionInfoText.setFill(Color.BLUE);
+            if(wordsSelected == 1){
+                selectionInfoText.setText("1 word selected.");
+                selectionInfoText.setFill(Color.BLUE);
+            }
+            else{
+                selectionInfoText.setText("" + wordsSelected + " words selected.");
+                selectionInfoText.setFill(Color.BLUE);
+            }
         }
         else if(wordsSelected < MIN_WORDS){
             selectionInfoText.setText("No words selected.");

@@ -118,7 +118,12 @@ public class ImageSelectionController extends Controller{
             waitLabel.setVisible(false);
             if(addedImages.size()>0){
                 nextButton.setDisable(false);
-                imageCountLabel.setText(addedImages.size()+" Images selected for the creation");
+                if(addedImages.size() == 1){
+                    imageCountLabel.setText("1 image selected for the creation");
+                }
+                else{
+                    imageCountLabel.setText(addedImages.size() + " images selected for the creation");
+                }
             }else{
                 nextButton.setDisable(true);
             }
