@@ -2,9 +2,7 @@ package wikispeak.components;
 
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -14,11 +12,13 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import wikispeak.tasks.creationDeletionJob;
 import wikispeak.tasks.generalDeletionJob;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -50,9 +50,14 @@ public class DeleteAndMoveCell extends ListCell<String> {
 
         button.setOnAction(event -> {
             String itemName = getItem();
-            creationDeletionJob deleteSelected = new creationDeletionJob(itemName);
-            workerTeam.submit(deleteSelected);
-            getListView().getItems().remove(itemName);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete " + itemName + "?");
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                creationDeletionJob deleteSelected = new creationDeletionJob(itemName);
+                workerTeam.submit(deleteSelected);
+                getListView().getItems().remove(itemName);
+            }
         });
 
         makeReorderable();
