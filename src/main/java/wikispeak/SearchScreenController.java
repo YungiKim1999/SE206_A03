@@ -24,7 +24,7 @@ public class SearchScreenController extends Controller {
     /**
      * Initial clean-up.
      * Configures the search button to only be pressable if some text is entered
-     * Deletes any generated audio files.
+     * Deletes any generated audio files and images.
      */
     public void initialize(){
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -56,7 +56,7 @@ public class SearchScreenController extends Controller {
             Thread searchThread = new Thread(new Task<Void>() {
                 @Override
                 protected Void call() throws Exception {
-                    Command wikitCommand = new Command("wikit " + currentSearch + " | sed 's/\\([.!?]\\) \\([[:upper:]]\\)/\\1\\n\\n\\2/g' > .temp" + System.getProperty("file.separator") + "temp_text.txt");
+                    Command wikitCommand = new Command("wikit " + currentSearch + " | sed 's/\\([.!?]\\) \\([[:upper:]]\\)/\\1\\n\\n\\2/g' | tee .temp" + System.getProperty("file.separator") + "temp_text.txt > .temp" + System.getProperty("file.separator") + "originalsearch_text.txt");
                     wikitCommand.execute();
                     return null;
                 }
