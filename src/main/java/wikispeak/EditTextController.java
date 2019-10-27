@@ -26,6 +26,19 @@ public class EditTextController extends Controller{
         textOutput.setText(command.getStream());
     }
 
+    //Resets the edited text back to its original state
+    @FXML
+    public void handleResetText(){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to reset the text?\nAny changes will be lost.");
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            Command command = new Command("cat .temp" + System.getProperty("file.separator") + "originalsearch_text.txt | tee .temp" + System.getProperty("file.separator") + "temp_text.txt");
+            command.execute();
+            textOutput.setText(command.getStream());
+        }
+    }
+
     @FXML
     /**
      * Takes the user back to the search screen. Confirms they are happy to abandon any progress
