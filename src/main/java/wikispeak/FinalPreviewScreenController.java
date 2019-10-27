@@ -245,9 +245,7 @@ public class FinalPreviewScreenController extends ListController {
      */
     @FXML
     private void handleForwardButton(){
-        if(play){
             creationPlayingThing.seek(creationPlayingThing.getCurrentTime().add(Duration.seconds(2)));
-        }
     }
 
     /**
@@ -255,9 +253,8 @@ public class FinalPreviewScreenController extends ListController {
      */
     @FXML
     private void handleBackButton(){
-        if(play){
             creationPlayingThing.seek(creationPlayingThing.getCurrentTime().subtract(Duration.seconds(2)));
-        }
+
     }
 
     /**
