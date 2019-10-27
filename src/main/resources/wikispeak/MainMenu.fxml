@@ -37,7 +37,7 @@
       </VBox>
    </center>
    <top>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to VARPedia" textAlignment="CENTER" wrappingWidth="600.0" BorderPane.alignment="CENTER">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to VARpedia" textAlignment="CENTER" wrappingWidth="900.0" BorderPane.alignment="CENTER">
          <font>
             <Font size="40.0" />
          </font>
