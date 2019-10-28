@@ -29,7 +29,7 @@
                <font>
                   <Font size="15.0" />
                </font></Label>
-            <Label alignment="CENTER" layoutY="5.0" prefHeight="36.0" prefWidth="900.0" text="Step 5: Finalise Creation" textAlignment="CENTER">
+            <Label alignment="CENTER" layoutY="10.0" prefHeight="36.0" prefWidth="900.0" text="Step 5: Finalise Creation" textAlignment="CENTER">
                <font>
                   <Font size="30.0" />
                </font>
@@ -44,12 +44,17 @@
                   <Font size="15.0" />
                </font></Label>
             <Button layoutX="5.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleBackToImageSelection" prefHeight="35.0" prefWidth="100.0" text="&lt; Back" />
-            <Label layoutX="218.0" layoutY="48.0" text="Preview Your Creation Here">
+            <Label layoutX="218.0" layoutY="50.0" text="Preview Your Creation Here">
                <font>
                   <Font size="15.0" />
                </font></Label>
             <Button fx:id="addMusicButton" layoutX="530.0" layoutY="511.0" mnemonicParsing="false" onAction="#handleAddMusic" prefHeight="80.0" prefWidth="90.0" text="Add Music" />
             <Button fx:id="removeMusicButton" alignment="CENTER" layoutX="440.0" layoutY="511.0" mnemonicParsing="false" onAction="#handleRemoveMusic" prefHeight="80.0" prefWidth="90.0" text="Remove Music" textAlignment="CENTER" wrapText="true" />
+            <Button layoutX="856.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#openUserManual" prefHeight="22.0" prefWidth="42.0" text="Help">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Button>
             </children>
         </AnchorPane>
    </bottom>

@@ -18,14 +18,23 @@
       </Button>
    </bottom>
    <top>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Step 1: Search Wikipedia" textAlignment="CENTER" wrappingWidth="900.0">
-         <font>
-            <Font size="30.0" />
-         </font>
+      <AnchorPane prefHeight="45.0" prefWidth="900.0">
          <BorderPane.margin>
-            <Insets top="10.0" />
+            <Insets />
          </BorderPane.margin>
-      </Text>
+         <children>
+            <Text layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Step 1: Search Wikipedia" textAlignment="CENTER" wrappingWidth="900.0">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Text>
+            <Button layoutX="856.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#openUserManual" prefHeight="22.0" prefWidth="42.0" text="Help">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
    </top>
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
