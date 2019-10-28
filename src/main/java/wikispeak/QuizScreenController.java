@@ -249,7 +249,7 @@ public class QuizScreenController extends Controller {
         }
 
         if(quiz.isFinished()){
-            String message = "You got " + quiz.getNumberCorrect() + " questions right and " + quiz.getNumberIncorrect() + " wrong";
+            String message = "You got " + quiz.getNumberCorrect() + " correct and " + quiz.getNumberIncorrect() + " incorrect.";
             if(quiz.getNumberIncorrect() > 0){
                 message += "\n\nYou should review the following Creations: \n" + quiz.getCreationsToReview();
             }

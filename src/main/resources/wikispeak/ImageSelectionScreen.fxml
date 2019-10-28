@@ -33,7 +33,7 @@
                <font>
                   <Font size="15.0" />
                </font></Label>
-            <Label layoutX="668.0" layoutY="39.0" prefHeight="22.0" prefWidth="169.0" text="Click on the images to">
+            <Label layoutX="666.0" layoutY="44.0" prefHeight="22.0" prefWidth="169.0" text="Click on the images to">
                <font>
                   <Font size="15.0" />
                </font></Label>
@@ -41,7 +41,7 @@
                <font>
                   <Font size="15.0" />
                </font></Label>
-            <Label alignment="CENTER" layoutY="5.0" prefHeight="41.0" prefWidth="900.0" text="Step 4: Select Images for Video" textAlignment="CENTER">
+            <Label alignment="CENTER" layoutY="10.0" prefHeight="41.0" prefWidth="900.0" text="Step 4: Select Images for Video" textAlignment="CENTER">
                <font>
                   <Font size="30.0" />
                </font>
@@ -50,6 +50,11 @@
             <ProgressBar fx:id="imageWaitBar" layoutX="14.0" layoutY="498.0" prefHeight="30.0" prefWidth="498.0" progress="0.0" />
             <Label fx:id="waitLabel" alignment="CENTER" layoutX="63.0" layoutY="157.0" prefHeight="210.0" prefWidth="398.0" text="Getting images from Flickr..." />
             <ProgressBar fx:id="createVideoBar" layoutX="624.0" layoutY="497.0" prefHeight="32.0" prefWidth="257.0" progress="0.0" />
+            <Button layoutX="856.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#openUserManual" prefHeight="22.0" prefWidth="42.0" text="Help">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
    </center>
