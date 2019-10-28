@@ -18,6 +18,7 @@ import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import javafx.util.Duration;
+import wikispeak.helpers.Command;
 import wikispeak.tasks.addMusicJob;
 import wikispeak.tasks.removeMusicJob;
 
@@ -68,6 +69,9 @@ public class FinalPreviewScreenController extends ListController {
         creationNameInput.textProperty().addListener((observable, oldValue, newValue) -> {
             createButton.setDisable(creationNameInput.getText().trim().isEmpty());
         });
+        Command command = new Command("cat .temp" + System.getProperty("file.separator") + "temp_searchterm.txt");
+        command.execute();
+        creationNameInput.setText(command.getStream() + "Creation");
 
         previousCreations.setItems(creationsStrings);
         firsTime = true;
