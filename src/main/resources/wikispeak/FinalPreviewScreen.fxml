@@ -34,7 +34,7 @@
                   <Font size="30.0" />
                </font>
             </Label>
-            <Button fx:id="createButton" defaultButton="true" disable="true" layoutX="686.0" layoutY="506.0" mnemonicParsing="false" onAction="#createAllThingsNecessary" prefHeight="90.0" prefWidth="200.0" style="-fx-base: #5ABDFF;" text="Create!">
+            <Button fx:id="createButton" defaultButton="true" layoutX="686.0" layoutY="506.0" mnemonicParsing="false" onAction="#createAllThingsNecessary" prefHeight="90.0" prefWidth="200.0" style="-fx-base: #5ABDFF;" text="Create!">
                <font>
                   <Font size="16.0" />
                </font></Button>
