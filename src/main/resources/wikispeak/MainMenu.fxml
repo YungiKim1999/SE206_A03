@@ -58,9 +58,9 @@
                <font>
                   <Font size="11.0" />
                </font></Button>
-            <Text layoutX="348.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The VARK Learning Experience">
+            <Text layoutX="326.0" layoutY="111.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The VARK Learning Experience">
                <font>
-                  <Font name="System Italic" size="14.0" />
+                  <Font name="System Italic" size="16.0" />
                </font>
             </Text>
          </children>

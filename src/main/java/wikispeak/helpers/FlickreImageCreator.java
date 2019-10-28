@@ -10,11 +10,11 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  *This class packages the Flickr api so that it is easy to use.
+ * Credits: Nasser Garciaman,
+ * https://acp.foe.auckland.ac.nz/ide
  */
 public class FlickreImageCreator {
 
