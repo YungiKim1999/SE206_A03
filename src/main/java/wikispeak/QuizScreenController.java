@@ -6,6 +6,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.media.Media;
@@ -230,7 +232,9 @@ public class QuizScreenController extends Controller {
         Boolean result = quiz.submitResponse(answerField.getText());
         if(result){
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "The answer was: " + answer);
-            alert.setHeaderText("Correct");
+            alert.setHeaderText("Correct!");
+            alert.setTitle("Answer");
+            alert.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("correctTick.png"))));
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             alert.showAndWait();
         }
@@ -238,6 +242,8 @@ public class QuizScreenController extends Controller {
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "The correct answer was: " + answer);
             alert.setHeaderText("Incorrect");
+            alert.setTitle("Answer");
+            alert.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("incorrectCross.png"))));
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             alert.showAndWait();
         }

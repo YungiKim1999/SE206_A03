@@ -51,7 +51,7 @@
                </font>
             </Text>
             <Slider fx:id="numberSlider" layoutX="212.0" layoutY="368.0" majorTickUnit="1.0" max="10.0" maxHeight="-Infinity" maxWidth="-Infinity" min="1.0" minHeight="-Infinity" minWidth="-Infinity" minorTickCount="0" prefHeight="20.0" prefWidth="500.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1.0" />
-            <Text fx:id="alertText" layoutX="768.0" layoutY="448.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You must make&#10;a creation first" textAlignment="CENTER" visible="false" />
+            <Text fx:id="alertText" layoutX="768.0" layoutY="448.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You must make&#10;a Creation first" textAlignment="CENTER" visible="false" />
          </children>
       </AnchorPane>
    </center>
