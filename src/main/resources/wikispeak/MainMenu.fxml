@@ -44,12 +44,12 @@
       </AnchorPane>
    </center>
    <top>
-      <AnchorPane prefHeight="99.0" prefWidth="900.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="123.0" prefWidth="900.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets />
          </BorderPane.margin>
          <children>
-            <Text layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to VARpedia" textAlignment="CENTER" wrappingWidth="900.0">
+            <Text layoutY="77.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to VARpedia" textAlignment="CENTER" wrappingWidth="900.0">
                <font>
                   <Font size="40.0" />
                </font>
@@ -58,6 +58,11 @@
                <font>
                   <Font size="11.0" />
                </font></Button>
+            <Text layoutX="348.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The VARK Learning Experience">
+               <font>
+                  <Font name="System Italic" size="14.0" />
+               </font>
+            </Text>
          </children>
       </AnchorPane>
    </top>
