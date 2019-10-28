@@ -46,7 +46,7 @@ public class CreateAudioScreenController extends ListController{
     @FXML private Button createAudioSnippetButton;
     @FXML private TextField audioFileNameField;
     @FXML private Button previewButton;
-    @FXML private VBox audioListBox;
+    @FXML private ListView audioListView;
     @FXML private ProgressIndicator progressIndicator;
     @FXML private Button createFullAudioButton;
     @FXML private Text promptText;
@@ -214,13 +214,11 @@ public class CreateAudioScreenController extends ListController{
     private void populateAudioList(){
         audioFiles.addAll(populateList(".temp" + System.getProperty("file.separator") + "audio", ".wav"));
 
-        ListView<String> audioListView = new ListView<>(audioFiles);
+        audioListView.setItems(audioFiles);
         Text text = new Text("No Audio Snippets\nhave been Created");
         text.setTextAlignment(TextAlignment.CENTER);
         audioListView.setPlaceholder(text);
         audioListView.setCellFactory(param -> new DeleteAndMoveCell(".temp" + System.getProperty("file.separator") + "audio", ".wav"));
-
-        audioListBox.getChildren().add(audioListView);
     }
 
     /**
